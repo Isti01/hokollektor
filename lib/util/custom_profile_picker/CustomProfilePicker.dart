@@ -10,7 +10,8 @@ class CustomProfilePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Align(
+      alignment: Alignment(0.0, -0.7),
       child: SingleChildScrollView(
         child: Material(
           child: Padding(
@@ -30,35 +31,37 @@ class CustomProfilePicker extends StatelessWidget {
   }
 
   Widget _buildLayout(BuildContext context, CustomProfileState state) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        DropdownButton<bool>(
-            value: state.expanded,
-            items: [
-              DropdownMenuItem(
-                child: Text(_getDropdownValue(true)),
-                value: true,
-              ),
-              DropdownMenuItem(
-                child: Text(_getDropdownValue(false)),
-                value: false,
-              )
+    return state.loading
+        ? CircularProgressIndicator()
+        : Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              DropdownButton<bool>(
+                  value: state.expanded,
+                  items: [
+                    DropdownMenuItem(
+                      child: Text(_getDropdownValue(true)),
+                      value: true,
+                    ),
+                    DropdownMenuItem(
+                      child: Text(_getDropdownValue(false)),
+                      value: false,
+                    )
+                  ],
+                  onChanged: (value) {
+                    if (value != state.expanded)
+                      bloc.dispatch(SizeChangedEvent(value));
+                  }),
+              state.expanded
+                  ? ExpandedSliderPicker(
+                      values: state.values,
+                      onChanged: (value) => print('changed $value'),
+                    )
+                  : MinifiedSliderPicker(
+                      values: state.values,
+                      onChanged: (value) => print('changed $value'),
+                    ),
             ],
-            onChanged: (value) {
-              if (value != state.expanded)
-                bloc.dispatch(SizeChangedEvent(value));
-            }),
-        state.expanded
-            ? ExpandedSliderPicker(
-                values: state.values,
-                onChanged: (value) => print('changed $value'),
-              )
-            : MinifiedSliderPicker(
-                values: state.values,
-                onChanged: (value) => print('changed $value'),
-              ),
-      ],
-    );
+          );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hokollektor/Loading.dart';
 import 'package:hokollektor/bloc/InformationTabBloc.dart';
 import 'package:hokollektor/bloc/ManualProfileBloc.dart';
 import 'package:hokollektor/bloc/ProfileBloc.dart';
@@ -87,7 +86,7 @@ class HomeBackpanel extends StatelessWidget {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: CollectorProgressIndicator(
+          child: CircularProgressIndicator(
               // valueColor: progressIndicatorColor,
               ),
         ),
@@ -96,11 +95,15 @@ class HomeBackpanel extends StatelessWidget {
     if (state.hasError || error)
       return Align(
         alignment: Alignment.topCenter,
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Text(
-            state.error ?? 'Failed to load!',
-            style: theme.textTheme.title.copyWith(color: fontColor),
+        child: InkWell(
+          onTap: () => profileBloc.initialState,
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Text(
+              'Something went wrong!\n'
+                  'Tap to reload',
+              style: theme.textTheme.title.copyWith(color: fontColor),
+            ),
           ),
         ),
       );
@@ -116,6 +119,7 @@ class HomeBackpanel extends StatelessWidget {
           _radioTile('Minimal', profileState.minimal, theme.textTheme, state),
           _radioTile('Maximal', profileState.maximal, theme.textTheme, state),
           _radioTile('Manual', profileState.manual, theme.textTheme, state),
+          _radioTile('Custom', profileState.manual, theme.textTheme, state),
         ],
       ),
     );
@@ -269,13 +273,13 @@ class InformationCards extends StatelessWidget {
       return Center(
           child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
-        child: CollectorProgressIndicator(),
+        child: CircularProgressIndicator(),
       ));
     } else {
       return Card(
         elevation: 0.0,
         child: InkWell(
-          onTap: () => print('asd'),
+          onTap: () => bloc.initialState,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -283,7 +287,7 @@ class InformationCards extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  'Failed to Load',
+                  'Tap to reload',
                 ),
               ),
             ],

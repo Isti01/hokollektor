@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hokollektor/util/DateIntervalPicker.dart' as picker;
 import 'package:hokollektor/util/SimpleScrollBehavior.dart';
 
-const int lastDay = 4;
+const int lastDay = 15;
 
 class DatePickerDialog extends StatefulWidget {
   @override
@@ -105,14 +105,12 @@ class DatePickerDialogState extends State<DatePickerDialog> {
           ),
           Flexible(
             fit: FlexFit.tight,
-            child: picker.DayPicker(
+            child: picker.MonthPicker(
               selectedDate2: selectedDate2,
               selectedDate: currentDate,
-              currentDate: now,
               onChanged: onDateChanged,
               firstDate: now.subtract(Duration(days: lastDay)),
               lastDate: now,
-              displayedMonth: now,
             ),
           ),
         ],

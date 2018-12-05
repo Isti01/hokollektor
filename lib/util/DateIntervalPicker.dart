@@ -1,9 +1,34 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-const double _kDayPickerRowHeight = .0;
+///  * <https://material.io/guidelines/components/pickers.html#pickers-date-pickers>
+enum DatePickerMode {
+  /// Show a date picker UI for choosing a month and day.
+  day,
+
+  /// Show a date picker UI for choosing a year.
+  year,
+}
+
+class _MonthPickerSortKey extends OrdinalSortKey {
+  const _MonthPickerSortKey(double order) : super(order);
+
+  static const _MonthPickerSortKey previousMonth = _MonthPickerSortKey(1.0);
+  static const _MonthPickerSortKey nextMonth = _MonthPickerSortKey(2.0);
+  static const _MonthPickerSortKey calendar = _MonthPickerSortKey(3.0);
+}
+
+const Duration _kMonthScrollDuration = Duration(milliseconds: 200);
+const double _kDayPickerRowHeight = 42.0;
+const int _kMaxDayPickerRowCount = 6; // A 31 day month that starts on Saturday.
+// Two extra rows: one for the day-of-week header and one for the month header.
+const double _kMaxDayPickerHeight =
+    _kDayPickerRowHeight * (_kMaxDayPickerRowCount + 2);
+
+const double _kMonthPickerPortraitWidth = 330.0;
 
 class DayPicker extends StatelessWidget {
   DayPicker({
@@ -52,6 +77,33 @@ class DayPicker extends StatelessWidget {
 
   /// Optional user supplied predicate function to customize selectable days.
   final SelectableDayPredicate selectableDayPredicate;
+
+  Widget _outOfMonthSelected(themeData) {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              style: BorderStyle.solid,
+              color: themeData.accentColor,
+            ),
+            bottom: BorderSide(
+              style: BorderStyle.solid,
+              color: themeData.accentColor,
+            ),
+            left: BorderSide(
+              style: BorderStyle.solid,
+              color: Color.lerp(themeData.accentColor, Colors.white, 0.5),
+            ),
+            right: BorderSide(
+              style: BorderStyle.solid,
+              color: Color.lerp(themeData.accentColor, Colors.white, 0.5),
+            ),
+          ),
+          color: Color.lerp(themeData.accentColor, Colors.white, 0.5),
+          shape: BoxShape.rectangle),
+      margin: EdgeInsets.symmetric(vertical: 2.0, horizontal: 0.0),
+    );
+  }
 
   /// Builds widgets showing abbreviated days of week. The first widget in the
   /// returned list corresponds to the first day of week for the current locale.
@@ -160,6 +212,11 @@ class DayPicker extends StatelessWidget {
     return (weekdayFromMonday - firstDayOfWeekFromMonday) % 7;
   }
 
+  bool _isBetween(DateTime date1, DateTime date2, DateTime selDate) {
+    if (date1 == null || date2 == null) return false;
+    return selDate.isAfter(date1) && selDate.isBefore(date2);
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
@@ -171,33 +228,39 @@ class DayPicker extends StatelessWidget {
     final int firstDayOffset =
         _computeFirstDayOffset(year, month, localizations);
     final List<Widget> labels = <Widget>[];
+    DateTime date1;
+    DateTime date2;
+
+    if (selectedDate2 != null &&
+        selectedDate != null &&
+        selectedDate2.isAfter(selectedDate)) {
+      date1 = selectedDate;
+      date2 = selectedDate2;
+    } else {
+      date1 = selectedDate2;
+      date2 = selectedDate;
+    }
     labels.addAll(_getDayHeaders(themeData.textTheme.caption, localizations));
     for (int i = 0; true; i += 1) {
       // 1-based day of month, e.g. 1-31 for January, and 1-29 for February on
       // a leap year.
       final int day = i - firstDayOffset + 1;
-      if (day > daysInMonth) break;
+      if (day > daysInMonth) {
+        break;
+      }
       if (day < 1) {
-        labels.add(Container());
+        print([day < 0, day, month, firstDayOffset]);
+        if (_isBetween(date1, date2,
+            DateTime(year, month, 1).subtract(Duration(hours: 12))))
+          labels.add(_outOfMonthSelected(themeData));
+        else
+          labels.add(Container());
       } else {
         final DateTime dayToBuild = DateTime(year, month, day);
         final bool disabled = dayToBuild.isAfter(lastDate) ||
             dayToBuild.isBefore(firstDate) ||
             (selectableDayPredicate != null &&
                 !selectableDayPredicate(dayToBuild));
-
-        DateTime date1;
-        DateTime date2;
-
-        if (selectedDate2 != null &&
-            selectedDate != null &&
-            selectedDate2.isAfter(selectedDate)) {
-          date1 = selectedDate;
-          date2 = selectedDate2;
-        } else {
-          date1 = selectedDate2;
-          date2 = selectedDate;
-        }
 
         BoxDecoration decoration;
         TextStyle itemStyle = themeData.textTheme.body1;
@@ -221,15 +284,13 @@ class DayPicker extends StatelessWidget {
 
         bool betweenSelectedDates = !nullDate;
         if (!nullDate) {
-          if (date1.year > year || date2.year < year) {
+          int date1Val = date1.millisecondsSinceEpoch;
+          int date2val = date2.millisecondsSinceEpoch;
+          int selectedDateVal =
+              DateTime(year, month, day).millisecondsSinceEpoch;
+
+          if (selectedDateVal > date2val || selectedDateVal < date1Val)
             betweenSelectedDates = false;
-          }
-          if (date1.month > month || date2.month < month) {
-            betweenSelectedDates = false;
-          }
-          if (date1.day >= day || date2.day <= day) {
-            betweenSelectedDates = false;
-          }
         }
         if (isSelectedDay || isSelectedDay2 || betweenSelectedDates) {
           // The selected day gets a circle background highlight, and a contrasting text color.
@@ -342,6 +403,17 @@ class DayPicker extends StatelessWidget {
       }
     }
 
+    if (_isBetween(date1, date2,
+        DateTime(year, month, daysInMonth).add(Duration(hours: 12)))) {
+      int iteration = labels.length % 7 == 0 ? 0 : 7 - labels.length % 7;
+
+      for (int i = 0; i < iteration; i++) {
+        labels.add(_outOfMonthSelected(themeData));
+      }
+
+      print('adding placeholders with iteartion $iteration');
+    }
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -392,4 +464,263 @@ class DayPickerGridDelegate extends SliverGridDelegate {
 }
 
 const DayPickerGridDelegate _kDayPickerGridDelegate = DayPickerGridDelegate();
-const int _kMaxDayPickerRowCount = 6;
+
+class MonthPicker extends StatefulWidget {
+  /// Creates a month picker.
+  ///
+  /// Rarely used directly. Instead, typically used as part of the dialog shown
+  /// by [showDatePicker].
+  MonthPicker({
+    Key key,
+    @required this.selectedDate,
+    @required this.onChanged,
+    @required this.firstDate,
+    @required this.lastDate,
+    this.selectableDayPredicate,
+    this.selectedDate2,
+  })  : assert(onChanged != null),
+        assert(!firstDate.isAfter(lastDate)),
+        assert(selectedDate == null ||
+            selectedDate.isAfter(firstDate) ||
+            selectedDate.isAtSameMomentAs(firstDate)),
+        assert(selectedDate2 == null ||
+            selectedDate2.isAfter(firstDate) ||
+            selectedDate2.isAtSameMomentAs(firstDate)),
+        super(key: key);
+
+  final DateTime selectedDate2;
+
+  /// The currently selected date.
+  ///
+  /// This date is highlighted in the picker.
+  final DateTime selectedDate;
+
+  /// Called when the user picks a month.
+  final Function(DateTime time1, DateTime time2) onChanged;
+
+  /// The earliest date the user is permitted to pick.
+  final DateTime firstDate;
+
+  /// The latest date the user is permitted to pick.
+  final DateTime lastDate;
+
+  /// Optional user supplied predicate function to customize selectable days.
+  final SelectableDayPredicate selectableDayPredicate;
+
+  @override
+  _MonthPickerState createState() => _MonthPickerState();
+}
+
+class _MonthPickerState extends State<MonthPicker>
+    with SingleTickerProviderStateMixin {
+  static final Animatable<double> _chevronOpacityTween =
+      Tween<double>(begin: 1.0, end: 0.0)
+          .chain(CurveTween(curve: Curves.easeInOut));
+
+  @override
+  void initState() {
+    super.initState();
+    // Initially display the pre-selected date.
+    final int monthPage = _monthDelta(
+        widget.firstDate, widget.selectedDate ?? widget.selectedDate2);
+    _dayPickerController = PageController(initialPage: monthPage);
+    _handleMonthPageChanged(monthPage);
+    _updateCurrentDate();
+
+    // Setup the fade animation for chevrons
+    _chevronOpacityController = AnimationController(
+        duration: const Duration(milliseconds: 250), vsync: this);
+    _chevronOpacityAnimation =
+        _chevronOpacityController.drive(_chevronOpacityTween);
+  }
+
+  @override
+  void didUpdateWidget(MonthPicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedDate != oldWidget.selectedDate) {
+      final int monthPage = _monthDelta(
+          widget.firstDate, widget.selectedDate ?? widget.selectedDate2);
+      _dayPickerController = PageController(initialPage: monthPage);
+      _handleMonthPageChanged(monthPage);
+    }
+  }
+
+  MaterialLocalizations localizations;
+  TextDirection textDirection;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    localizations = MaterialLocalizations.of(context);
+    textDirection = Directionality.of(context);
+  }
+
+  DateTime _todayDate;
+  DateTime _currentDisplayedMonthDate;
+  Timer _timer;
+  PageController _dayPickerController;
+  AnimationController _chevronOpacityController;
+  Animation<double> _chevronOpacityAnimation;
+
+  void _updateCurrentDate() {
+    _todayDate = DateTime.now();
+    final DateTime tomorrow =
+        DateTime(_todayDate.year, _todayDate.month, _todayDate.day + 1);
+    Duration timeUntilTomorrow = tomorrow.difference(_todayDate);
+    timeUntilTomorrow +=
+        const Duration(seconds: 1); // so we don't miss it by rounding
+    _timer?.cancel();
+    _timer = Timer(timeUntilTomorrow, () {
+      setState(() {
+        _updateCurrentDate();
+      });
+    });
+  }
+
+  static int _monthDelta(DateTime startDate, DateTime endDate) {
+    return (endDate.year - startDate.year) * 12 +
+        endDate.month -
+        startDate.month;
+  }
+
+  /// Add months to a month truncated date.
+  DateTime _addMonthsToMonthDate(DateTime monthDate, int monthsToAdd) {
+    return DateTime(
+        monthDate.year + monthsToAdd ~/ 12, monthDate.month + monthsToAdd % 12);
+  }
+
+  Widget _buildItems(BuildContext context, int index) {
+    final DateTime month = _addMonthsToMonthDate(widget.firstDate, index);
+    return DayPicker(
+      key: ValueKey<DateTime>(month),
+      selectedDate: widget.selectedDate,
+      currentDate: _todayDate,
+      onChanged: widget.onChanged,
+      firstDate: widget.firstDate,
+      lastDate: widget.lastDate,
+      displayedMonth: month,
+      //selectableDayPredicate: widget.selectableDayPredicate,
+      selectedDate2: widget.selectedDate2,
+    );
+  }
+
+  void _handleNextMonth() {
+    if (!_isDisplayingLastMonth) {
+      SemanticsService.announce(
+          localizations.formatMonthYear(_nextMonthDate), textDirection);
+      _dayPickerController.nextPage(
+          duration: _kMonthScrollDuration, curve: Curves.ease);
+    }
+  }
+
+  void _handlePreviousMonth() {
+    if (!_isDisplayingFirstMonth) {
+      SemanticsService.announce(
+          localizations.formatMonthYear(_previousMonthDate), textDirection);
+      _dayPickerController.previousPage(
+          duration: _kMonthScrollDuration, curve: Curves.ease);
+    }
+  }
+
+  /// True if the earliest allowable month is displayed.
+  bool get _isDisplayingFirstMonth {
+    return !_currentDisplayedMonthDate
+        .isAfter(DateTime(widget.firstDate.year, widget.firstDate.month));
+  }
+
+  /// True if the latest allowable month is displayed.
+  bool get _isDisplayingLastMonth {
+    return !_currentDisplayedMonthDate
+        .isBefore(DateTime(widget.lastDate.year, widget.lastDate.month));
+  }
+
+  DateTime _previousMonthDate;
+  DateTime _nextMonthDate;
+
+  void _handleMonthPageChanged(int monthPage) {
+    setState(() {
+      _previousMonthDate =
+          _addMonthsToMonthDate(widget.firstDate, monthPage - 1);
+      _currentDisplayedMonthDate =
+          _addMonthsToMonthDate(widget.firstDate, monthPage);
+      _nextMonthDate = _addMonthsToMonthDate(widget.firstDate, monthPage + 1);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: _kMonthPickerPortraitWidth,
+      height: _kMaxDayPickerHeight,
+      child: Stack(
+        children: <Widget>[
+          Semantics(
+            sortKey: _MonthPickerSortKey.calendar,
+            child: NotificationListener<ScrollStartNotification>(
+              onNotification: (_) {
+                _chevronOpacityController.forward();
+                return false;
+              },
+              child: NotificationListener<ScrollEndNotification>(
+                onNotification: (_) {
+                  _chevronOpacityController.reverse();
+                  return false;
+                },
+                child: PageView.builder(
+                  key: ValueKey<DateTime>(widget.selectedDate),
+                  controller: _dayPickerController,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _monthDelta(widget.firstDate, widget.lastDate) + 1,
+                  itemBuilder: _buildItems,
+                  onPageChanged: _handleMonthPageChanged,
+                ),
+              ),
+            ),
+          ),
+          PositionedDirectional(
+            top: 0.0,
+            start: 8.0,
+            child: Semantics(
+              sortKey: _MonthPickerSortKey.previousMonth,
+              child: FadeTransition(
+                opacity: _chevronOpacityAnimation,
+                child: IconButton(
+                  icon: const Icon(Icons.chevron_left),
+                  tooltip: _isDisplayingFirstMonth
+                      ? null
+                      : '${localizations.previousMonthTooltip} ${localizations.formatMonthYear(_previousMonthDate)}',
+                  onPressed:
+                      _isDisplayingFirstMonth ? null : _handlePreviousMonth,
+                ),
+              ),
+            ),
+          ),
+          PositionedDirectional(
+            top: 0.0,
+            end: 8.0,
+            child: Semantics(
+              sortKey: _MonthPickerSortKey.nextMonth,
+              child: FadeTransition(
+                opacity: _chevronOpacityAnimation,
+                child: IconButton(
+                  icon: const Icon(Icons.chevron_right),
+                  tooltip: _isDisplayingLastMonth
+                      ? null
+                      : '${localizations.nextMonthTooltip} ${localizations.formatMonthYear(_nextMonthDate)}',
+                  onPressed: _isDisplayingLastMonth ? null : _handleNextMonth,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _dayPickerController?.dispose();
+    super.dispose();
+  }
+}

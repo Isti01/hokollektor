@@ -154,6 +154,7 @@ enum profileState {
   minimal,
   maximal,
   manual,
+  custom,
 }
 
 int _getProfileNumber(profileState profile) {
@@ -166,6 +167,8 @@ int _getProfileNumber(profileState profile) {
       return 2;
     case profileState.manual:
       return 4;
+    case profileState.custom:
+      return 5;
   }
   return 1;
 }
@@ -180,7 +183,8 @@ profileState _getProfileState(int number) {
       return profileState.maximal;
     case 4:
       return profileState.manual;
-
+    case 5:
+      return profileState.custom;
     default:
       return profileState.optimal;
   }

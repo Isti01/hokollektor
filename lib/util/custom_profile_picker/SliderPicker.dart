@@ -62,60 +62,63 @@ class ExpandedSliderPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        _mSlider(
-          label: '0',
-          value: values[0] / 100,
-          onChanged: (value) => _onChanged(value, 0),
-        ),
-        _mSlider(
-          label: '10',
-          value: values[1] / 100,
-          onChanged: (value) => _onChanged(value, 1),
-        ),
-        _mSlider(
-          label: '20',
-          value: values[2] / 100,
-          onChanged: (value) => _onChanged(value, 2),
-        ),
-        _mSlider(
-          label: '30',
-          value: values[3] / 100,
-          onChanged: (value) => _onChanged(value, 3),
-        ),
-        _mSlider(
-          label: '40',
-          value: values[4] / 100,
-          onChanged: (value) => _onChanged(value, 4),
-        ),
-        _mSlider(
-          label: '50',
-          value: values[5] / 100,
-          onChanged: (value) => _onChanged(value, 5),
-        ),
-        _mSlider(
-          label: '60',
-          value: values[6] / 100,
-          onChanged: (value) => _onChanged(value, 6),
-        ),
-        _mSlider(
-          label: '70',
-          value: values[7] / 100,
-          onChanged: (value) => _onChanged(value, 7),
-        ),
-        _mSlider(
-          label: '80',
-          value: values[8] / 100,
-          onChanged: (value) => _onChanged(value, 8),
-        ),
-        _mSlider(
-          label: '90',
-          value: values[9] / 100,
-          onChanged: (value) => _onChanged(value, 9),
-        ),
-      ],
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 0.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          _mSlider(
+            label: '0',
+            value: values[0] / 100,
+            onChanged: (value) => _onChanged(value, 0),
+          ),
+          _mSlider(
+            label: '10',
+            value: values[1] / 100,
+            onChanged: (value) => _onChanged(value, 1),
+          ),
+          _mSlider(
+            label: '20',
+            value: values[2] / 100,
+            onChanged: (value) => _onChanged(value, 2),
+          ),
+          _mSlider(
+            label: '30',
+            value: values[3] / 100,
+            onChanged: (value) => _onChanged(value, 3),
+          ),
+          _mSlider(
+            label: '40',
+            value: values[4] / 100,
+            onChanged: (value) => _onChanged(value, 4),
+          ),
+          _mSlider(
+            label: '50',
+            value: values[5] / 100,
+            onChanged: (value) => _onChanged(value, 5),
+          ),
+          _mSlider(
+            label: '60',
+            value: values[6] / 100,
+            onChanged: (value) => _onChanged(value, 6),
+          ),
+          _mSlider(
+            label: '70',
+            value: values[7] / 100,
+            onChanged: (value) => _onChanged(value, 7),
+          ),
+          _mSlider(
+            label: '80',
+            value: values[8] / 100,
+            onChanged: (value) => _onChanged(value, 8),
+          ),
+          _mSlider(
+            label: '90',
+            value: values[9] / 100,
+            onChanged: (value) => _onChanged(value, 9),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -144,30 +147,21 @@ class _mSliderState extends State<_mSlider> {
   @override
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.width;
-    return Wrap(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(' ${_mapValue().toString()}% on ${widget.label}°C'),
-            SizedBox(width: 4.0),
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: 0.0,
-                maxHeight: double.infinity,
-                minWidth: size / 2,
-                maxWidth: size / 2,
-              ),
-              child: Slider(
-                value: this.value,
-                onChanged: (value) => this.setState(() => this.value = value),
-                onChangeEnd: widget.onChanged,
-              ),
-            ),
-          ],
-        ),
-      ],
+    return SizedBox(
+      width: size / 1.5,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(' ${_mapValue().toString()}% on ${widget.label}°C'),
+          SizedBox(width: 4.0),
+          Slider(
+            value: this.value,
+            onChanged: (value) => this.setState(() => this.value = value),
+            onChangeEnd: widget.onChanged,
+          ),
+        ],
+      ),
     );
   }
 
