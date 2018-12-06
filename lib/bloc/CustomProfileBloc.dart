@@ -17,6 +17,9 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
   }
 
   _submitValues(List<int> values) async {
+    if (values.length == minifiedSize)
+      values = CustomProfileState.transformToExpanded(values);
+
     try {
       http.Response res;
       if (values.length == minifiedSize)
@@ -24,7 +27,7 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
       else
         res = await http.get(CustomProfile.createLink(values));
 
-      print(res.body);
+//      print(res.body);
     } catch (e) {
       print(e.toString());
     }
@@ -57,12 +60,12 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
   Stream<CustomProfileState> mapEventToState(
       CustomProfileState state, CustomProfileEvent event) async* {
     if (event is ProfileErrorEvent) {
-      print('error caught');
+      // print('error caught');
       yield CustomProfileState.error(event.message);
     }
 
     if (event is ValueChangeEvent) {
-      print('updating value');
+      //print('updating value');
 
       if (!event.initial) _submitValues(event.newValues);
 
@@ -71,11 +74,11 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
     }
 
     if (event is SizeChangedEvent) {
-      print('updating size');
+      // print('updating size');
       yield CustomProfileState.success(state.values, expanded: event.expanded);
     }
 
-    print('Unknown profile event');
+    // print('Unknown profile event');
   }
 }
 
@@ -115,7 +118,7 @@ class CustomProfileState {
   }
 
   static transformToExpanded(List<int> input) {
-    print(input.length);
+    // print(input.length);
 
     List<int> result = [];
 
@@ -127,13 +130,13 @@ class CustomProfileState {
 
     if (result.length == expandedSize - 1) result.add(input[input.length - 1]);
 
-    print('$input => $result');
+    //print('$input => $result');
 
     return result;
   }
 
   static _transformToMinified(List<int> values) {
-    print(values.length);
+    // print(values.length);
     List<int> result = [];
 
     for (int i = 1; i < values.length; i += 2)

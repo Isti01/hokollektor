@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hokollektor/bloc/CustomProfileBloc.dart';
 import 'package:hokollektor/bloc/InformationTabBloc.dart';
 import 'package:hokollektor/bloc/ManualProfileBloc.dart';
 import 'package:hokollektor/bloc/ProfileBloc.dart';
 import 'package:hokollektor/chart/Chart.dart';
+import 'package:hokollektor/util/custom_profile_picker/CustomProfilePicker.dart';
 import 'package:hokollektor/util/tabbedBackdrop.dart';
 
 const fontColor = Colors.white;
@@ -77,6 +79,23 @@ class HomeBackpanel extends StatelessWidget {
         : Container();
   }
 
+  void _customProfileTileClicked(
+      profileState value, context, ProfileState state) async {
+    final CustomProfileBloc bloc = CustomProfileBloc();
+
+    final result = await showDialog(
+      context: context,
+      builder: (context) => CustomProfilePicker(bloc: bloc),
+    );
+
+    bloc.dispose();
+    if (result != null && result) {
+      if (value != state.state) {
+        profileBloc.dispatch(ProfileEvent(newState: value));
+      }
+    }
+  }
+
   Widget _buildProfile(BuildContext context, ProfileState state) {
     final theme = Theme.of(context);
 
@@ -87,8 +106,8 @@ class HomeBackpanel extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: CircularProgressIndicator(
-              // valueColor: progressIndicatorColor,
-              ),
+            valueColor: progressIndicatorColor,
+          ),
         ),
       );
 
@@ -119,7 +138,8 @@ class HomeBackpanel extends StatelessWidget {
           _radioTile('Minimal', profileState.minimal, theme.textTheme, state),
           _radioTile('Maximal', profileState.maximal, theme.textTheme, state),
           _radioTile('Manual', profileState.manual, theme.textTheme, state),
-          _radioTile('Custom', profileState.manual, theme.textTheme, state),
+          _radioTile('Custom', profileState.custom, theme.textTheme, state,
+              (value) => _customProfileTileClicked(value, context, state)),
         ],
       ),
     );
@@ -146,7 +166,12 @@ class HomeBackpanel extends StatelessWidget {
   }
 
   _radioTile(
-      String text, profileState value, TextTheme theme, ProfileState state) {
+    String text,
+    profileState value,
+    TextTheme theme,
+    ProfileState state, [
+    Function(profileState value) onChanged,
+  ]) {
     return RadioListTile<profileState>(
       activeColor: radioActiveColor,
 //      subtitle: Padding(
@@ -161,7 +186,11 @@ class HomeBackpanel extends StatelessWidget {
       value: value,
       groupValue: state.state,
       onChanged: (profileState value) {
-        profileBloc.dispatch(ProfileEvent(newState: value));
+        if (onChanged != null) {
+          onChanged(value);
+        } else {
+          profileBloc.dispatch(ProfileEvent(newState: value));
+        }
       },
     );
   }

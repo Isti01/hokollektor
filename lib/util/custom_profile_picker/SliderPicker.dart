@@ -10,6 +10,14 @@ class MinifiedSliderPicker extends StatelessWidget {
     this.onChanged,
   }) : super(key: key);
 
+  void _onChanged(double value, int index) {
+    var copy = values;
+
+    copy[index] = (value * 100).toInt();
+
+    onChanged(copy);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -18,27 +26,27 @@ class MinifiedSliderPicker extends StatelessWidget {
         _mSlider(
           label: '0',
           value: values[0] / 100,
-          onChanged: (value) => print('value Changed $value'),
+          onChanged: (value) => _onChanged(value, 0),
         ),
         _mSlider(
           label: '25',
           value: values[1] / 100,
-          onChanged: (value) => print('value Changed $value'),
+          onChanged: (value) => _onChanged(value, 1),
         ),
         _mSlider(
           label: '50',
           value: values[2] / 100,
-          onChanged: (value) => print('value Changed $value'),
+          onChanged: (value) => _onChanged(value, 2),
         ),
         _mSlider(
           label: '75',
           value: values[3] / 100,
-          onChanged: (value) => print('value Changed $value'),
+          onChanged: (value) => _onChanged(value, 3),
         ),
         _mSlider(
           label: '100',
           value: values[4] / 100,
-          onChanged: (value) => print('value Changed $value'),
+          onChanged: (value) => _onChanged(value, 4),
         ),
       ],
     );
@@ -108,12 +116,12 @@ class ExpandedSliderPicker extends StatelessWidget {
             onChanged: (value) => _onChanged(value, 7),
           ),
           _mSlider(
-            label: '80',
+            label: '85',
             value: values[8] / 100,
             onChanged: (value) => _onChanged(value, 8),
           ),
           _mSlider(
-            label: '90',
+            label: '100',
             value: values[9] / 100,
             onChanged: (value) => _onChanged(value, 9),
           ),
@@ -148,7 +156,7 @@ class _mSliderState extends State<_mSlider> {
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.width;
     return SizedBox(
-      width: size / 1.5,
+      width: size / 1.4,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,

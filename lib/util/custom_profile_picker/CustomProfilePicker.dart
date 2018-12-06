@@ -11,12 +11,12 @@ class CustomProfilePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment(0.0, -0.7),
+      alignment: Alignment(0.0, -0.5),
       child: SingleChildScrollView(
         child: Material(
           child: Padding(
               padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0),
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: BlocBuilder<CustomProfileEvent, CustomProfileState>(
                 bloc: bloc,
                 builder: _buildLayout,
@@ -27,41 +27,71 @@ class CustomProfilePicker extends StatelessWidget {
   }
 
   _getDropdownValue(bool expanded) {
-    return expanded ? 'Expnaded' : 'Simplified';
+    return expanded ? 'Expanded' : 'Simplified';
   }
 
   Widget _buildLayout(BuildContext context, CustomProfileState state) {
-    return state.loading
-        ? CircularProgressIndicator()
-        : Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              DropdownButton<bool>(
-                  value: state.expanded,
-                  items: [
-                    DropdownMenuItem(
-                      child: Text(_getDropdownValue(true)),
-                      value: true,
-                    ),
-                    DropdownMenuItem(
-                      child: Text(_getDropdownValue(false)),
-                      value: false,
-                    )
-                  ],
-                  onChanged: (value) {
-                    if (value != state.expanded)
-                      bloc.dispatch(SizeChangedEvent(value));
-                  }),
-              state.expanded
-                  ? ExpandedSliderPicker(
-                      values: state.values,
-                      onChanged: (value) => print('changed $value'),
-                    )
-                  : MinifiedSliderPicker(
-                      values: state.values,
-                      onChanged: (value) => print('changed $value'),
-                    ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        DropdownButton<bool>(
+            value: state.expanded,
+            items: [
+              DropdownMenuItem(
+                child: Text(_getDropdownValue(true)),
+                value: true,
+              ),
+              DropdownMenuItem(
+                child: Text(_getDropdownValue(false)),
+                value: false,
+              )
             ],
-          );
+            onChanged: (value) {
+              if (value != state.expanded && !state.loading)
+                bloc.dispatch(SizeChangedEvent(value));
+            }),
+        state.loading
+            ? CircularProgressIndicator()
+            : state.expanded
+                ? ExpandedSliderPicker(
+                    values: state.values,
+                    onChanged: (value) => bloc.dispatch(ValueChangeEvent(
+                        expanded: value.length == expandedSize,
+                        initial: false,
+                        newValues: value)),
+                  )
+                : MinifiedSliderPicker(
+                    values: state.values,
+                    onChanged: (value) => bloc.dispatch(ValueChangeEvent(
+                        expanded: value.length == expandedSize,
+                        initial: false,
+                        newValues: value)),
+                  ),
+        ButtonBar(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            OutlineButton(
+                child: Text('Cancel'),
+                borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
+                textColor: Theme.of(context).primaryColor,
+                onPressed: () => Navigator.pop(context)),
+            RaisedButton(
+              child: Text('Save'),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12.0)),
+              ),
+              textColor: Colors.white,
+              color: Theme.of(context).primaryColor,
+              onPressed: () {
+                if (!state.loading) Navigator.pop(context, true);
+              },
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
