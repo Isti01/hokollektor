@@ -11,37 +11,30 @@ import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPage extends StatefulWidget {
-  @override
-  LoginPageState createState() {
-    return new LoginPageState();
-  }
-}
-
-class LoginPageState extends State<LoginPage> {
-  bool showForm = false;
-
+class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size.shortestSide / 3.5;
+    final s = MediaQuery.of(context).size;
+    final ratio = s.width / s.height;
+    final size = ratio * 350;
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
         image: AssetImage('assets/login.jpg'),
         fit: BoxFit.cover,
       )),
-      child: Center(
-        child: showForm
-            ? LoginForm()
-            : CollectorProgressIndicator(
-                size: size,
-                duration: Duration(seconds: 2, milliseconds: 500),
-                onFinished: () => this.setState(() {
-                      this.showForm = true;
-                      print('finished');
-                    }),
-              ),
-      ),
+      child: Stack(children: [
+        Transform.translate(
+          offset: Offset(size / s.width * 100, -size / s.height * 200),
+          child: Align(
+            alignment: Alignment.topRight,
+            child: CollectorProgressIndicator(
+              size: size,
+            ),
+          ),
+        ),
+        Center(child: LoginForm()),
+      ]),
     );
   }
 }

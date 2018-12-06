@@ -3,7 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 const Curve sunCurve = Curves.linear;
-const maxSize = 1.0;
+const maxSize1 = 0.9;
+const maxSize2 = 0.8;
 
 class CollectorProgressIndicator extends StatefulWidget {
   final Color color0;
@@ -59,28 +60,25 @@ class _CollectorProgressIndicatorState extends State<CollectorProgressIndicator>
 
   double _getMotionAnimation1() {
     if (_controller.value < 0.25)
-      return Tween<double>(begin: 0.0, end: 1.0).evaluate(
+      return Tween<double>(begin: 0.0, end: maxSize1).evaluate(
           CurvedAnimation(parent: _controller, curve: Interval(0.0, 0.25)));
-    else if (_controller.value < 0.66)
-      return Tween<double>(begin: 1.0, end: 0.0).evaluate(
-          CurvedAnimation(parent: _controller, curve: Interval(0.25, 0.66)));
     else
-      return Tween<double>(begin: 0.0, end: 0.1).evaluate(
-          CurvedAnimation(parent: _controller, curve: Interval(0.66, 1.0)));
+      return Tween<double>(begin: maxSize1, end: 0.0).evaluate(
+          CurvedAnimation(parent: _controller, curve: Interval(0.25, 0.66)));
   }
 
   double _getMotionAnimation2() {
     if (_controller.value < 0.25)
-      return Tween<double>(begin: 0.0, end: maxSize).evaluate(
+      return Tween<double>(begin: 0.0, end: maxSize2).evaluate(
           CurvedAnimation(parent: _controller, curve: Interval(0.0, 0.25)));
     else if (_controller.value < 0.5)
-      return Tween<double>(begin: maxSize, end: 0.0).evaluate(
+      return Tween<double>(begin: maxSize2, end: 0.0).evaluate(
           CurvedAnimation(parent: _controller, curve: Interval(0.25, 0.5)));
     else if (_controller.value < 0.75)
-      return Tween<double>(begin: 0.0, end: maxSize).evaluate(
+      return Tween<double>(begin: 0.0, end: maxSize2).evaluate(
           CurvedAnimation(parent: _controller, curve: Interval(0.5, 0.75)));
     else
-      return Tween<double>(begin: maxSize, end: 0.0).evaluate(
+      return Tween<double>(begin: maxSize2, end: 0.0).evaluate(
           CurvedAnimation(parent: _controller, curve: Interval(0.75, 1)));
   }
 
