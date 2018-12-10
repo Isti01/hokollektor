@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hokollektor/bloc/CustomProfileBloc.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/custom_profile_picker/SliderPicker.dart';
 
 class CustomProfilePicker extends StatelessWidget {
@@ -28,7 +29,7 @@ class CustomProfilePicker extends StatelessWidget {
   }
 
   _getDropdownValue(bool expanded) {
-    return expanded ? 'Expanded' : 'Simplified';
+    return expanded ? loc.getText(loc.expanded) : loc.getText(loc.simplified);
   }
 
   Widget _buildLayout(BuildContext context, CustomProfileState state) {
@@ -72,7 +73,7 @@ class CustomProfilePicker extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             OutlineButton(
-                child: Text('Cancel'),
+                child: Text(loc.getText(loc.cancel)),
                 borderSide: BorderSide(color: Theme.of(context).primaryColor),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12.0)),
@@ -80,7 +81,7 @@ class CustomProfilePicker extends StatelessWidget {
                 textColor: Theme.of(context).primaryColor,
                 onPressed: () => Navigator.pop(context)),
             RaisedButton(
-              child: Text('Save'),
+              child: Text(loc.getText(loc.save)),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12.0)),
               ),

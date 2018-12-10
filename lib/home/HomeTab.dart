@@ -5,6 +5,7 @@ import 'package:hokollektor/bloc/InformationTabBloc.dart';
 import 'package:hokollektor/bloc/ManualProfileBloc.dart';
 import 'package:hokollektor/bloc/ProfileBloc.dart';
 import 'package:hokollektor/chart/Chart.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/custom_profile_picker/CustomProfilePicker.dart';
 import 'package:hokollektor/util/tabbedBackdrop.dart';
 
@@ -50,10 +51,10 @@ class HomeBackpanel extends StatelessWidget {
     return state.rpm1 != null
         ? _buildCategoryTile(
             theme: theme,
-            title: "Manual Configuration",
+            title: loc.getText(loc.manualConf),
             children: [
               ManualSlider(
-                sliderLabel: 'Ventilator #0',
+                sliderLabel: loc.getText(loc.vent0),
                 initialValue: state.rpm0,
                 onChanged: (value) => manualBloc.dispatch(
                       ManualEvent(
@@ -64,7 +65,7 @@ class HomeBackpanel extends StatelessWidget {
                     ),
               ),
               ManualSlider(
-                sliderLabel: 'Ventilator #1',
+                sliderLabel: loc.getText(loc.vent1),
                 initialValue: state.rpm1,
                 onChanged: (value) => manualBloc.dispatch(
                       ManualEvent(
@@ -119,8 +120,7 @@ class HomeBackpanel extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Text(
-              'Something went wrong!\n'
-                  'Tap to reload',
+              loc.getText(loc.tapToReload),
               style: theme.textTheme.title.copyWith(color: fontColor),
             ),
           ),
@@ -131,14 +131,22 @@ class HomeBackpanel extends StatelessWidget {
       data: theme.copyWith(unselectedWidgetColor: Colors.white),
       child: _buildCategoryTile(
         theme: theme,
-        title: "Profiles",
+        title: loc.getText(loc.profiles),
         initiallyExpanded: true,
         children: [
-          _radioTile('Optimal', profileState.optimal, theme.textTheme, state),
-          _radioTile('Minimal', profileState.minimal, theme.textTheme, state),
-          _radioTile('Maximal', profileState.maximal, theme.textTheme, state),
-          _radioTile('Manual', profileState.manual, theme.textTheme, state),
-          _radioTile('Custom', profileState.custom, theme.textTheme, state,
+          _radioTile(loc.getText(loc.optimal), profileState.optimal,
+              theme.textTheme, state),
+          _radioTile(loc.getText(loc.minimal), profileState.minimal,
+              theme.textTheme, state),
+          _radioTile(loc.getText(loc.maximal), profileState.maximal,
+              theme.textTheme, state),
+          _radioTile(loc.getText(loc.manual), profileState.manual,
+              theme.textTheme, state),
+          _radioTile(
+              loc.getText(loc.custom),
+              profileState.custom,
+              theme.textTheme,
+              state,
               (value) => _customProfileTileClicked(value, context, state)),
         ],
       ),
@@ -174,14 +182,6 @@ class HomeBackpanel extends StatelessWidget {
   ]) {
     return RadioListTile<profileState>(
       activeColor: radioActiveColor,
-//      subtitle: Padding(
-//        padding: const EdgeInsets.all(4.0),
-//        child: Text(
-//          'subtitlesubtitlesubtitlesubtitlesubtitlesubtitlesubtitlesubtitlesubtitlesubtitlesubtitle',
-//          style: theme.body2.copyWith(color: fontColor),
-//        ),
-//      ),
-
       title: Text(text, style: theme.title.copyWith(color: fontColor)),
       value: value,
       groupValue: state.state,
@@ -254,18 +254,18 @@ class InformationCards extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Collector', style: theme.textTheme.title),
+                  Text(loc.getText(loc.koll), style: theme.textTheme.title),
                   SizedBox(
                     height: 8.0,
                   ),
                   Text(
-                    'Min Temperature: ${data.legkisebbKoll}°C',
+                    loc.getText(loc.minTemp) + '${data.legkisebbKoll}°C',
                   ),
                   SizedBox(
                     height: 4.0,
                   ),
                   Text(
-                    'Max Temperature: ${data.legnagyobbKoll}°C',
+                    loc.getText(loc.maxTemp) + '${data.legnagyobbKoll}°C',
                   ),
                 ],
               ),
@@ -277,19 +277,19 @@ class InformationCards extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('House', style: theme.textTheme.title),
+                  Text(loc.getText(loc.house), style: theme.textTheme.title),
                   SizedBox(
                     height: 8.0,
                   ),
                   Text(
-                    'Min Temperature: ${data.legkisebbBenti}°C',
+                    loc.getText(loc.minTemp) + '${data.legkisebbBenti}°C',
                     style: theme.textTheme.subhead.copyWith(),
                   ),
                   SizedBox(
                     height: 4.0,
                   ),
                   Text(
-                    'Max Temperature: ${data.legnagyobbBenti}°C',
+                    loc.getText(loc.maxTemp) + '${data.legnagyobbBenti}°C',
                     style: theme.textTheme.subhead.copyWith(),
                   ),
                 ],
@@ -316,7 +316,7 @@ class InformationCards extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  'Tap to reload',
+                  loc.getText(loc.tapToReload),
                 ),
               ),
             ],

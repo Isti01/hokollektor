@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hokollektor/localization.dart' as loc;
 
 class ChartExplanation extends StatelessWidget {
   @override
@@ -9,9 +10,9 @@ class ChartExplanation extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildLine(Color(0xFFF44336), "Collector Temperature"),
-          _buildLine(Color(0xff2196f3), "Outside Temperature"),
-          _buildLine(Color(0xffffeb3b), "Inside Temperature"),
+          _buildLine(Color(0xFFF44336), loc.getText(loc.tempKoll)),
+          _buildLine(Color(0xff2196f3), loc.getText(loc.tempOutside)),
+          _buildLine(Color(0xffffeb3b), loc.getText(loc.tempInside)),
         ],
       ),
     );

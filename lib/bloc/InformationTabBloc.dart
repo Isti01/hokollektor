@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/URLs.dart';
 import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
@@ -58,7 +59,7 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
       dispatch(InformationEvent(data: _parseData(json)));
     } catch (e) {
       print(e.toString());
-      dispatch(InformationEvent.failed("Connection Error"));
+      dispatch(InformationEvent.failed(loc.getText(loc.connectionError)));
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/network.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
@@ -14,7 +15,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     bool connected = await isConnected();
 
     if (!connected) {
-      dispatch(LoginFailed(otherError: 'No Internet Connection'));
+      dispatch(LoginFailed(otherError: loc.getText(loc.noInternet)));
       return;
     }
 
@@ -33,13 +34,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       FormSubmitEvent submitEvent = event as FormSubmitEvent;
 
       if (!_userValid(submitEvent.user))
-        yield LoginState.failed(userError: "Invalid Username");
+        yield LoginState.failed(userError: loc.getText(loc.invalidUsername));
 
       if (!_passValid(submitEvent.pass))
         yield LoginState.failed(
-            passError: "Invalid Password",
-            otherError:
-                "Password minimum length is 8 characters and must contain numbers and letters");
+            passError: loc.getText(loc.invalidPassword),
+            otherError: loc.getText(loc.correctPass));
 
       _submitLogin(
         submitEvent.user,

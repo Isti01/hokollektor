@@ -5,6 +5,7 @@ import 'package:hokollektor/bloc/ManualProfileBloc.dart';
 import 'package:hokollektor/bloc/ProfileBloc.dart';
 import 'package:hokollektor/home/ChartTab.dart';
 import 'package:hokollektor/home/HomeTab.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/SimpleScrollBehavior.dart';
 import 'package:hokollektor/util/tabbedBackdrop.dart';
 
@@ -28,8 +29,8 @@ class HomePage extends StatelessWidget {
         body: TabbedBackdrop(
           key: backdropKey,
           tabs: [
-            Tab(text: "Home"),
-            Tab(text: "Charts"),
+            Tab(text: loc.getText(loc.home)),
+            Tab(text: loc.getText(loc.charts)),
           ],
           backdrops: [
             BackdropComponent(
@@ -37,7 +38,7 @@ class HomePage extends StatelessWidget {
               frontLayer: HomeFront(
                 bloc: informationBloc,
               ),
-              frontHeading: Text('Tap To Configure'),
+              frontHeading: Text(loc.getText(loc.configureHeader)),
               backLayer: HomeBackpanel(
                 manualBloc: manualBloc,
                 profileBloc: profileBloc,
@@ -49,7 +50,7 @@ class HomePage extends StatelessWidget {
               frontLayer: ChartFront(
                 bloc: chartBloc,
               ),
-              frontHeading: Text('Tap For More Charts'),
+              frontHeading: Text(loc.getText(loc.chartHeader)),
               backLayer: ChartBackpanel(
                 bloc: chartBloc,
                 onReturn: _toggleBackdrop,

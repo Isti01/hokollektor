@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hokollektor/HokollektorApp.dart';
 import 'package:hokollektor/Loading.dart';
 import 'package:hokollektor/home/Home.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/URLs.dart';
 import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
@@ -95,7 +96,7 @@ class LoginFormState extends State<LoginForm> {
                           SizedBox(height: 8.0),
                           LoginInput(
                             controller: _userController,
-                            labelText: 'Username',
+                            labelText: loc.getText(loc.user),
                             icon: Icon(Icons.person),
                             node: nodes[0],
                             onSubmitted: (String text) {
@@ -111,7 +112,7 @@ class LoginFormState extends State<LoginForm> {
                           ),
                           LoginInput(
                             controller: _passController,
-                            labelText: "Password",
+                            labelText: loc.getText(loc.pass),
                             icon: Icon(Icons.lock),
                             obscureText: true,
                             node: nodes[1],
@@ -134,7 +135,7 @@ class LoginFormState extends State<LoginForm> {
                             onChanged: (bool value) =>
                                 this.setState(() => stayLoggedIn = value),
                             title: Text(
-                              'Stay Logged In',
+                              loc.getText(loc.stayLoggedIn),
                               textAlign: TextAlign.end,
                             ),
                           ),
@@ -220,7 +221,7 @@ class LoginButton extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(vertical: 12.0, horizontal: 44.0),
               child: Text(
-                'Login',
+                loc.getText(loc.login),
                 style: theme.title.copyWith(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -257,7 +258,7 @@ class LoginInput extends StatelessWidget {
     return TextFormField(
       validator: (String text) {
         if (text == null) return null;
-        if (text.length == 0) return "No Text Added";
+        if (text.length == 0) return loc.getText(loc.noTextAdded);
       },
       controller: controller,
       focusNode: this.node,
@@ -278,7 +279,7 @@ class LoginInput extends StatelessWidget {
 }
 
 Future<String> _login(String user, String pass) async {
-  if (!await isConnected()) return 'No Internet';
+  if (!await isConnected()) return loc.getText(loc.noInternet);
 
   try {
     final chars = Utf8Encoder().convert(pass);
@@ -297,10 +298,10 @@ Future<String> _login(String user, String pass) async {
     if (resJson['success'])
       return '';
     else
-      return "Invalid User information";
+      return loc.getText(loc.invalidUserInfo);
   } catch (e) {
     print(e);
-    return "Invalid User information";
+    return loc.getText(loc.invalidUserInfo);
   }
 }
 

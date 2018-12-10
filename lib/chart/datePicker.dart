@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/DateIntervalPicker.dart' as picker;
 import 'package:hokollektor/util/SimpleScrollBehavior.dart';
 
@@ -33,7 +34,7 @@ class DatePickerDialogState extends State<DatePickerDialog> {
             Container(
               height: 300.0,
               child: _buildDatePickerCard(
-                title: "Pick Time interval",
+                title: loc.getText(loc.pickInterval),
                 theme: theme,
                 selectedDate2: lastDate,
                 currentDate: firstDate,
@@ -44,7 +45,7 @@ class DatePickerDialogState extends State<DatePickerDialog> {
             ButtonBar(
               children: <Widget>[
                 OutlineButton(
-                    child: Text('Cancel'),
+                    child: Text(loc.getText(loc.cancel)),
                     borderSide:
                         BorderSide(color: Theme.of(context).primaryColor),
                     shape: RoundedRectangleBorder(
@@ -53,7 +54,7 @@ class DatePickerDialogState extends State<DatePickerDialog> {
                     textColor: Theme.of(context).primaryColor,
                     onPressed: () => Navigator.pop(context)),
                 RaisedButton(
-                  child: Text('Save'),
+                  child: Text(loc.getText(loc.save)),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(12.0)),
                   ),

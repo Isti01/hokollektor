@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hokollektor/localization.dart' as loc;
 
 class MinifiedSliderPicker extends StatelessWidget {
   final List<int> values;
@@ -161,7 +162,9 @@ class _mSliderState extends State<_mSlider> {
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(' ${_mapValue().toString()}% on ${widget.label}°C'),
+          Text(' ${_mapValue().toString()}%' +
+              loc.getText(loc.onDeg) +
+              '${widget.label}°C'),
           SizedBox(width: 4.0),
           Slider(
             value: this.value,

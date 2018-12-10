@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hokollektor/bloc/ChartTabBloc.dart';
 import 'package:hokollektor/chart/Chart.dart';
 import 'package:hokollektor/chart/datePicker.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/tabbedBackdrop.dart';
 
 class ChartBackpanel extends StatelessWidget {
@@ -34,24 +35,28 @@ class ChartBackpanel extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: _buildEntry(charts.weekly, "Weekly Chart", context, state),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildEntry(charts.daily, "Daily Chart", context, state),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildEntry(charts.hourly, "Hourly Chart", context, state),
+              child: _buildEntry(
+                  charts.weekly, loc.getText(loc.weeklyChart), context, state),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: _buildEntry(
-                  charts.realTime, "RealTime Chart", context, state),
+                  charts.daily, loc.getText(loc.dailyChart), context, state),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: _buildEntry(charts.custom, "Custom Chart", context, state),
+              child: _buildEntry(
+                  charts.hourly, loc.getText(loc.hourlyChart), context, state),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildEntry(charts.realTime,
+                  loc.getText(loc.realtimeChart), context, state),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildEntry(
+                  charts.custom, loc.getText(loc.customChart), context, state),
             ),
           ],
         )
@@ -240,15 +245,15 @@ class ChartFrontState extends State<ChartFront> {
   String _getChartTitle(charts chart) {
     switch (chart) {
       case charts.realTime:
-        return 'RealTime Chart';
+        return loc.getText(loc.weeklyChart);
       case charts.hourly:
-        return 'Hourly Chart';
+        return loc.getText(loc.dailyChart);
       case charts.daily:
-        return 'Daily Chart';
+        return loc.getText(loc.hourlyChart);
       case charts.weekly:
-        return 'Weekly Chart';
+        return loc.getText(loc.realtimeChart);
       case charts.custom:
-        return 'Custom Chart';
+        return loc.getText(loc.customChart);
     }
     return '';
   }
@@ -286,76 +291,3 @@ class ChartFrontState extends State<ChartFront> {
     return Container();
   }
 }
-
-//
-//final ChartTabBloc bloc;
-//
-//const ChartFront({
-//Key key,
-//this.bloc,
-//})  : assert(bloc != null),
-//super(key: key);
-//
-//@override
-//Widget build(BuildContext context) {
-//  return BlocBuilder<ChartTabEvent, ChartTabState>(
-//    bloc: bloc,
-//    builder: _build,
-//  );
-//}
-//
-//Widget _build(BuildContext context, ChartTabState state) {
-//  return Padding(
-//    padding: const EdgeInsets.only(
-//      left: 16.0,
-//      right: 16.0,
-//      top: 8.0,
-//    ),
-//    child: ListView(children: [
-//      Padding(
-//        padding: const EdgeInsets.all(8.0),
-//        child: Text(
-//          _getChartTitle(state.chart),
-//          style: Theme.of(context).textTheme.title,
-//        ),
-//      ),
-//      _getChart(state.chart),
-//    ]),
-//  );
-//}
-//
-//String _getChartTitle(charts chart) {
-//  switch (chart) {
-//    case charts.realTime:
-//      return 'RealTime Chart';
-//    case charts.hourly:
-//      return 'Hourly Chart';
-//    case charts.daily:
-//      return 'Daily Chart';
-//    case charts.weekly:
-//      return 'Weekly Chart';
-//  }
-//  return '';
-//}
-//
-//Widget _getChart(charts chart) {
-//  switch (chart) {
-//    case charts.realTime:
-//      return RealTimeChart(
-//        height: 450.0,
-//      );
-//    case charts.hourly:
-//      return OneHourChart(
-//        height: 450.0,
-//      );
-//    case charts.daily:
-//      return OneDayChart(
-//        height: 450.0,
-//      );
-//    case charts.weekly:
-//      return OneWeekChart(
-//        height: 450.0,
-//      );
-//  }
-//  return Container();
-//}

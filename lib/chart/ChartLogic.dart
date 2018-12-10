@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:charts_common/common.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
 
@@ -62,21 +63,21 @@ List<charts.Series<ChartDataPoint, DateTime>> _parseData(
           domainFn: (ChartDataPoint sales, _) => sales.date,
           measureFn: (ChartDataPoint sales, _) => sales.value,
           data: koll,
-          displayName: 'Kollektor'),
+          displayName: loc.getText(loc.koll)),
       charts.Series<ChartDataPoint, DateTime>(
           id: 'Kint',
           colorFn: (_, __) => chartColors[1],
           domainFn: (ChartDataPoint sales, _) => sales.date,
           measureFn: (ChartDataPoint sales, _) => sales.value,
           data: kinti,
-          displayName: 'Kint'),
+          displayName: loc.getText(loc.outside)),
       charts.Series<ChartDataPoint, DateTime>(
           id: 'Benti',
           colorFn: (_, __) => chartColors[2],
           domainFn: (ChartDataPoint sales, _) => sales.date,
           measureFn: (ChartDataPoint sales, _) => sales.value,
           data: benti,
-          displayName: 'Benti'),
+          displayName: loc.getText(loc.inside)),
     ];
     return result;
   } catch (e) {

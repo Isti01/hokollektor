@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/URLs.dart' as urls;
 import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
@@ -21,11 +22,11 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
       values = CustomProfileState.transformToExpanded(values);
 
     try {
-      http.Response res;
+      /* http.Response res;*/
       if (values.length == minifiedSize)
-        res = await http.get(CustomProfile.createLink(values));
+        /*res =*/ await http.get(CustomProfile.createLink(values));
       else
-        res = await http.get(CustomProfile.createLink(values));
+        /*res =*/ await http.get(CustomProfile.createLink(values));
 
 //      print(res.body);
     } catch (e) {
@@ -36,7 +37,7 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
   _fetchCustomProfileState() async {
     try {
       if (!await isConnected()) {
-        dispatch(ProfileErrorEvent('No Internet Connection'));
+        dispatch(ProfileErrorEvent(loc.getText(loc.noInternet)));
         return;
       }
 
@@ -52,7 +53,7 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
       ));
     } catch (e) {
       print(e.toString());
-      dispatch(ProfileErrorEvent('Fetch Failed'));
+      dispatch(ProfileErrorEvent(loc.getText(loc.fetchFailed)));
     }
   }
 

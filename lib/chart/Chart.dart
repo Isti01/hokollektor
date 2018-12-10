@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hokollektor/Loading.dart';
 import 'package:hokollektor/chart/ChartExplanation.dart';
 import 'package:hokollektor/chart/ChartLogic.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/URLs.dart' as urls;
 
 const reloadAfter = 120;
@@ -105,7 +106,7 @@ class KollChartState extends State<KollChart>
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.error),
-              Text("Falied to load!"),
+              Text(loc.getText(loc.failedToLoadChart)),
             ],
           ),
         ),
@@ -227,7 +228,7 @@ class RealtimeKollChartState extends State<RealtimeKollChart>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.error),
-                    Text("Falied to load!"),
+                    Text(loc.getText(loc.failedToLoadChart)),
                   ],
                 ),
               ),

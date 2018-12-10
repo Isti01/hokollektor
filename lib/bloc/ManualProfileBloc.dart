@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/URLs.dart';
 import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
@@ -69,7 +70,7 @@ class ManualProfileBloc extends Bloc<ManualEvent, ManualState> {
 
       if (!(await isConnected())) {
         completed = true;
-        dispatch(ManualEvent.failed("No Internet Connection"));
+        dispatch(ManualEvent.failed(loc.getText(loc.noInternet)));
         return;
       }
 
@@ -86,7 +87,7 @@ class ManualProfileBloc extends Bloc<ManualEvent, ManualState> {
           rpm1: int.parse(result.rpm2),
           rpm0: int.parse(result.rpm1)));
     } catch (e) {
-      dispatch(ManualEvent.failed('Connection Error'));
+      dispatch(ManualEvent.failed(loc.getText(loc.connectionError)));
       completed = true;
       print(e);
     }

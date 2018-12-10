@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/URLs.dart';
 import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
@@ -41,7 +42,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       if (!(await isConnected())) {
         completed = true;
-        if (!uploading) dispatch(ProfileEvent.failed("No Internet Connection"));
+        if (!uploading)
+          dispatch(ProfileEvent.failed(loc.getText(loc.noInternet)));
         return;
       }
 
@@ -54,7 +56,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       int profileNumber = int.parse(json['profile']);
 
       if (profileNumber == null) {
-        dispatch(ProfileEvent.failed("Connection Problem"));
+        dispatch(ProfileEvent.failed(loc.getText(loc.connectionError)));
         completed = true;
         return;
       }
@@ -64,7 +66,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         dispatch(ProfileEvent.init(_getProfileState(profileNumber)));
     } catch (e) {
       print(e.toString());
-      if (!uploading) dispatch(ProfileEvent.failed('Connection Error'));
+      if (!uploading)
+        dispatch(ProfileEvent.failed(loc.getText(loc.connectionError)));
     }
   }
 
