@@ -260,12 +260,14 @@ class InformationCards extends StatelessWidget {
                   ),
                   Text(
                     loc.getText(loc.minTemp) + '${data.legkisebbKoll}°C',
+                    style: theme.textTheme.subhead.copyWith(),
                   ),
                   SizedBox(
                     height: 4.0,
                   ),
                   Text(
                     loc.getText(loc.maxTemp) + '${data.legnagyobbKoll}°C',
+                    style: theme.textTheme.subhead.copyWith(),
                   ),
                 ],
               ),

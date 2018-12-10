@@ -23,6 +23,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    loc.initLocale(Localizations.localeOf(context).languageCode);
     return ScrollConfiguration(
       behavior: SimpleScrollBehavior(),
       child: Scaffold(

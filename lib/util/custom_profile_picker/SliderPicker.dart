@@ -162,9 +162,9 @@ class _mSliderState extends State<_mSlider> {
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(' ${_mapValue().toString()}%' +
+          Text(' ${_mapValue().toString()}% ' +
               loc.getText(loc.onDeg) +
-              '${widget.label}°C'),
+              ' ${widget.label}°C'),
           SizedBox(width: 4.0),
           Slider(
             value: this.value,

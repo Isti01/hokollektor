@@ -248,7 +248,7 @@ class TabbedBackdropState extends State<TabbedBackdrop>
               padding:
                   const EdgeInsets.symmetric(horizontal: kFrontHeadingHeight),
               child: TabBar(
-                // isScrollable: true,
+                 isScrollable: true,
                 labelPadding: EdgeInsets.symmetric(horizontal: 52.0),
                 controller: _tabController,
                 tabs: widget.tabs,

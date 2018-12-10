@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    loc.initLocale(Localizations.localeOf(context).languageCode);
     final s = MediaQuery.of(context).size;
     final ratio = s.width / s.height;
     final size = ratio * 350;
