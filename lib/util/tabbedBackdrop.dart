@@ -1,12 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 const double kFrontHeadingHeight = 32.0; // front layer beveled rectangle
 const double _kFrontClosedHeight = 92.0; // front layer height when closed
 const double _kBackAppBarHeight = 48.0; // back layer (options) appbar height
-
 // The size of the front layer heading's left and right beveled corners.
 final Animatable<BorderRadius> _kFrontHeadingRoundRadius = BorderRadiusTween(
   begin: const BorderRadius.only(
@@ -86,8 +84,6 @@ class _CrossFadeTransition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (progress.value < 0 || progress.value > 1)
-      print('value is shit ${progress.value}');
     final double opacity1 = CurvedAnimation(
       parent: ReverseAnimation(progress),
       curve: const Interval(0.5, 1.0),
@@ -97,9 +93,6 @@ class _CrossFadeTransition extends StatelessWidget {
       parent: progress,
       curve: const Interval(0.5, 1.0),
     ).value;
-
-    if (progress.value < 0 || progress.value > 1)
-      print('value is shit ${progress.value}');
 
     if (opacity1 == 0.0) {
       return Opacity(
@@ -232,11 +225,11 @@ class TabbedBackdropState extends State<TabbedBackdrop>
   }
 
   Widget _buildStack(BuildContext context, BoxConstraints constraints) {
-    final bool isLight = widget
-            .backdrops[_tabController.animation.value.round()].backgroundColor
-            .computeLuminance()
-            .round() ==
-        1;
+//    final bool isLight = widget
+//            .backdrops[_tabController.animation.value.round()].backgroundColor
+//            .computeLuminance()
+//            .round() ==
+//        1;
 
     final Animation<RelativeRect> frontRelativeRect =
         _controller.drive(RelativeRectTween(
@@ -248,16 +241,19 @@ class TabbedBackdropState extends State<TabbedBackdrop>
     final List<Widget> layers = <Widget>[
       // Back layer
       Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Align(
             alignment: Alignment.topCenter,
-            child: TabBar(
-              isScrollable: true,
-              labelPadding: EdgeInsets.symmetric(horizontal: 52.0),
-              controller: _tabController,
-              tabs: widget.tabs,
-              indicatorColor: Colors.white,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: kFrontHeadingHeight),
+              child: TabBar(
+                // isScrollable: true,
+                labelPadding: EdgeInsets.symmetric(horizontal: 52.0),
+                controller: _tabController,
+                tabs: widget.tabs,
+                indicatorColor: Colors.white,
+              ),
             ),
           ),
           Expanded(
@@ -322,26 +318,27 @@ class TabbedBackdropState extends State<TabbedBackdrop>
       ),
     ];
 
-    if (isLight) {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-    } else {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-    }
+//    if (isLight) {
+//      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+//    } else {
+//      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+//    }
 
-    return AnimatedTheme(
+    return /*AnimatedTheme(
       data: ThemeData(
         primarySwatch: widget
             .backdrops[_tabController.animation.value.round()].backgroundColor,
       ),
-      child: Container(
-        color: _calculateColor(),
-        child: SafeArea(
-          child: Stack(
-            key: _backdropKey,
-            children: layers,
-          ),
+      child:*/
+        Container(
+      color: _calculateColor(),
+      child: SafeArea(
+        child: Stack(
+          key: _backdropKey,
+          children: layers,
         ),
       ),
+//      ),
     );
   }
 

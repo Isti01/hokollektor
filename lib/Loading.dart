@@ -22,7 +22,7 @@ class CollectorProgressIndicator extends StatefulWidget {
     this.color1,
     this.color2,
     this.onFinished,
-    this.size = 50.0,
+    this.size = 70.0,
     this.elevation = 2.0,
     this.duration = const Duration(seconds: 3),
   }) : super(key: key);

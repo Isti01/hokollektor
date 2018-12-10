@@ -3,6 +3,8 @@ import 'package:hokollektor/util/DateIntervalPicker.dart' as picker;
 import 'package:hokollektor/util/SimpleScrollBehavior.dart';
 
 const int lastDay = 15;
+final DateTime FirstDate = DateTime(2018, 1, 1);
+const Duration maxInterval = Duration(days: 14);
 
 class DatePickerDialog extends StatefulWidget {
   @override
@@ -109,8 +111,9 @@ class DatePickerDialogState extends State<DatePickerDialog> {
               selectedDate2: selectedDate2,
               selectedDate: currentDate,
               onChanged: onDateChanged,
-              firstDate: now.subtract(Duration(days: lastDay)),
+              firstDate: FirstDate,
               lastDate: now,
+              maxInterval: maxInterval,
             ),
           ),
         ],

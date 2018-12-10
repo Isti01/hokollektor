@@ -7,6 +7,8 @@ import 'package:hokollektor/chart/ChartExplanation.dart';
 import 'package:hokollektor/chart/ChartLogic.dart';
 import 'package:hokollektor/util/URLs.dart' as urls;
 
+const reloadAfter = 120;
+
 class KollChart extends StatefulWidget {
   final String url;
   final double height;
@@ -166,7 +168,7 @@ class RealtimeKollChartState extends State<RealtimeKollChart>
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(Duration(seconds: 10), (timer) {
+    timer = Timer.periodic(Duration(seconds: reloadAfter), (timer) {
       if (!firstLaunch) {
         if (loaded) {
           this.setState(() {

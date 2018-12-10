@@ -14,6 +14,7 @@ class CustomProfilePicker extends StatelessWidget {
       alignment: Alignment(0.0, -0.5),
       child: SingleChildScrollView(
         child: Material(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
           child: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),

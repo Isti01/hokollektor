@@ -249,7 +249,7 @@ class DayPicker extends StatelessWidget {
         break;
       }
       if (day < 1) {
-        print([day < 0, day, month, firstDayOffset]);
+        // print([day < 0, day, month, firstDayOffset]);
         if (_isBetween(date1, date2,
             DateTime(year, month, 1).subtract(Duration(hours: 12))))
           labels.add(_outOfMonthSelected(themeData));
@@ -411,7 +411,7 @@ class DayPicker extends StatelessWidget {
         labels.add(_outOfMonthSelected(themeData));
       }
 
-      print('adding placeholders with iteartion $iteration');
+      //print('adding placeholders with iteartion $iteration');
     }
 
     return Column(
@@ -476,10 +476,12 @@ class MonthPicker extends StatefulWidget {
     @required this.onChanged,
     @required this.firstDate,
     @required this.lastDate,
+    @required this.maxInterval,
     this.selectableDayPredicate,
     this.selectedDate2,
   })  : assert(onChanged != null),
         assert(!firstDate.isAfter(lastDate)),
+        assert(maxInterval != null),
         assert(selectedDate == null ||
             selectedDate.isAfter(firstDate) ||
             selectedDate.isAtSameMomentAs(firstDate)),
@@ -500,6 +502,8 @@ class MonthPicker extends StatefulWidget {
 
   /// The earliest date the user is permitted to pick.
   final DateTime firstDate;
+
+  final Duration maxInterval;
 
   /// The latest date the user is permitted to pick.
   final DateTime lastDate;
@@ -591,15 +595,25 @@ class _MonthPickerState extends State<MonthPicker>
 
   Widget _buildItems(BuildContext context, int index) {
     final DateTime month = _addMonthsToMonthDate(widget.firstDate, index);
+
+    DateTime firstDate = widget.firstDate;
+    DateTime lastDate = widget.lastDate;
+
+    if (widget.selectedDate == null || widget.selectedDate2 == null) {
+      final selected = widget.selectedDate ?? widget.selectedDate2;
+
+      firstDate = selected.subtract(widget.maxInterval);
+      lastDate = selected.add(widget.maxInterval);
+    }
+
     return DayPicker(
       key: ValueKey<DateTime>(month),
       selectedDate: widget.selectedDate,
       currentDate: _todayDate,
       onChanged: widget.onChanged,
-      firstDate: widget.firstDate,
-      lastDate: widget.lastDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
       displayedMonth: month,
-      //selectableDayPredicate: widget.selectableDayPredicate,
       selectedDate2: widget.selectedDate2,
     );
   }

@@ -6,6 +6,8 @@ import 'package:hokollektor/util/URLs.dart';
 import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
 
+const reloadAfter = 30;
+
 class ManualProfileBloc extends Bloc<ManualEvent, ManualState> {
   bool completed = false;
   bool tickerCreated = false;
@@ -16,7 +18,7 @@ class ManualProfileBloc extends Bloc<ManualEvent, ManualState> {
     _fetchData();
 
     if (!tickerCreated) {
-      timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      timer = Timer.periodic(Duration(seconds: reloadAfter), (timer) {
         if (completed) {
           _fetchData();
         }
@@ -54,7 +56,8 @@ class ManualProfileBloc extends Bloc<ManualEvent, ManualState> {
         event.enabled,
       );
 
-      var res = await http.get(url);
+      /*    var res = */
+      await http.get(url);
     } catch (e) {
       print(e.toString());
     }

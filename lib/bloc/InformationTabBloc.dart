@@ -6,6 +6,8 @@ import 'package:hokollektor/util/URLs.dart';
 import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
 
+const reloadAfter = 120;
+
 class InformationBloc extends Bloc<InformationEvent, InformationState> {
   bool finished = false;
   bool timerCreated = false;
@@ -23,7 +25,7 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
   InformationState get initialState {
     _fetchData();
     if (!timerCreated) {
-      timer = Timer.periodic(Duration(seconds: 10), (timer) {
+      timer = Timer.periodic(Duration(seconds: reloadAfter), (timer) {
         if (finished) _fetchData();
       });
       timerCreated = true;

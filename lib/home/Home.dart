@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
               frontLayer: HomeFront(
                 bloc: informationBloc,
               ),
-              frontHeading: Text('Configure'),
+              frontHeading: Text('Tap To Configure'),
               backLayer: HomeBackpanel(
                 manualBloc: manualBloc,
                 profileBloc: profileBloc,
@@ -49,7 +49,7 @@ class HomePage extends StatelessWidget {
               frontLayer: ChartFront(
                 bloc: chartBloc,
               ),
-              frontHeading: Text('More Charts'),
+              frontHeading: Text('Tap For More Charts'),
               backLayer: ChartBackpanel(
                 bloc: chartBloc,
                 onReturn: _toggleBackdrop,

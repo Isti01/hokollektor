@@ -38,12 +38,6 @@ class ChartTabBloc extends Bloc<ChartEvent, ChartTabState> {
       print(e);
     }
     if (event is CustomChartTabEvent) {
-      print([
-        event.newChart,
-        event.startDate,
-        event.endDate,
-      ]);
-
       this.initial = charts.custom;
       this.startDate = event.startDate;
       this.endDate = event.endDate;
