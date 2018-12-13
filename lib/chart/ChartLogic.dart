@@ -22,7 +22,7 @@ Future<List<charts.Series<ChartDataPoint, DateTime>>> fetchChartData(
 
   Map<String, dynamic> json = jsonDecode(body);
 
-  final data = _parseData(json);
+  final data = parseChartData(json);
 
   return data;
 }
@@ -43,7 +43,7 @@ class ChartDataPoint {
   }
 }
 
-List<charts.Series<ChartDataPoint, DateTime>> _parseData(
+List<charts.Series<ChartDataPoint, DateTime>> parseChartData(
     Map<String, dynamic> json) {
   List<ChartDataPoint> kinti = [];
   List<ChartDataPoint> benti = [];

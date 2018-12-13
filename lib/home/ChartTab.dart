@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hokollektor/bloc/AppDataBloc.dart';
 import 'package:hokollektor/bloc/ChartTabBloc.dart';
 import 'package:hokollektor/chart/Chart.dart';
 import 'package:hokollektor/chart/datePicker.dart';
@@ -171,10 +172,12 @@ class ChartBackpanel extends StatelessWidget {
 
 class ChartFront extends StatefulWidget {
   final ChartTabBloc bloc;
+  final AppBloc realTimeBloc;
 
   const ChartFront({
     Key key,
     this.bloc,
+    this.realTimeBloc,
   })  : assert(bloc != null),
         super(key: key);
 
@@ -212,8 +215,9 @@ class ChartFrontState extends State<ChartFront> {
     this.title = _getChartTitle(this.chart);
     this.chartWidget = _getChart(
       chart,
-      startDate,
-      endDate,
+      startDate: startDate,
+      endDate: endDate,
+      bloc: widget.realTimeBloc,
     );
   }
 
@@ -259,13 +263,15 @@ class ChartFrontState extends State<ChartFront> {
   }
 
   Widget _getChart(
-    charts chart, [
+    charts chart, {
     int startDate,
     int endDate,
-  ]) {
+    AppBloc bloc,
+  }) {
     switch (chart) {
       case charts.realTime:
         return RealTimeChart(
+          bloc: bloc,
           height: 450.0,
         );
       case charts.hourly:

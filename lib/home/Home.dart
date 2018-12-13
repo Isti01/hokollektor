@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hokollektor/bloc/AppDataBloc.dart';
 import 'package:hokollektor/bloc/ChartTabBloc.dart';
-import 'package:hokollektor/bloc/InformationTabBloc.dart';
-import 'package:hokollektor/bloc/ManualProfileBloc.dart';
-import 'package:hokollektor/bloc/ProfileBloc.dart';
 import 'package:hokollektor/home/ChartTab.dart';
 import 'package:hokollektor/home/HomeTab.dart';
 import 'package:hokollektor/localization.dart' as loc;
@@ -17,9 +15,7 @@ class HomePage extends StatelessWidget {
       GlobalKey(debugLabel: "Backdrop Key In Home");
 
   final ChartTabBloc chartBloc = ChartTabBloc();
-  final InformationBloc informationBloc = InformationBloc();
-  final ManualProfileBloc manualBloc = ManualProfileBloc();
-  final ProfileBloc profileBloc = ProfileBloc();
+  final AppBloc appBloc = AppBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -37,18 +33,18 @@ class HomePage extends StatelessWidget {
             BackdropComponent(
               // frontPadding: 12.0,
               frontLayer: HomeFront(
-                bloc: informationBloc,
+                bloc: appBloc,
               ),
               frontHeading: Text(loc.getText(loc.configureHeader)),
               backLayer: HomeBackpanel(
-                manualBloc: manualBloc,
-                profileBloc: profileBloc,
+                bloc: appBloc,
               ),
               backgroundColor: HomePanelColor,
             ),
             BackdropComponent(
               // frontPadding: 12.0,
               frontLayer: ChartFront(
+                realTimeBloc: appBloc,
                 bloc: chartBloc,
               ),
               frontHeading: Text(loc.getText(loc.chartHeader)),

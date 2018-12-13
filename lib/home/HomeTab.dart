@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hokollektor/bloc/AppDataBloc.dart';
 import 'package:hokollektor/bloc/CustomProfileBloc.dart';
-import 'package:hokollektor/bloc/InformationTabBloc.dart';
-import 'package:hokollektor/bloc/ManualProfileBloc.dart';
-import 'package:hokollektor/bloc/ProfileBloc.dart';
+import 'package:hokollektor/bloc/DataClasses.dart';
 import 'package:hokollektor/chart/Chart.dart';
 import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/custom_profile_picker/CustomProfilePicker.dart';
@@ -14,66 +13,65 @@ const radioActiveColor = Colors.white;
 const progressIndicatorColor = AlwaysStoppedAnimation(Colors.white);
 
 class HomeBackpanel extends StatelessWidget {
-  final ManualProfileBloc manualBloc;
-  final ProfileBloc profileBloc;
+  final AppBloc bloc;
 
-  const HomeBackpanel({Key key, this.manualBloc, this.profileBloc})
-      : super(key: key);
+  const HomeBackpanel({
+    Key key,
+    this.bloc,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
-        BlocBuilder<ProfileEvent, ProfileState>(
-          bloc: profileBloc,
+        BlocBuilder<DataEvent, AppDataState>(
+          bloc: bloc,
           builder: _buildProfile,
         ),
-        BlocBuilder<ManualEvent, ManualState>(
-          bloc: manualBloc,
+        BlocBuilder<DataEvent, AppDataState>(
+          bloc: bloc,
           builder: _buildManual,
         ),
       ],
     );
   }
 
-  Widget _buildManual(BuildContext context, ManualState state) {
+  Widget _buildManual(BuildContext context, AppDataState state) {
     final theme = Theme.of(context);
 
-    if (state.isLoading) return Container();
+    if (state.loading) return Container();
 
-    if (state.hasError)
+    if (state.failed || state.manualData == null)
       return Center(
           child: Text(
-        state.error,
+        state.errorMessage,
         style: theme.textTheme.title.copyWith(color: fontColor),
       ));
 
-    return state.rpm1 != null
+    final data = state.manualData;
+
+    return data.rpm2 != null
         ? _buildCategoryTile(
             theme: theme,
             title: loc.getText(loc.manualConf),
             children: [
               ManualSlider(
                 sliderLabel: loc.getText(loc.vent0),
-                initialValue: state.rpm0,
-                onChanged: (value) => manualBloc.dispatch(
-                      ManualEvent(
-                        enabled: state.enabled,
-                        rpm0: value,
-                        rpm1: state.rpm1,
-                      ),
-                    ),
+                initialValue: data.rpm1,
+                onChanged: (value) => bloc.uploadData(Rpm(
+                      enabled: data.enabled,
+                      rpm1: value,
+                      rpm2: data.rpm2,
+                    )),
               ),
               ManualSlider(
                 sliderLabel: loc.getText(loc.vent1),
-                initialValue: state.rpm1,
-                onChanged: (value) => manualBloc.dispatch(
-                      ManualEvent(
-                        enabled: state.enabled,
-                        rpm0: state.rpm0,
-                        rpm1: value,
-                      ),
-                    ),
+                initialValue: data.rpm2,
+                onChanged: (value) => bloc.uploadData(Rpm(
+                      enabled: data.enabled,
+                      rpm1: data.rpm1,
+                      rpm2: value,
+                    )),
               ),
             ],
           )
@@ -81,28 +79,32 @@ class HomeBackpanel extends StatelessWidget {
   }
 
   void _customProfileTileClicked(
-      profileState value, context, ProfileState state) async {
-    final CustomProfileBloc bloc = CustomProfileBloc();
+      profileState value, context, AppDataState state) async {
+    final CustomProfileBloc customProfileBloc = CustomProfileBloc();
+
+    final data = state.profileData;
 
     final result = await showDialog(
       context: context,
-      builder: (context) => CustomProfilePicker(bloc: bloc),
+      builder: (context) => CustomProfilePicker(bloc: customProfileBloc),
     );
 
-    bloc.dispose();
+    customProfileBloc.dispose();
     if (result != null && result) {
-      if (value != state.state) {
-        profileBloc.dispatch(ProfileEvent(newState: value));
+      if (value != data) {
+        bloc.uploadData(value);
       }
     }
   }
 
-  Widget _buildProfile(BuildContext context, ProfileState state) {
+  Widget _buildProfile(BuildContext context, AppDataState state) {
     final theme = Theme.of(context);
 
-    bool error = !state.isLoading && state.state?.index == null;
+    final data = state.profileData;
 
-    if (state.isLoading)
+    bool error = !state.loading && data?.index == null;
+
+    if (state.loading)
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -112,11 +114,14 @@ class HomeBackpanel extends StatelessWidget {
         ),
       );
 
-    if (state.hasError || error)
+    if (state.failed || error)
       return Align(
         alignment: Alignment.topCenter,
         child: InkWell(
-          onTap: () => profileBloc.initialState,
+          onTap: () {
+            bloc.loaded = false;
+            bloc.initialState;
+          },
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Text(
@@ -177,19 +182,19 @@ class HomeBackpanel extends StatelessWidget {
     String text,
     profileState value,
     TextTheme theme,
-    ProfileState state, [
+    AppDataState state, [
     Function(profileState value) onChanged,
   ]) {
     return RadioListTile<profileState>(
       activeColor: radioActiveColor,
       title: Text(text, style: theme.title.copyWith(color: fontColor)),
       value: value,
-      groupValue: state.state,
+      groupValue: state.profileData,
       onChanged: (profileState value) {
         if (onChanged != null) {
           onChanged(value);
         } else {
-          profileBloc.dispatch(ProfileEvent(newState: value));
+          bloc.uploadData(value);
         }
       },
     );
@@ -197,7 +202,7 @@ class HomeBackpanel extends StatelessWidget {
 }
 
 class HomeFront extends StatelessWidget {
-  final InformationBloc bloc;
+  final AppBloc bloc;
 
   const HomeFront({Key key, this.bloc}) : super(key: key);
 
@@ -214,6 +219,7 @@ class HomeFront extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(4.0),
             child: RealTimeChart(
+              bloc: bloc,
               height: 400.0,
             ),
           ),
@@ -224,23 +230,23 @@ class HomeFront extends StatelessWidget {
 }
 
 class InformationCards extends StatelessWidget {
-  final InformationBloc bloc;
+  final AppBloc bloc;
 
   const InformationCards({Key key, this.bloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<InformationEvent, InformationState>(
+    return BlocBuilder<DataEvent, AppDataState>(
       bloc: bloc,
       builder: _buildCards,
     );
   }
 
-  Widget _buildCards(BuildContext context, InformationState state) {
+  Widget _buildCards(BuildContext context, AppDataState state) {
     final theme = Theme.of(context);
 
-    if (!state.hasError && !state.isLoading && state.data != null) {
-      InformationHolder data = state.data;
+    if (!state.failed && !state.loading && state.tempData != null) {
+      InformationHolder data = state.tempData;
 
       return Card(
         elevation: 0.0,
@@ -300,7 +306,7 @@ class InformationCards extends StatelessWidget {
           ],
         ),
       );
-    } else if (state.isLoading) {
+    } else if (state.loading) {
       return Center(
           child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
