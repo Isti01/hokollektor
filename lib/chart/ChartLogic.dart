@@ -6,6 +6,11 @@ import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
 
+const tempBent = 'bnt';
+const tempKint = 'knt';
+const tempKoll = 'kll';
+const datum = 'dt';
+
 final List<Color> chartColors = [
   charts.MaterialPalette.red.shadeDefault,
   charts.MaterialPalette.blue.shadeDefault,
@@ -20,7 +25,7 @@ Future<List<charts.Series<ChartDataPoint, DateTime>>> fetchChartData(
 
   String body = connection.body;
 
-  Map<String, dynamic> json = jsonDecode(body);
+  final json = jsonDecode(body);
 
   final data = parseChartData(json);
 
@@ -35,7 +40,7 @@ class ChartDataPoint {
 
   factory ChartDataPoint.fromJson(Map<String, dynamic> json, String key) {
     return ChartDataPoint(
-      date: DateTime.parse(json['datum']),
+      date: DateTime.parse(json[datum]),
       value: json[key] is double
           ? json[key]
           : json[key] is num ? json[key].toDouble() : double.parse(json[key]),
@@ -43,17 +48,16 @@ class ChartDataPoint {
   }
 }
 
-List<charts.Series<ChartDataPoint, DateTime>> parseChartData(
-    Map<String, dynamic> json) {
+List<charts.Series<ChartDataPoint, DateTime>> parseChartData(json) {
   List<ChartDataPoint> kinti = [];
   List<ChartDataPoint> benti = [];
   List<ChartDataPoint> koll = [];
 
   try {
-    for (Map<String, dynamic> subJson in json['adatokkollektor']) {
-      kinti.add(ChartDataPoint.fromJson(subJson, 'tempKinti'));
-      benti.add(ChartDataPoint.fromJson(subJson, 'tempBent'));
-      koll.add(ChartDataPoint.fromJson(subJson, 'tempKoll'));
+    for (var subJson in json['adatokkollektor']) {
+      kinti.add(ChartDataPoint.fromJson(subJson, tempKint));
+      benti.add(ChartDataPoint.fromJson(subJson, tempBent));
+      koll.add(ChartDataPoint.fromJson(subJson, tempKoll));
     }
 
     final result = [
