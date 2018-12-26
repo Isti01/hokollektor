@@ -48,14 +48,14 @@ class DatePickerDialogState extends State<DatePickerDialog> {
                     child: Text(loc.getText(loc.cancel)),
                     borderSide:
                         BorderSide(color: Theme.of(context).primaryColor),
-                    shape: RoundedRectangleBorder(
+                    shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12.0)),
                     ),
                     textColor: Theme.of(context).primaryColor,
                     onPressed: () => Navigator.pop(context)),
                 RaisedButton(
                   child: Text(loc.getText(loc.save)),
-                  shape: RoundedRectangleBorder(
+                  shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(12.0)),
                   ),
                   textColor: Colors.white,

@@ -9,7 +9,8 @@ void initLocale(String loc) {
   }
 }
 
-String getText(String textKey) => localizedTexts[locale][textKey];
+String getText(String textKey) =>
+    localizedTexts[locale][textKey] ?? "_nincs ilyen string_";
 
 const localizations = [
   "hu",
@@ -170,3 +171,57 @@ const fetchFailed = "fetchFailed",
     pickInterval = "pickInterval",
     failedToLoadChart = "failedToLoadChart",
     invalidPassword = "invalidPassword";
+
+bool test(String locale) {
+  if (!localizations.contains(locale)) return false;
+
+  if (localizedTexts[locale][fetchFailed] == null) return false;
+  if (localizedTexts[locale][invalidUsername] == null) return false;
+  if (localizedTexts[locale][noInternet] == null) return false;
+  if (localizedTexts[locale][connectionError] == null) return false;
+  if (localizedTexts[locale][correctPass] == null) return false;
+  if (localizedTexts[locale][tempKoll] == null) return false;
+  if (localizedTexts[locale][tempOutside] == null) return false;
+  if (localizedTexts[locale][tempInside] == null) return false;
+  if (localizedTexts[locale][koll] == null) return false;
+  if (localizedTexts[locale][outside] == null) return false;
+  if (localizedTexts[locale][inside] == null) return false;
+  if (localizedTexts[locale][cancel] == null) return false;
+  if (localizedTexts[locale][save] == null) return false;
+  if (localizedTexts[locale][home] == null) return false;
+  if (localizedTexts[locale][charts] == null) return false;
+  if (localizedTexts[locale][minTemp] == null) return false;
+  if (localizedTexts[locale][maxTemp] == null) return false;
+  if (localizedTexts[locale][stayLoggedIn] == null) return false;
+  if (localizedTexts[locale][tapToReload] == null) return false;
+  if (localizedTexts[locale][configureHeader] == null) return false;
+  if (localizedTexts[locale][chartHeader] == null) return false;
+  if (localizedTexts[locale][weeklyChart] == null) return false;
+  if (localizedTexts[locale][dailyChart] == null) return false;
+  if (localizedTexts[locale][hourlyChart] == null) return false;
+  if (localizedTexts[locale][realtimeChart] == null) return false;
+  if (localizedTexts[locale][customChart] == null) return false;
+  if (localizedTexts[locale][profiles] == null) return false;
+  if (localizedTexts[locale][optimal] == null) return false;
+  if (localizedTexts[locale][minimal] == null) return false;
+  if (localizedTexts[locale][maximal] == null) return false;
+  if (localizedTexts[locale][manualConf] == null) return false;
+  if (localizedTexts[locale][vent0] == null) return false;
+  if (localizedTexts[locale][vent1] == null) return false;
+  if (localizedTexts[locale][manual] == null) return false;
+  if (localizedTexts[locale][expanded] == null) return false;
+  if (localizedTexts[locale][simplified] == null) return false;
+  if (localizedTexts[locale][onDeg] == null) return false;
+  if (localizedTexts[locale][custom] == null) return false;
+  if (localizedTexts[locale][house] == null) return false;
+  if (localizedTexts[locale][noTextAdded] == null) return false;
+  if (localizedTexts[locale][user] == null) return false;
+  if (localizedTexts[locale][pass] == null) return false;
+  if (localizedTexts[locale][invalidUserInfo] == null) return false;
+  if (localizedTexts[locale][login] == null) return false;
+  if (localizedTexts[locale][pickInterval] == null) return false;
+  if (localizedTexts[locale][failedToLoadChart] == null) return false;
+  if (localizedTexts[locale][invalidPassword] == null) return false;
+
+  return false;
+}

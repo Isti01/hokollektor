@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hokollektor/localization.dart' as loc;
 
 class ChartExplanation extends StatelessWidget {
+  final collectorText = loc.getText(loc.tempKoll);
+  final outsideText = loc.getText(loc.tempOutside);
+  final insideText = loc.getText(loc.tempInside);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -10,9 +14,9 @@ class ChartExplanation extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildLine(Color(0xFFF44336), loc.getText(loc.tempKoll)),
-          _buildLine(Color(0xff2196f3), loc.getText(loc.tempOutside)),
-          _buildLine(Color(0xffffeb3b), loc.getText(loc.tempInside)),
+          _buildLine(const Color(0xFFF44336), collectorText),
+          _buildLine(const Color(0xff2196f3), outsideText),
+          _buildLine(const Color(0xffffeb3b), insideText),
         ],
       ),
     );

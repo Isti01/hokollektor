@@ -39,7 +39,7 @@ class HomeBackpanel extends StatelessWidget {
   Widget _buildManual(BuildContext context, AppDataState state) {
     final theme = Theme.of(context);
 
-    if (state.loading) return Container();
+    if (state.loading) return const SizedBox();
 
     if (state.failed || state.manualData == null)
       return Center(
@@ -75,7 +75,7 @@ class HomeBackpanel extends StatelessWidget {
               ),
             ],
           )
-        : Container();
+        : const SizedBox();
   }
 
   void _customProfileTileClicked(
@@ -105,9 +105,9 @@ class HomeBackpanel extends StatelessWidget {
     bool error = !state.loading && data?.index == null;
 
     if (state.loading)
-      return Center(
+      return const Center(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(8.0),
           child: CircularProgressIndicator(
             valueColor: progressIndicatorColor,
           ),
@@ -210,7 +210,7 @@ class HomeFront extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        SizedBox(height: kFrontHeadingHeight),
+        const SizedBox(height: kFrontHeadingHeight),
         InformationCards(
           bloc: bloc,
         ),
@@ -261,14 +261,14 @@ class InformationCards extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(loc.getText(loc.koll), style: theme.textTheme.title),
-                  SizedBox(
+                  const SizedBox(
                     height: 8.0,
                   ),
                   Text(
                     loc.getText(loc.minTemp) + '${data.legkisebbKoll}°C',
                     style: theme.textTheme.subhead.copyWith(),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 4.0,
                   ),
                   Text(
@@ -286,14 +286,14 @@ class InformationCards extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(loc.getText(loc.house), style: theme.textTheme.title),
-                  SizedBox(
+                  const SizedBox(
                     height: 8.0,
                   ),
                   Text(
                     loc.getText(loc.minTemp) + '${data.legkisebbBenti}°C',
                     style: theme.textTheme.subhead.copyWith(),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 4.0,
                   ),
                   Text(
@@ -307,9 +307,9 @@ class InformationCards extends StatelessWidget {
         ),
       );
     } else if (state.loading) {
-      return Center(
+      return const Center(
           child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        padding: EdgeInsets.symmetric(vertical: 16.0),
         child: CircularProgressIndicator(),
       ));
     } else {

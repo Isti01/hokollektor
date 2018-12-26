@@ -28,41 +28,38 @@ class ChartBackpanel extends StatelessWidget {
   }
 
   Widget _build(BuildContext context, ChartTabState state) {
-    return ListView(
-      children: [
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildEntry(
-                  charts.weekly, loc.getText(loc.weeklyChart), context, state),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildEntry(
-                  charts.daily, loc.getText(loc.dailyChart), context, state),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildEntry(
-                  charts.hourly, loc.getText(loc.hourlyChart), context, state),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildEntry(charts.realTime,
-                  loc.getText(loc.realtimeChart), context, state),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildEntry(
-                  charts.custom, loc.getText(loc.customChart), context, state),
-            ),
-          ],
-        )
+    return SingleChildScrollView(
+        child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: _buildEntry(
+              charts.weekly, loc.getText(loc.weeklyChart), context, state),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: _buildEntry(
+              charts.daily, loc.getText(loc.dailyChart), context, state),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: _buildEntry(
+              charts.hourly, loc.getText(loc.hourlyChart), context, state),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: _buildEntry(
+              charts.realTime, loc.getText(loc.realtimeChart), context, state),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: _buildEntry(
+              charts.custom, loc.getText(loc.customChart), context, state),
+        ),
       ],
-    );
+    ));
   }
 
   Widget _buildEntry(
@@ -155,7 +152,7 @@ class ChartBackpanel extends StatelessWidget {
       disabledElevation: 0.0,
       shape: RoundedRectangleBorder(
           side: BorderSide(color: color, width: 2.0),
-          borderRadius: BorderRadius.all(Radius.circular(12.0))),
+          borderRadius: const BorderRadius.all(Radius.circular(12.0))),
       color: Colors.transparent,
       onPressed: onPressed,
       child: Padding(
@@ -233,7 +230,7 @@ class ChartFrontState extends State<ChartFront> {
         right: 16.0,
       ),
       child: ListView(children: [
-        SizedBox(height: kFrontHeadingHeight),
+        const SizedBox(height: kFrontHeadingHeight),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
@@ -294,6 +291,6 @@ class ChartFrontState extends State<ChartFront> {
         );
         break;
     }
-    return Container();
+    return const SizedBox();
   }
 }

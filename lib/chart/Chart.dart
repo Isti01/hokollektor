@@ -16,6 +16,7 @@ class KollChart extends StatefulWidget {
   final double height;
   final bool animate;
   final bool clickable;
+  final chartExplanation = ChartExplanation();
 
   KollChart({
     @required this.url,
@@ -84,7 +85,7 @@ class KollChartState extends State<KollChart>
             height: widget.height,
             child: _buildChart(context, snapshot),
           ),
-          loaded ? ChartExplanation() : Container(),
+          loaded ? widget.chartExplanation : const SizedBox(),
         ],
       ),
     );
@@ -106,14 +107,14 @@ class KollChartState extends State<KollChart>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.error),
+              const Icon(Icons.error),
               Text(loc.getText(loc.failedToLoadChart)),
             ],
           ),
         ),
       );
     } else
-      return Center(
+      return const Center(
         child: CollectorProgressIndicator(),
       );
   }
@@ -127,6 +128,7 @@ class PreloadedKollChart extends StatefulWidget {
   final double height;
   final bool animate;
   final bool clickable;
+  final chartExplanation = ChartExplanation();
 
   PreloadedKollChart({
     @required this.bloc,
@@ -183,7 +185,7 @@ class PreloadedKollChartState extends State<PreloadedKollChart>
             height: widget.height,
             child: _buildChart(context, snapshot),
           ),
-          loaded ? ChartExplanation() : Container(),
+          loaded ? widget.chartExplanation : const SizedBox(),
         ],
       ),
     );
@@ -205,14 +207,14 @@ class PreloadedKollChartState extends State<PreloadedKollChart>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.error),
+              const Icon(Icons.error),
               Text(loc.getText(loc.failedToLoadChart)),
             ],
           ),
         ),
       );
     } else
-      return Center(
+      return const Center(
         child: CollectorProgressIndicator(),
       );
   }
