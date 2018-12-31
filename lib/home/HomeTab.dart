@@ -11,6 +11,8 @@ import 'package:hokollektor/util/tabbedBackdrop.dart';
 const fontColor = Colors.white;
 const radioActiveColor = Colors.white;
 const progressIndicatorColor = AlwaysStoppedAnimation(Colors.white);
+const backpanelIndicator =
+    CircularProgressIndicator(valueColor: progressIndicatorColor);
 
 class HomeBackpanel extends StatelessWidget {
   final AppBloc bloc;
@@ -23,6 +25,7 @@ class HomeBackpanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      physics: BouncingScrollPhysics(),
       children: <Widget>[
         BlocBuilder<DataEvent, AppDataState>(
           bloc: bloc,
@@ -39,14 +42,30 @@ class HomeBackpanel extends StatelessWidget {
   Widget _buildManual(BuildContext context, AppDataState state) {
     final theme = Theme.of(context);
 
-    if (state.loading) return const SizedBox();
-
-    if (state.failed || state.manualData == null)
-      return Center(
-          child: Text(
-        state.errorMessage,
-        style: theme.textTheme.title.copyWith(color: fontColor),
-      ));
+    if (state.manualData == null) {
+      if (state.loading && state.profileLoaded)
+        return const Center(child: backpanelIndicator);
+      else if (state.loading) return const SizedBox();
+    }
+    if ((state.manualFailed || state.manualData == null) &&
+        !state.profileFailed)
+      return Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: bloc.reload,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Text(
+                loc.getText(loc.tapToReload),
+                style: theme.textTheme.title.copyWith(color: fontColor),
+              ),
+            ),
+          ),
+        ),
+      );
+    else if (state.manualFailed || state.manualData == null)
+      return const SizedBox();
 
     final data = state.manualData;
 
@@ -104,29 +123,26 @@ class HomeBackpanel extends StatelessWidget {
 
     bool error = !state.loading && data?.index == null;
 
-    if (state.loading)
+    if (state.loading && state.profileData == null)
       return const Center(
         child: Padding(
           padding: EdgeInsets.all(8.0),
-          child: CircularProgressIndicator(
-            valueColor: progressIndicatorColor,
-          ),
+          child: backpanelIndicator,
         ),
       );
 
-    if (state.failed || error)
-      return Align(
-        alignment: Alignment.topCenter,
+    if (state.profileFailed || error)
+      return Material(
+        type: MaterialType.transparency,
         child: InkWell(
-          onTap: () {
-            bloc.loaded = false;
-            bloc.initialState;
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Text(
-              loc.getText(loc.tapToReload),
-              style: theme.textTheme.title.copyWith(color: fontColor),
+          onTap: bloc.reload,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Text(
+                loc.getText(loc.tapToReload),
+                style: theme.textTheme.title.copyWith(color: fontColor),
+              ),
             ),
           ),
         ),
@@ -203,25 +219,31 @@ class HomeBackpanel extends StatelessWidget {
 
 class HomeFront extends StatelessWidget {
   final AppBloc bloc;
+  final title = loc.getText(loc.realtimeChart);
 
-  const HomeFront({Key key, this.bloc}) : super(key: key);
+  HomeFront({Key key, this.bloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView(
+      physics: const BouncingScrollPhysics(),
       children: [
         const SizedBox(height: kFrontHeadingHeight),
         InformationCards(
           bloc: bloc,
         ),
-        Card(
-          elevation: 0.0,
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: RealTimeChart(
-              bloc: bloc,
-              height: 400.0,
-            ),
+        Divider(),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RealTimeChart(
+                bloc: bloc,
+                height: 450.0,
+                title: loc.getText(loc.realtimeChart),
+              ),
+            ],
           ),
         ),
       ],
@@ -245,66 +267,63 @@ class InformationCards extends StatelessWidget {
   Widget _buildCards(BuildContext context, AppDataState state) {
     final theme = Theme.of(context);
 
-    if (!state.failed && !state.loading && state.tempData != null) {
+    if (state.tempData != null) {
       InformationHolder data = state.tempData;
 
-      return Card(
-        elevation: 0.0,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(loc.getText(loc.koll), style: theme.textTheme.title),
-                  const SizedBox(
-                    height: 8.0,
-                  ),
-                  Text(
-                    loc.getText(loc.minTemp) + '${data.legkisebbKoll}°C',
-                    style: theme.textTheme.subhead.copyWith(),
-                  ),
-                  const SizedBox(
-                    height: 4.0,
-                  ),
-                  Text(
-                    loc.getText(loc.maxTemp) + '${data.legnagyobbKoll}°C',
-                    style: theme.textTheme.subhead.copyWith(),
-                  ),
-                ],
-              ),
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(loc.getText(loc.koll), style: theme.textTheme.title),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                Text(
+                  loc.getText(loc.minTemp) + '${data.legkisebbKoll}°C',
+                  style: theme.textTheme.subhead.copyWith(),
+                ),
+                const SizedBox(
+                  height: 4.0,
+                ),
+                Text(
+                  loc.getText(loc.maxTemp) + '${data.legnagyobbKoll}°C',
+                  style: theme.textTheme.subhead.copyWith(),
+                ),
+              ],
             ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(loc.getText(loc.house), style: theme.textTheme.title),
-                  const SizedBox(
-                    height: 8.0,
-                  ),
-                  Text(
-                    loc.getText(loc.minTemp) + '${data.legkisebbBenti}°C',
-                    style: theme.textTheme.subhead.copyWith(),
-                  ),
-                  const SizedBox(
-                    height: 4.0,
-                  ),
-                  Text(
-                    loc.getText(loc.maxTemp) + '${data.legnagyobbBenti}°C',
-                    style: theme.textTheme.subhead.copyWith(),
-                  ),
-                ],
-              ),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(loc.getText(loc.house), style: theme.textTheme.title),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                Text(
+                  loc.getText(loc.minTemp) + '${data.legkisebbBenti}°C',
+                  style: theme.textTheme.subhead.copyWith(),
+                ),
+                const SizedBox(
+                  height: 4.0,
+                ),
+                Text(
+                  loc.getText(loc.maxTemp) + '${data.legnagyobbBenti}°C',
+                  style: theme.textTheme.subhead.copyWith(),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       );
     } else if (state.loading) {
       return const Center(
@@ -316,7 +335,7 @@ class InformationCards extends StatelessWidget {
       return Card(
         elevation: 0.0,
         child: InkWell(
-          onTap: () => bloc.initialState,
+          onTap: bloc.reload,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,

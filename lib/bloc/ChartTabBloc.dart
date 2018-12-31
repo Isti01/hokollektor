@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:hokollektor/chart/Chart.dart';
 
-final initialChart = charts.weekly;
+final initialChart = Charts.weekly;
 final initialChartWidget = OneWeekChart();
 
-enum charts {
+enum Charts {
   daily,
   weekly,
   hourly,
@@ -13,7 +13,7 @@ enum charts {
 }
 
 class ChartTabBloc extends Bloc<ChartEvent, ChartTabState> {
-  charts initial = initialChart;
+  Charts initial = initialChart;
   int startDate;
   int endDate;
 
@@ -31,14 +31,14 @@ class ChartTabBloc extends Bloc<ChartEvent, ChartTabState> {
       ChartTabState state, ChartEvent event) async* {
     try {
       if (event == null) {
-        this.initial = charts.weekly;
-        yield ChartTabState(charts.weekly);
+        this.initial = Charts.weekly;
+        yield ChartTabState(Charts.weekly);
       }
     } catch (e) {
       print(e);
     }
     if (event is CustomChartTabEvent) {
-      this.initial = charts.custom;
+      this.initial = Charts.custom;
       this.startDate = event.startDate;
       this.endDate = event.endDate;
       yield ChartTabState(
@@ -65,14 +65,14 @@ class ChartTabBloc extends Bloc<ChartEvent, ChartTabState> {
 abstract class ChartEvent {}
 
 class ChartTabEvent extends ChartEvent {
-  final charts newChart;
+  final Charts newChart;
 
   ChartTabEvent(this.newChart);
 }
 
 class CustomChartTabEvent extends ChartEvent {
   final int startDate, endDate;
-  final charts newChart;
+  final Charts newChart;
 
   CustomChartTabEvent(
     this.newChart,
@@ -82,12 +82,12 @@ class CustomChartTabEvent extends ChartEvent {
 }
 
 class ChartTabState {
-  final charts chart;
+  final Charts chart;
   final int startDate, endDate;
 
   ChartTabState(
     this.chart, {
     this.startDate,
     this.endDate,
-  }) : assert(chart != charts.custom || (startDate != null && endDate != null));
+  }) : assert(chart != Charts.custom || (startDate != null && endDate != null));
 }

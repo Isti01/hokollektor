@@ -597,7 +597,7 @@ class _MonthPickerState extends State<MonthPicker>
     final DateTime month = _addMonthsToMonthDate(widget.firstDate, index);
 
     DateTime firstDate = widget.firstDate;
-    DateTime lastDate = widget.lastDate;
+    DateTime lastDate;
 
     if (widget.selectedDate == null || widget.selectedDate2 == null) {
       final selected = widget.selectedDate ?? widget.selectedDate2;
@@ -605,6 +605,8 @@ class _MonthPickerState extends State<MonthPicker>
       firstDate = selected.subtract(widget.maxInterval);
       lastDate = selected.add(widget.maxInterval);
     }
+    if (lastDate == null || widget.lastDate.isBefore(lastDate))
+      lastDate = widget.lastDate;
 
     return DayPicker(
       key: ValueKey<DateTime>(month),

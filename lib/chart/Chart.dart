@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hokollektor/Loading.dart';
 import 'package:hokollektor/bloc/AppDataBloc.dart';
 import 'package:hokollektor/bloc/DataClasses.dart';
 import 'package:hokollektor/chart/ChartExplanation.dart';
@@ -19,11 +18,12 @@ class KollChart extends StatefulWidget {
   final chartExplanation = ChartExplanation();
 
   KollChart({
+    Key key,
     @required this.url,
     this.animate = true,
     this.height = 300.0,
     this.clickable = false,
-  });
+  }) : super(key: key);
 
   @override
   KollChartState createState() {
@@ -34,7 +34,6 @@ class KollChart extends StatefulWidget {
 class KollChartState extends State<KollChart>
     with AutomaticKeepAliveClientMixin {
   bool reloading = false;
-  bool disposed = false;
 
   Future<List<charts.Series<ChartDataPoint, DateTime>>> _fetch() async {
     var data;
@@ -50,7 +49,6 @@ class KollChartState extends State<KollChart>
 
   @override
   void dispose() {
-    disposed = true;
     super.dispose();
   }
 
@@ -76,7 +74,7 @@ class KollChartState extends State<KollChart>
   Widget _build(BuildContext context, AsyncSnapshot snapshot) {
     bool loaded = !snapshot.hasError && snapshot.hasData;
     return AbsorbPointer(
-      absorbing: !loaded || !widget.clickable,
+      absorbing: (!loaded || !widget.clickable) && !snapshot.hasError,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -92,31 +90,32 @@ class KollChartState extends State<KollChart>
   }
 
   Widget _buildChart(BuildContext context, AsyncSnapshot snapshot) {
-    if (snapshot.hasData) {
+    if (snapshot.hasData && !reloading) {
       return charts.TimeSeriesChart(
         snapshot.data,
         animate: _animate,
         dateTimeFactory: const charts.LocalDateTimeFactory(),
       );
     } else if (snapshot.hasError && !reloading) {
-      return Center(
+      return Material(
+        type: MaterialType.transparency,
         child: InkWell(
           onTap: () => this.setState(() {
                 reloading = true;
               }),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.error),
-              Text(loc.getText(loc.failedToLoadChart)),
-            ],
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.error),
+                Text(loc.getText(loc.failedToLoadChart)),
+              ],
+            ),
           ),
         ),
       );
     } else
-      return const Center(
-        child: CollectorProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
   }
 
   @override
@@ -129,12 +128,14 @@ class PreloadedKollChart extends StatefulWidget {
   final bool animate;
   final bool clickable;
   final chartExplanation = ChartExplanation();
+  final title;
 
   PreloadedKollChart({
     @required this.bloc,
     this.animate = true,
     this.height = 300.0,
     this.clickable = false,
+    this.title,
   });
 
   @override
@@ -145,12 +146,8 @@ class PreloadedKollChart extends StatefulWidget {
 
 class PreloadedKollChartState extends State<PreloadedKollChart>
     with AutomaticKeepAliveClientMixin {
-  bool reloading = false;
-  bool disposed = false;
-
   @override
   void dispose() {
-    disposed = true;
     super.dispose();
   }
 
@@ -176,11 +173,24 @@ class PreloadedKollChartState extends State<PreloadedKollChart>
   Widget _build(BuildContext context, AppDataState snapshot) {
     bool loaded = !snapshot.loading && snapshot.kollData != null;
     return AbsorbPointer(
-      absorbing: !loaded || !widget.clickable,
+      absorbing: (!loaded || !widget.clickable) && !snapshot.kollFailed,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          widget.title != null && snapshot.kollData != null
+              ? Padding(
+                  padding: const EdgeInsets.only(
+                    left: 8.0,
+                    right: 8.0,
+                    bottom: 8.0,
+                  ),
+                  child: Text(
+                    widget.title,
+                    style: Theme.of(context).textTheme.title,
+                  ),
+                )
+              : const SizedBox(),
           SizedBox(
             height: widget.height,
             child: _buildChart(context, snapshot),
@@ -198,25 +208,33 @@ class PreloadedKollChartState extends State<PreloadedKollChart>
         animate: _animate,
         dateTimeFactory: const charts.LocalDateTimeFactory(),
       );
-    } else if (snapshot.failed && !reloading) {
-      return Center(
-        child: InkWell(
-          onTap: () => this.setState(() {
-                reloading = true;
-              }),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.error),
-              Text(loc.getText(loc.failedToLoadChart)),
-            ],
+    } else if (snapshot.kollFailed && !snapshot.tempFailed) {
+      return Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Material(
+              child: InkWell(
+                onTap: () => widget.bloc.reload(),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.error),
+                      Text(loc.getText(loc.failedToLoadChart)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
-        ),
+          Spacer(),
+        ],
       );
-    } else
-      return const Center(
-        child: CollectorProgressIndicator(),
-      );
+    } else if (snapshot.loading && snapshot.tempLoaded)
+      return const Center(child: CircularProgressIndicator());
+    else
+      return const SizedBox();
   }
 
   @override
@@ -227,42 +245,30 @@ class RealTimeChart extends PreloadedKollChart {
   RealTimeChart({
     @required AppBloc bloc,
     double height,
-  }) : super(
-          height: height,
-          bloc: bloc,
-        );
+    String title,
+  }) : super(height: height, bloc: bloc, title: title);
 }
 
 class OneDayChart extends KollChart {
-  OneDayChart({double height})
-      : super(
-          height: height,
-          url: urls.OneDayChartURL,
-        );
+  OneDayChart({double height, Key key})
+      : super(height: height, url: urls.OneDayChartURL, key: key);
 }
 
 class OneWeekChart extends KollChart {
-  OneWeekChart({double height})
-      : super(
-          height: height,
-          url: urls.OneWeekChartURL,
-        );
+  OneWeekChart({double height, Key key})
+      : super(height: height, url: urls.OneWeekChartURL, key: key);
 }
 
 class OneHourChart extends KollChart {
-  OneHourChart({double height})
-      : super(
-          height: height,
-          url: urls.OneHourChartURL,
-        );
+  OneHourChart({double height, Key key})
+      : super(height: height, url: urls.OneHourChartURL, key: key);
 }
 
 class CustomChart extends KollChart {
-  CustomChart({
-    double height,
-    int startDate,
-    int endDate,
-  }) : super(
-            height: height,
-            url: urls.CustomChartURL + '?ki=$startDate&vi=$endDate');
+  CustomChart({double height, int startDate, int endDate, Key key})
+      : super(
+          key: key,
+          height: height,
+          url: urls.CustomChartURL + '?ki=$startDate&vi=$endDate',
+        );
 }

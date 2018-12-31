@@ -38,20 +38,49 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
     );
   }
 
+  void reload() {
+    if (!fetching) {
+      _fetchData();
+    }
+
+    dispatch(DataUpdateEvent(
+      profileData: profileData,
+      kollData: kollData,
+      tempData: tempData,
+      manualData: manualData,
+      reload: true,
+    ));
+  }
+
   @override
   Stream<AppDataState> mapEventToState(
       AppDataState state, DataEvent event) async* {
     if (event is DataUpdateEvent) {
       yield AppDataState(
+        loading: event.reload,
         profileData: event.profileData ?? profileData,
         tempData: event.tempData ?? tempData,
         manualData: event.manualData ?? manualData,
         kollData: event.kollData ?? kollData,
+        profileLoaded: (event.profileData ?? profileData) != null,
+        tempLoaded: (event.tempData ?? tempData) != null,
       );
     }
 
     if (event is DataErrorEvent) {
-      yield AppDataState.error(event.message ?? '');
+      yield AppDataState(
+        profileData: profileData,
+        tempData: tempData,
+        manualData: manualData,
+        kollData: kollData,
+        kollFailed: kollData == null,
+        manualFailed: manualData == null,
+        tempFailed: tempData == null,
+        profileFailed: profileData == null,
+        errorMessage: event.message ?? '',
+        profileLoaded: profileData != null,
+        tempLoaded: tempData != null,
+      );
     }
   }
 

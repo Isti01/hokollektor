@@ -53,7 +53,7 @@ class CustomProfilePicker extends StatelessWidget {
                 bloc.dispatch(SizeChangedEvent(value));
             }),
         state.loading
-            ? CircularProgressIndicator()
+            ? CircularProgressIndicator
             : state.expanded
                 ? ExpandedSliderPicker(
                     values: state.values,

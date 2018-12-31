@@ -7,6 +7,7 @@ abstract class DataEvent {
 }
 
 class DataUpdateEvent extends DataEvent {
+  final reload;
   final InformationHolder tempData;
   final List<charts.Series<ChartDataPoint, DateTime>> kollData;
   final profileState profileData;
@@ -17,6 +18,7 @@ class DataUpdateEvent extends DataEvent {
     this.tempData,
     this.kollData,
     this.profileData,
+    this.reload = false,
   });
 }
 
@@ -27,7 +29,8 @@ class DataErrorEvent extends DataEvent {
 }
 
 class AppDataState {
-  final bool failed, loading;
+  final bool tempLoaded, profileLoaded;
+  final bool kollFailed, profileFailed, manualFailed, tempFailed, loading;
   final String errorMessage;
   final InformationHolder tempData;
   final List<charts.Series<ChartDataPoint, DateTime>> kollData;
@@ -35,17 +38,24 @@ class AppDataState {
   final Rpm manualData;
 
   const AppDataState({
+    this.tempLoaded,
+    this.profileLoaded,
     this.manualData,
     this.errorMessage,
-    this.failed = false,
     this.loading = false,
     this.tempData,
     this.kollData = const [],
     this.profileData,
+    this.kollFailed = false,
+    this.profileFailed = false,
+    this.manualFailed = false,
+    this.tempFailed = false,
   });
 
   factory AppDataState.init({tempData, kollData, profileData, manualData}) =>
       AppDataState(
+        tempLoaded: false,
+        profileLoaded: false,
         loading: true,
         tempData: tempData,
         kollData: kollData,
@@ -54,7 +64,12 @@ class AppDataState {
       );
 
   factory AppDataState.error(errorMessage) => AppDataState(
-        failed: true,
+        tempLoaded: false,
+        profileLoaded: false,
+        kollFailed: true,
+        profileFailed: true,
+        manualFailed: true,
+        tempFailed: true,
         errorMessage: errorMessage,
       );
 }
@@ -88,22 +103,6 @@ class InformationHolder {
     jelenlegKoll = json['jelenlegKoll'];
   }
 }
-
-/*class ChartDataPoint {
-  final DateTime date;
-  final double value;
-
-  ChartDataPoint({this.date, this.value});
-
-  factory ChartDataPoint.fromJson(Map<String, dynamic> json, String key) {
-    return ChartDataPoint(
-      date: DateTime.parse(json['datum']),
-      value: json[key] is double
-          ? json[key]
-          : json[key] is num ? json[key].toDouble() : double.parse(json[key]),
-    );
-  }
-}*/
 
 enum profileState {
   optimal,

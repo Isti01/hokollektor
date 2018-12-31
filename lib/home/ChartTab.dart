@@ -29,45 +29,46 @@ class ChartBackpanel extends StatelessWidget {
 
   Widget _build(BuildContext context, ChartTabState state) {
     return SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: _buildEntry(
-              charts.weekly, loc.getText(loc.weeklyChart), context, state),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: _buildEntry(
-              charts.daily, loc.getText(loc.dailyChart), context, state),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: _buildEntry(
-              charts.hourly, loc.getText(loc.hourlyChart), context, state),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: _buildEntry(
-              charts.realTime, loc.getText(loc.realtimeChart), context, state),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: _buildEntry(
-              charts.custom, loc.getText(loc.customChart), context, state),
-        ),
-      ],
-    ));
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildEntry(
+                  Charts.weekly, loc.getText(loc.weeklyChart), context, state),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildEntry(
+                  Charts.daily, loc.getText(loc.dailyChart), context, state),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildEntry(
+                  Charts.hourly, loc.getText(loc.hourlyChart), context, state),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildEntry(Charts.realTime,
+                  loc.getText(loc.realtimeChart), context, state),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildEntry(
+                  Charts.custom, loc.getText(loc.customChart), context, state),
+            ),
+          ],
+        ));
   }
 
   Widget _buildEntry(
-      charts chart, String text, BuildContext context, ChartTabState state) {
+      Charts chart, String text, BuildContext context, ChartTabState state) {
     Color color = Colors.white;
 
     var onPressed = () async {
-      if (chart == charts.custom) {
+      if (chart == Charts.custom) {
         try {
           final dates = await showDialog(
             context: context,
@@ -93,7 +94,7 @@ class ChartBackpanel extends StatelessWidget {
           int endDate = masodik.millisecondsSinceEpoch ~/ 1000;
 
           bloc.dispatch(CustomChartTabEvent(
-            charts.custom,
+            Charts.custom,
             startDate,
             endDate,
           ));
@@ -106,7 +107,7 @@ class ChartBackpanel extends StatelessWidget {
 
     if (state.chart != chart) {
       onPressed = () async {
-        if (chart == charts.custom) {
+        if (chart == Charts.custom) {
           try {
             final dates = await showDialog(
                 context: context,
@@ -124,14 +125,14 @@ class ChartBackpanel extends StatelessWidget {
               dates[1].month,
               dates[1].day,
               23,
-              59,
+              30,
             );
 
             int startDate = elso.millisecondsSinceEpoch ~/ 1000;
             int endDate = masodik.millisecondsSinceEpoch ~/ 1000;
 
             bloc.dispatch(CustomChartTabEvent(
-              charts.custom,
+              Charts.custom,
               startDate,
               endDate,
             ));
@@ -187,7 +188,7 @@ class ChartFront extends StatefulWidget {
 class ChartFrontState extends State<ChartFront> {
   Widget chartWidget;
   String title;
-  charts chart;
+  Charts chart;
   int startDate;
   int endDate;
 
@@ -209,7 +210,8 @@ class ChartFrontState extends State<ChartFront> {
   }
 
   void _createWidgets() {
-    this.title = _getChartTitle(this.chart);
+    this.title = getChartTitle(this.chart);
+    this.chartWidget = null;
     this.chartWidget = _getChart(
       chart,
       startDate: startDate,
@@ -229,67 +231,73 @@ class ChartFrontState extends State<ChartFront> {
         left: 16.0,
         right: 16.0,
       ),
-      child: ListView(children: [
-        const SizedBox(height: kFrontHeadingHeight),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            this.title,
-            style: Theme.of(context).textTheme.title,
+      child: ListView(
+        physics: const BouncingScrollPhysics(),
+        children: [
+          const SizedBox(height: kFrontHeadingHeight),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              this.title,
+              style: Theme.of(context).textTheme.title,
+            ),
           ),
-        ),
-        this.chartWidget,
-      ]),
+          this.chartWidget,
+        ],
+      ),
     );
   }
 
-  String _getChartTitle(charts chart) {
+  String getChartTitle(Charts chart) {
     switch (chart) {
-      case charts.realTime:
-        return loc.getText(loc.weeklyChart);
-      case charts.hourly:
-        return loc.getText(loc.dailyChart);
-      case charts.daily:
-        return loc.getText(loc.hourlyChart);
-      case charts.weekly:
+      case Charts.realTime:
         return loc.getText(loc.realtimeChart);
-      case charts.custom:
+      case Charts.hourly:
+        return loc.getText(loc.hourlyChart);
+      case Charts.daily:
+        return loc.getText(loc.dailyChart);
+      case Charts.weekly:
+        return loc.getText(loc.weeklyChart);
+      case Charts.custom:
         return loc.getText(loc.customChart);
     }
     return '';
   }
 
   Widget _getChart(
-    charts chart, {
+    Charts chart, {
     int startDate,
     int endDate,
     AppBloc bloc,
   }) {
     switch (chart) {
-      case charts.realTime:
+      case Charts.realTime:
         return RealTimeChart(
           bloc: bloc,
           height: 450.0,
         );
-      case charts.hourly:
+      case Charts.hourly:
         return OneHourChart(
+          key: UniqueKey(),
           height: 450.0,
         );
-      case charts.daily:
+      case Charts.daily:
         return OneDayChart(
+          key: UniqueKey(),
           height: 450.0,
         );
-      case charts.weekly:
+      case Charts.weekly:
         return OneWeekChart(
+          key: UniqueKey(),
           height: 450.0,
         );
-      case charts.custom:
-        return CustomChart(
+      case Charts.custom:
+        return new CustomChart(
+          key: UniqueKey(),
           height: 450.0,
           startDate: startDate,
           endDate: endDate,
         );
-        break;
     }
     return const SizedBox();
   }

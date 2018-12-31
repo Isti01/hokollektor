@@ -84,7 +84,7 @@ const Map<String, Map<String, String>> localizedTexts = {
     tempKoll: "Collector Temperature",
     tempOutside: "Outside Temperature",
     tempInside: "Inside Temperature",
-    koll: "Colector",
+    koll: "Collector",
     outside: "Outside",
     inside: "Inside",
     pickInterval: "Pick Time Interval",

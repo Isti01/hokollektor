@@ -225,12 +225,6 @@ class TabbedBackdropState extends State<TabbedBackdrop>
   }
 
   Widget _buildStack(BuildContext context, BoxConstraints constraints) {
-//    final bool isLight = widget
-//            .backdrops[_tabController.animation.value.round()].backgroundColor
-//            .computeLuminance()
-//            .round() ==
-//        1;
-
     final Animation<RelativeRect> frontRelativeRect =
         _controller.drive(RelativeRectTween(
       begin: RelativeRect.fromLTRB(
@@ -248,7 +242,7 @@ class TabbedBackdropState extends State<TabbedBackdrop>
               padding:
                   const EdgeInsets.symmetric(horizontal: kFrontHeadingHeight),
               child: TabBar(
-                 isScrollable: true,
+                isScrollable: true,
                 labelPadding: EdgeInsets.symmetric(horizontal: 52.0),
                 controller: _tabController,
                 tabs: widget.tabs,
@@ -256,13 +250,12 @@ class TabbedBackdropState extends State<TabbedBackdrop>
               ),
             ),
           ),
-          Expanded(
-              child: Visibility(
-            child: _calculateBackpanel(),
-            visible: _controller.status != AnimationStatus.completed,
-            maintainState: true,
-          )),
-          SizedBox(
+          _controller.status != AnimationStatus.completed
+              ? Expanded(
+                  child: _calculateBackpanel(),
+                )
+              : const SizedBox(),
+          const SizedBox(
             height: _kFrontClosedHeight,
           ),
         ],
@@ -279,7 +272,8 @@ class TabbedBackdropState extends State<TabbedBackdrop>
                 builder: (BuildContext context, Widget child) {
                   return PhysicalShape(
                     elevation: 12.0,
-                    color: Theme.of(context).canvasColor,
+                    color: Colors.white,
+                    //Theme.of(context).canvasColor,
                     clipper: ShapeBorderClipper(
                       shape: RoundedRectangleBorder(
                         borderRadius: (widget.borderRadiusAnimation ??
@@ -318,19 +312,7 @@ class TabbedBackdropState extends State<TabbedBackdrop>
       ),
     ];
 
-//    if (isLight) {
-//      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-//    } else {
-//      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-//    }
-
-    return /*AnimatedTheme(
-      data: ThemeData(
-        primarySwatch: widget
-            .backdrops[_tabController.animation.value.round()].backgroundColor,
-      ),
-      child:*/
-        Container(
+    return Container(
       color: _calculateColor(),
       child: SafeArea(
         child: Stack(
@@ -338,7 +320,6 @@ class TabbedBackdropState extends State<TabbedBackdrop>
           children: layers,
         ),
       ),
-//      ),
     );
   }
 

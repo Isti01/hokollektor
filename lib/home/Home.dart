@@ -4,7 +4,6 @@ import 'package:hokollektor/bloc/ChartTabBloc.dart';
 import 'package:hokollektor/home/ChartTab.dart';
 import 'package:hokollektor/home/HomeTab.dart';
 import 'package:hokollektor/localization.dart' as loc;
-import 'package:hokollektor/util/SimpleScrollBehavior.dart';
 import 'package:hokollektor/util/tabbedBackdrop.dart';
 
 const HomePanelColor = Colors.blue;
@@ -20,42 +19,41 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     loc.initLocale(Localizations.localeOf(context).languageCode);
-    return ScrollConfiguration(
-      behavior: SimpleScrollBehavior(),
-      child: Scaffold(
-        body: TabbedBackdrop(
-          key: backdropKey,
-          tabs: [
-            Tab(text: loc.getText(loc.home)),
-            Tab(text: loc.getText(loc.charts)),
-          ],
-          backdrops: [
-            BackdropComponent(
-              // frontPadding: 12.0,
-              frontLayer: HomeFront(
-                bloc: appBloc,
-              ),
-              frontHeading: Text(loc.getText(loc.configureHeader)),
-              backLayer: HomeBackpanel(
-                bloc: appBloc,
-              ),
-              backgroundColor: HomePanelColor,
+    return Scaffold(
+      body: TabbedBackdrop(
+        key: backdropKey,
+        tabs: [
+          Tab(text: loc.getText(loc.home)),
+          Tab(text: loc.getText(loc.charts)),
+        ],
+        backdrops: [
+          BackdropComponent(
+            // frontPadding: 12.0,
+            frontLayer: Theme(
+              data: Theme.of(context).copyWith(primaryColor: HomePanelColor),
+              child: HomeFront(bloc: appBloc),
             ),
-            BackdropComponent(
-              // frontPadding: 12.0,
-              frontLayer: ChartFront(
-                realTimeBloc: appBloc,
-                bloc: chartBloc,
-              ),
-              frontHeading: Text(loc.getText(loc.chartHeader)),
-              backLayer: ChartBackpanel(
-                bloc: chartBloc,
-                onReturn: _toggleBackdrop,
-              ),
-              backgroundColor: ChartPanelColor,
+            frontHeading: Text(loc.getText(loc.configureHeader)),
+            backLayer: Theme(
+              data: Theme.of(context).copyWith(primaryColor: HomePanelColor),
+              child: HomeBackpanel(bloc: appBloc),
             ),
-          ],
-        ),
+            backgroundColor: HomePanelColor,
+          ),
+          BackdropComponent(
+            // frontPadding: 12.0,
+            frontLayer: Theme(
+              data: Theme.of(context).copyWith(primaryColor: ChartPanelColor),
+              child: ChartFront(realTimeBloc: appBloc, bloc: chartBloc),
+            ),
+            frontHeading: Text(loc.getText(loc.chartHeader)),
+            backLayer: Theme(
+              data: Theme.of(context).copyWith(primaryColor: ChartPanelColor),
+              child: ChartBackpanel(bloc: chartBloc, onReturn: _toggleBackdrop),
+            ),
+            backgroundColor: ChartPanelColor,
+          ),
+        ],
       ),
     );
   }

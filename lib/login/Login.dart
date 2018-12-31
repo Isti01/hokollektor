@@ -127,7 +127,8 @@ class LoginFormState extends State<LoginForm> {
                                       theme.button.copyWith(color: Colors.red))
                               : loading
                                   ? Wrap(children: [
-                                      Center(child: CircularProgressIndicator())
+                                      const Center(
+                                          child: CircularProgressIndicator())
                                     ])
                                   : Container(),
                           SizedBox(height: 2.0),
