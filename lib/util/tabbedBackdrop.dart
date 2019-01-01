@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 const double kFrontHeadingHeight = 32.0; // front layer beveled rectangle
-const double _kFrontClosedHeight = 92.0; // front layer height when closed
+const double kFrontClosedHeight = 92.0; // front layer height when closed
 const double _kBackAppBarHeight = 48.0; // back layer (options) appbar height
 // The size of the front layer heading's left and right beveled corners.
 final Animatable<BorderRadius> _kFrontHeadingRoundRadius = BorderRadiusTween(
@@ -195,7 +195,7 @@ class TabbedBackdropState extends State<TabbedBackdrop>
     // not be called at build time.
     final RenderBox renderBox = _backdropKey.currentContext.findRenderObject();
     return math.max(
-        0.0, renderBox.size.height - _kBackAppBarHeight - _kFrontClosedHeight);
+        0.0, renderBox.size.height - _kBackAppBarHeight - kFrontClosedHeight);
   }
 
   void _handleDragUpdate(DragUpdateDetails details) {
@@ -228,7 +228,7 @@ class TabbedBackdropState extends State<TabbedBackdrop>
     final Animation<RelativeRect> frontRelativeRect =
         _controller.drive(RelativeRectTween(
       begin: RelativeRect.fromLTRB(
-          0.0, constraints.biggest.height - _kFrontClosedHeight, 0.0, 0.0),
+          0.0, constraints.biggest.height - kFrontClosedHeight, 0.0, 0.0),
       end: const RelativeRect.fromLTRB(0.0, _kBackAppBarHeight, 0.0, 0.0),
     ));
 
@@ -252,12 +252,14 @@ class TabbedBackdropState extends State<TabbedBackdrop>
           ),
           _controller.status != AnimationStatus.completed
               ? Expanded(
-                  child: _calculateBackpanel(),
+                  child:
+
+                      _calculateBackpanel(),
+
+
                 )
               : const SizedBox(),
-          const SizedBox(
-            height: _kFrontClosedHeight,
-          ),
+
         ],
       ),
       PositionedTransition(

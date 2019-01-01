@@ -5,6 +5,7 @@ import 'package:hokollektor/bloc/CustomProfileBloc.dart';
 import 'package:hokollektor/bloc/DataClasses.dart';
 import 'package:hokollektor/chart/Chart.dart';
 import 'package:hokollektor/localization.dart' as loc;
+import 'package:hokollektor/presentation/presentation.dart';
 import 'package:hokollektor/util/custom_profile_picker/CustomProfilePicker.dart';
 import 'package:hokollektor/util/tabbedBackdrop.dart';
 
@@ -34,6 +35,23 @@ class HomeBackpanel extends StatelessWidget {
         BlocBuilder<DataEvent, AppDataState>(
           bloc: bloc,
           builder: _buildManual,
+        ),
+        SizedBox(height: 1000),
+        Material(
+          type: MaterialType.transparency,
+          child: ListTile(
+            title: Text(
+              "Presentation Time!",
+              textAlign: TextAlign.center,
+              style:
+                  Theme.of(context).textTheme.title.copyWith(color: fontColor),
+            ),
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PresentationPage())),
+          ),
+        ),
+        const SizedBox(
+          height: kFrontClosedHeight,
         ),
       ],
     );
@@ -155,20 +173,42 @@ class HomeBackpanel extends StatelessWidget {
         title: loc.getText(loc.profiles),
         initiallyExpanded: true,
         children: [
-          _radioTile(loc.getText(loc.optimal), profileState.optimal,
-              theme.textTheme, state),
-          _radioTile(loc.getText(loc.minimal), profileState.minimal,
-              theme.textTheme, state),
-          _radioTile(loc.getText(loc.maximal), profileState.maximal,
-              theme.textTheme, state),
-          _radioTile(loc.getText(loc.manual), profileState.manual,
-              theme.textTheme, state),
           _radioTile(
-              loc.getText(loc.custom),
-              profileState.custom,
-              theme.textTheme,
-              state,
-              (value) => _customProfileTileClicked(value, context, state)),
+            loc.getText(loc.optimal),
+            loc.getText(loc.profileOptimalDescription),
+            profileState.optimal,
+            theme.textTheme,
+            state,
+          ),
+          _radioTile(
+            loc.getText(loc.minimal),
+            loc.getText(loc.profileMinimalDescription),
+            profileState.minimal,
+            theme.textTheme,
+            state,
+          ),
+          _radioTile(
+            loc.getText(loc.maximal),
+            loc.getText(loc.profileMaximalDescription),
+            profileState.maximal,
+            theme.textTheme,
+            state,
+          ),
+          _radioTile(
+            loc.getText(loc.manual),
+            loc.getText(loc.profileManualDescription),
+            profileState.manual,
+            theme.textTheme,
+            state,
+          ),
+          _radioTile(
+            loc.getText(loc.custom),
+            loc.getText(loc.profileCustomDescription),
+            profileState.custom,
+            theme.textTheme,
+            state,
+            (value) => _customProfileTileClicked(value, context, state),
+          ),
         ],
       ),
     );
@@ -183,36 +223,47 @@ class HomeBackpanel extends StatelessWidget {
     return ListTileTheme(
       iconColor: fontColor,
       child: ExpansionTile(
-          initiallyExpanded: initiallyExpanded,
-          children: children,
-          title: Text(
-            title,
-            style: theme.textTheme.title.copyWith(
-                fontSize: theme.textTheme.title.fontSize + 6.0,
-                color: fontColor),
-          )),
+        initiallyExpanded: initiallyExpanded,
+        children: children,
+        title: Text(
+          title,
+          style: theme.textTheme.title.copyWith(
+              fontSize: theme.textTheme.title.fontSize + 6.0, color: fontColor),
+        ),
+      ),
     );
   }
 
   _radioTile(
     String text,
+    String description,
     profileState value,
     TextTheme theme,
     AppDataState state, [
     Function(profileState value) onChanged,
   ]) {
-    return RadioListTile<profileState>(
-      activeColor: radioActiveColor,
-      title: Text(text, style: theme.title.copyWith(color: fontColor)),
-      value: value,
-      groupValue: state.profileData,
-      onChanged: (profileState value) {
-        if (onChanged != null) {
-          onChanged(value);
-        } else {
-          bloc.uploadData(value);
-        }
-      },
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: RadioListTile<profileState>(
+        activeColor: radioActiveColor,
+        title: Text(
+          text,
+          style: theme.title.copyWith(color: fontColor),
+        ),
+        subtitle: Text(
+          description,
+          style: theme.subtitle.copyWith(color: fontColor),
+        ),
+        value: value,
+        groupValue: state.profileData,
+        onChanged: (profileState value) {
+          if (onChanged != null) {
+            onChanged(value);
+          } else {
+            bloc.uploadData(value);
+          }
+        },
+      ),
     );
   }
 }

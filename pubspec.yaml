@@ -50,6 +50,9 @@ flutter:
 
   assets:
   - assets/login.jpg
+  - assets/kollKep.jpg
+  - assets/nodemcu.jpg
+  - assets/icon.png
 
   fonts:
     - family: Rubik

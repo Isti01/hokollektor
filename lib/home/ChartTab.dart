@@ -59,6 +59,9 @@ class ChartBackpanel extends StatelessWidget {
               child: _buildEntry(
                   Charts.custom, loc.getText(loc.customChart), context, state),
             ),
+            const SizedBox(
+              height: kFrontClosedHeight,
+            ),
           ],
         ));
   }

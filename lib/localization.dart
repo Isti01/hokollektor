@@ -16,7 +16,7 @@ const localizations = [
   "hu",
 //  "sr",
 //  "sr_Latn",
-  "en",
+  // "en",
 ];
 
 const Map<String, Map<String, String>> localizedTexts = {
@@ -69,6 +69,16 @@ const Map<String, Map<String, String>> localizedTexts = {
     noTextAdded: "Nincs Szöveg Megadva",
     invalidUserInfo: "Hibás Jelszó Vagy Felhasználónév",
     onDeg: "on",
+    profileMinimalDescription:
+        "A ventilátorok sebessége kisebb, a benti hőmérséklet alacsonyabb.",
+    profileMaximalDescription:
+        "A ventilátorok sebessége a lehető legnagyobb, a benti hőmérséklet magasabb.",
+    profileOptimalDescription:
+        "A vetilátorok sebessége és a benti hőmérséklet optimális.",
+    profileCustomDescription:
+        "A felhasználó szabja meg adott hőfokokon a ventilátorok sebességét.",
+    profileManualDescription:
+        "A ventillátorok sebességének manuális beállítása."
   },
   "sr": {},
   "sr_Latn": {},
@@ -170,7 +180,12 @@ const fetchFailed = "fetchFailed",
     login = "login",
     pickInterval = "pickInterval",
     failedToLoadChart = "failedToLoadChart",
-    invalidPassword = "invalidPassword";
+    invalidPassword = "invalidPassword",
+    profileMinimalDescription = "profileMinimalDescription",
+    profileMaximalDescription = "profileMaximalDescription",
+    profileOptimalDescription = "profileOptimalDescription",
+    profileCustomDescription = "profileCustomDescription",
+    profileManualDescription = "profileManualDescription";
 
 bool test(String locale) {
   if (!localizations.contains(locale)) return false;

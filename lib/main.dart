@@ -7,11 +7,7 @@ import 'package:hokollektor/util/URLs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
-
+  setPortraitOrientation();
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   bool loggedIn = false;
@@ -25,4 +21,26 @@ void main() async {
     runApp(HokollektorApp(child: HomePage()));
   else
     runApp(HokollektorApp(child: LoginPage()));
+}
+
+setPortraitOrientation() {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+}
+
+setLandscapeOrientation() {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+}
+
+showSystemOverlay() {
+  SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+}
+
+hideSystemOverlay() {
+  SystemChrome.setEnabledSystemUIOverlays([]);
 }
