@@ -23,15 +23,13 @@ class DataUpdateEvent extends DataEvent {
 }
 
 class DataErrorEvent extends DataEvent {
-  final String message;
 
-  const DataErrorEvent({this.message});
+  const DataErrorEvent();
 }
 
 class AppDataState {
   final bool tempLoaded, profileLoaded;
   final bool kollFailed, profileFailed, manualFailed, tempFailed, loading;
-  final String errorMessage;
   final InformationHolder tempData;
   final List<charts.Series<ChartDataPoint, DateTime>> kollData;
   final profileState profileData;
@@ -41,7 +39,6 @@ class AppDataState {
     this.tempLoaded,
     this.profileLoaded,
     this.manualData,
-    this.errorMessage,
     this.loading = false,
     this.tempData,
     this.kollData = const [],
@@ -70,7 +67,6 @@ class AppDataState {
         profileFailed: true,
         manualFailed: true,
         tempFailed: true,
-        errorMessage: errorMessage,
       );
 }
 

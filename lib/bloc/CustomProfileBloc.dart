@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
-import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/URLs.dart' as urls;
 import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
@@ -22,13 +21,10 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
       values = CustomProfileState.transformToExpanded(values);
 
     try {
-      /* http.Response res;*/
       if (values.length == minifiedSize)
-        /*res =*/ await http.get(CustomProfile.createLink(values));
+        await http.get(CustomProfile.createLink(values));
       else
-        /*res =*/ await http.get(CustomProfile.createLink(values));
-
-//      print(res.body);
+        await http.get(CustomProfile.createLink(values));
     } catch (e) {
       print(e.toString());
     }
@@ -37,7 +33,7 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
   _fetchCustomProfileState() async {
     try {
       if (!await isConnected()) {
-        dispatch(ProfileErrorEvent(loc.getText(loc.noInternet)));
+        dispatch(ProfileErrorEvent());
         return;
       }
 
@@ -53,7 +49,7 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
       ));
     } catch (e) {
       print(e.toString());
-      dispatch(ProfileErrorEvent(loc.getText(loc.fetchFailed)));
+      dispatch(ProfileErrorEvent());
     }
   }
 
@@ -61,13 +57,10 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
   Stream<CustomProfileState> mapEventToState(
       CustomProfileState state, CustomProfileEvent event) async* {
     if (event is ProfileErrorEvent) {
-      // print('error caught');
-      yield CustomProfileState.error(event.message);
+      yield CustomProfileState.error();
     }
 
     if (event is ValueChangeEvent) {
-      //print('updating value');
-
       if (!event.initial) _submitValues(event.newValues);
 
       yield CustomProfileState.success(event.newValues,
@@ -86,22 +79,18 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
 class CustomProfileState {
   final bool loading, hasError, expanded;
   final List<int> values;
-  final String errorMessage;
 
   CustomProfileState({
     this.expanded = false,
     this.loading = false,
     this.hasError = false,
     this.values = const [],
-    this.errorMessage = '',
   });
 
   factory CustomProfileState.init() => CustomProfileState(loading: true);
 
-  factory CustomProfileState.error([String errorMessage = '']) =>
-      CustomProfileState(
+  factory CustomProfileState.error() => CustomProfileState(
         hasError: true,
-        errorMessage: errorMessage,
       );
 
   factory CustomProfileState.success(List<int> values, {bool expanded}) {
@@ -150,9 +139,7 @@ class CustomProfileState {
 abstract class CustomProfileEvent {}
 
 class ProfileErrorEvent extends CustomProfileEvent {
-  final String message;
-
-  ProfileErrorEvent(this.message);
+  ProfileErrorEvent();
 }
 
 class ValueChangeEvent extends CustomProfileEvent {

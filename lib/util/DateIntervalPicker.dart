@@ -250,8 +250,14 @@ class DayPicker extends StatelessWidget {
       }
       if (day < 1) {
         // print([day < 0, day, month, firstDayOffset]);
-        if (_isBetween(date1, date2,
-            DateTime(year, month, 1).subtract(Duration(hours: 12))))
+        if (_isBetween(
+            date1,
+            date2,
+            DateTime(year, month, 1).subtract(Duration(
+              hours: 23,
+              minutes: 59,
+              seconds: 59,
+            ))))
           labels.add(_outOfMonthSelected(themeData));
         else
           labels.add(Container());
@@ -403,8 +409,14 @@ class DayPicker extends StatelessWidget {
       }
     }
 
-    if (_isBetween(date1, date2,
-        DateTime(year, month, daysInMonth).add(Duration(hours: 12)))) {
+    if (_isBetween(
+        date1,
+        date2,
+        DateTime(year, month, daysInMonth).add(Duration(
+          hours: 23,
+          minutes: 59,
+          seconds: 59,
+        )))) {
       int iteration = labels.length % 7 == 0 ? 0 : 7 - labels.length % 7;
 
       for (int i = 0; i < iteration; i++) {

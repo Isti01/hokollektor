@@ -230,10 +230,7 @@ class ChartFrontState extends State<ChartFront> {
 
   Widget _build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 16.0,
-        right: 16.0,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ListView(
         physics: const BouncingScrollPhysics(),
         children: [

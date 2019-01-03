@@ -29,7 +29,6 @@ dependencies:
   connectivity: any
   shared_preferences: any
   crypto: any
-  convert: any
 
 
 dev_dependencies:

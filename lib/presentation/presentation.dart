@@ -1,48 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/main.dart';
 
 const imagePadding = 6.0;
 
-const slides = [
-  Slide(
-    title: "Collector App",
-    text: " ",
-    textImageRatio: 2 / 3,
-    image: 'assets/icon.png',
-    textColor: Colors.white,
-    topColor: Colors.blue,
-    imageDescription: "",
-  ),
-  Slide(
-    title: "A kollektorról",
-    text: "Péter tanár úr 2017 tavaszán készítette el a kollektort\n\n"
-        "Mi kaptuk a lehetőséget, hogy vezérlést készítsünk hozzá.",
-    image: "assets/kollKep.jpg",
-    textColor: Colors.white,
-    topColor: Colors.teal,
-    imageDescription: "A tanár úr és a kollektor",
-    textImageRatio: 3 / 5,
-  ),
-  Slide(
-    title: "A vezérlés",
-    text:
-        "Beszereltünk egy Node MCU-t és hőszenzorokat, amivel valós időben mérjük a hőmérsékletet, és vezéreljük a kollektort.",
-    image: "assets/nodemcu.jpg",
-    textColor: Colors.black87,
-    topColor: Colors.yellow,
-    imageDescription: " ",
-  ),
-  Slide(
-    title: "Az App",
-    text:
-        "Azt akartuk, hogy bárhol hozzáférhessünk a kollektorhoz, ezért készült ez az applikáció.",
-    image: "assets/icon.png",
-    textColor: Colors.white,
-    topColor: Colors.indigo,
-    imageDescription: " ",
-    popOnTap: true,
-  ),
-];
+initSlides() => [
+      Slide(
+        title: loc.getText(loc.appName),
+        text: " ",
+        textImageRatio: 2 / 3,
+        image: 'assets/icon.png',
+        textColor: Colors.white,
+        topColor: Colors.blue,
+        imageDescription: "",
+      ),
+      Slide(
+        title: loc.getText(loc.aboutCollector),
+        text: loc.getText(loc.aboutCollectorText),
+        image: "assets/kollKep.jpg",
+        textColor: Colors.white,
+        topColor: Colors.teal,
+        imageDescription: loc.getText(loc.aboutCollectorImageDescription),
+        textImageRatio: 3 / 5,
+      ),
+      Slide(
+        title: loc.getText(loc.collectorControlling),
+        text: loc.getText(loc.collectorControllingText),
+        image: "assets/nodemcu.jpg",
+        textColor: Colors.black87,
+        topColor: Colors.yellow,
+        imageDescription: loc.getText(loc.collectorControllingImageDescription),
+      ),
+      Slide(
+        title: loc.getText(loc.theApplication),
+        text: loc.getText(loc.theApplicationText),
+        image: "assets/icon.png",
+        textColor: Colors.white,
+        topColor: Colors.indigo,
+        imageDescription: " ",
+        popOnTap: true,
+      ),
+    ];
 
 class PresentationPage extends StatefulWidget {
   @override
@@ -54,12 +52,14 @@ class PresentationPage extends StatefulWidget {
 class PresentationPageState extends State<PresentationPage>
     with SingleTickerProviderStateMixin {
   TabController _controller;
+  List<Widget> slides;
 
   @override
   void initState() {
     setLandscapeOrientation();
     hideSystemOverlay();
     super.initState();
+    slides = initSlides();
     _controller = TabController(length: slides.length, vsync: this);
   }
 
@@ -153,6 +153,7 @@ class Slide extends StatelessWidget {
                                       image: DecorationImage(
                                     image: AssetImage(image),
                                     fit: BoxFit.scaleDown,
+                                    alignment: Alignment.bottomCenter,
                                   )),
                                 ),
                               ),

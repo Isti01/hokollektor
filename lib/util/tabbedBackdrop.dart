@@ -238,28 +238,20 @@ class TabbedBackdropState extends State<TabbedBackdrop>
         children: <Widget>[
           Align(
             alignment: Alignment.topCenter,
-            child: Padding(
-              padding:
+            child: TabBar(
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorPadding:
                   const EdgeInsets.symmetric(horizontal: kFrontHeadingHeight),
-              child: TabBar(
-                isScrollable: true,
-                labelPadding: EdgeInsets.symmetric(horizontal: 52.0),
-                controller: _tabController,
-                tabs: widget.tabs,
-                indicatorColor: Colors.white,
-              ),
+              isScrollable: true,
+              labelPadding: EdgeInsets.symmetric(horizontal: 52.0),
+              controller: _tabController,
+              tabs: widget.tabs,
+              indicatorColor: Colors.white,
             ),
           ),
           _controller.status != AnimationStatus.completed
-              ? Expanded(
-                  child:
-
-                      _calculateBackpanel(),
-
-
-                )
+              ? Expanded(child: _calculateBackpanel())
               : const SizedBox(),
-
         ],
       ),
       PositionedTransition(

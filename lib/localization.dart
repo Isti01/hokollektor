@@ -16,18 +16,16 @@ const localizations = [
   "hu",
 //  "sr",
 //  "sr_Latn",
-  // "en",
+  "en",
 ];
 
 const Map<String, Map<String, String>> localizedTexts = {
   "hu": {
     noInternet: "Nincs Internet Kapcsolat",
-    fetchFailed: "Tartalom Letöltése Sikertelen",
-    connectionError: "Kapcsolódási Hiba",
     invalidUsername: "Hiba A Felhasználónévben",
     invalidPassword: "Hiba A Jelszóban",
-    correctPass: "A jelszónak minimum 8 karakter hosszúnak kell lennie"
-        " és tartalmaznia kell betűket és számokat",
+    correctPass:
+        "A jelszónak minimum 8 karakter hosszúnak kell lennie és tartalmaznia kell betűket és számokat",
     failedToLoadChart: "A Betöltés Sikertelen",
     tempKoll: "Kollektor Hőmérséklete",
     tempOutside: "Kinti Hőmérséklet",
@@ -78,18 +76,29 @@ const Map<String, Map<String, String>> localizedTexts = {
     profileCustomDescription:
         "A felhasználó szabja meg adott hőfokokon a ventilátorok sebességét.",
     profileManualDescription:
-        "A ventillátorok sebességének manuális beállítása."
+        "A ventillátorok sebességének manuális beállítása.",
+    presentationTime: "Ugrás a prezentációhoz!",
+    appName: "Collector App",
+    aboutCollector: "A kollektorról",
+    aboutCollectorText:
+        "Péter tanár úr 2017 tavaszán készítette el a kollektort\n\nMi kaptuk a lehetőséget, hogy vezérlést készítsünk hozzá.",
+    aboutCollectorImageDescription: "A tanár úr és a kollektor",
+    collectorControlling: "A vezérlés",
+    collectorControllingText:
+        "Beszereltünk egy Node MCU-t és hőszenzorokat, amivel valós időben mérjük a hőmérsékletet, és vezéreljük a kollektort.",
+    theApplication: "Az App",
+    theApplicationText:
+        "A célunk az, hogy bárhol hozzáférhessünk a kollektorhoz, ezért készült ez az applikáció.",
+    collectorControllingImageDescription: "A vezérlés egy édesség dobozban"
   },
   "sr": {},
   "sr_Latn": {},
   "en": {
     noInternet: "No Internet Connection",
-    fetchFailed: "Fetch Failed",
-    connectionError: "Connection Error",
     invalidUsername: "Invalid Username",
     invalidPassword: "Invalid Password",
-    correctPass: "Password minimum length is 8 characters"
-        " and must contain numbers and letters",
+    correctPass:
+        "Password minimum length is 8 characters and must contain numbers and letters",
     failedToLoadChart: "Falied To Load",
     tempKoll: "Collector Temperature",
     tempOutside: "Outside Temperature",
@@ -124,20 +133,40 @@ const Map<String, Map<String, String>> localizedTexts = {
     vent1: "Fan #1",
     user: "Username",
     pass: "Password",
-    stayLoggedIn: "Stay Logged In",
+    stayLoggedIn: "Stay Signed in",
     login: "Sign In",
     expanded: "Expanded",
     simplified: "Simplified",
     noTextAdded: "No Text Added",
     invalidUserInfo: "Invalid User Information",
     onDeg: "on",
+    profileMinimalDescription:
+        "Fan speed and the inside temperature are lower.",
+    profileMaximalDescription:
+        "Fan speed and the inside temperature are higher.",
+    profileOptimalDescription:
+        "Fan speed, and the inside temperature are optimal.",
+    profileCustomDescription:
+        "Create custom profile, set the fan speed relative to the temperature.",
+    profileManualDescription: "Set the fan speed manually.",
+    presentationTime: "Presentation Time!",
+    appName: "Collector App",
+    aboutCollector: "About the collector",
+    aboutCollectorText:
+        "Péter, our IT teacher in the spring of 2017 finished the collector.\n\nWe got the opportunity to automate it.",
+    aboutCollectorImageDescription: "A tanár úr és a kollektor",
+    collectorControlling: "A vezérlés",
+    collectorControllingText:
+        "First, we installed the Node MCU and three heat sensors, then we could measure and monitor the temperatures realtime and we could control the collector.",
+    theApplication: "The application",
+    theApplicationText:
+        "We made this app with these goals, make the collector accessible from anywhere, and make everything as simple as possible.",
+    collectorControllingImageDescription: "All the electronics in one candy box"
   },
 };
 
-const fetchFailed = "fetchFailed",
-    invalidUsername = "invalidUsername",
+const invalidUsername = "invalidUsername",
     noInternet = "noInternet",
-    connectionError = "connectionError",
     correctPass = "correctPass",
     tempKoll = "tempKoll",
     tempOutside = "tempOutside",
@@ -185,15 +214,24 @@ const fetchFailed = "fetchFailed",
     profileMaximalDescription = "profileMaximalDescription",
     profileOptimalDescription = "profileOptimalDescription",
     profileCustomDescription = "profileCustomDescription",
-    profileManualDescription = "profileManualDescription";
+    profileManualDescription = "profileManualDescription",
+    presentationTime = "presentationTime",
+    appName = "appName",
+    aboutCollector = "aboutCollector",
+    aboutCollectorText = "aboutCollectorText",
+    aboutCollectorImageDescription = "aboutCollectorImageDescription",
+    collectorControlling = "collectorControlling",
+    collectorControllingText = "collectorControllingText",
+    theApplication = "theApplication",
+    theApplicationText = "theApplicationText",
+    collectorControllingImageDescription =
+        "collectorControllingImageDescription";
 
 bool test(String locale) {
   if (!localizations.contains(locale)) return false;
 
-  if (localizedTexts[locale][fetchFailed] == null) return false;
   if (localizedTexts[locale][invalidUsername] == null) return false;
   if (localizedTexts[locale][noInternet] == null) return false;
-  if (localizedTexts[locale][connectionError] == null) return false;
   if (localizedTexts[locale][correctPass] == null) return false;
   if (localizedTexts[locale][tempKoll] == null) return false;
   if (localizedTexts[locale][tempOutside] == null) return false;
@@ -238,5 +276,5 @@ bool test(String locale) {
   if (localizedTexts[locale][failedToLoadChart] == null) return false;
   if (localizedTexts[locale][invalidPassword] == null) return false;
 
-  return false;
+  return true;
 }

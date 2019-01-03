@@ -26,64 +26,67 @@ class DatePickerDialogState extends State<DatePickerDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(12.0)),
       ),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 12.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Container(
-              height: 300.0,
-              child: _buildDatePickerCard(
-                title: loc.getText(loc.pickInterval),
-                theme: theme,
-                selectedDate2: lastDate,
-                currentDate: firstDate,
-                now: now,
-                onDateChanged: _handleDateChange,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 12.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                height: 300.0,
+                child: _buildDatePickerCard(
+                  title: loc.getText(loc.pickInterval),
+                  theme: theme,
+                  selectedDate2: lastDate,
+                  currentDate: firstDate,
+                  now: now,
+                  onDateChanged: _handleDateChange,
+                ),
               ),
-            ),
-            ButtonBar(
-              children: <Widget>[
-                OutlineButton(
-                    child: Text(loc.getText(loc.cancel)),
-                    borderSide:
-                        BorderSide(color: Theme.of(context).primaryColor),
+              ButtonBar(
+                children: <Widget>[
+                  OutlineButton(
+                      child: Text(loc.getText(loc.cancel)),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).primaryColor),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      ),
+                      textColor: Theme.of(context).primaryColor,
+                      onPressed: () => Navigator.pop(context)),
+                  RaisedButton(
+                    child: Text(loc.getText(loc.save)),
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12.0)),
                     ),
-                    textColor: Theme.of(context).primaryColor,
-                    onPressed: () => Navigator.pop(context)),
-                RaisedButton(
-                  child: Text(loc.getText(loc.save)),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                  ),
-                  textColor: Colors.white,
-                  color: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    var result;
-                    try {
+                    textColor: Colors.white,
+                    color: Theme.of(context).primaryColor,
+                    onPressed: () {
+                      var result;
                       try {
-                        result = [
-                          firstDate.isAfter(lastDate) ? lastDate : firstDate,
-                          firstDate.isAfter(lastDate) ? firstDate : lastDate,
-                        ];
+                        try {
+                          result = [
+                            firstDate.isAfter(lastDate) ? lastDate : firstDate,
+                            firstDate.isAfter(lastDate) ? firstDate : lastDate,
+                          ];
+                        } catch (e) {
+                          result = [
+                            firstDate ?? lastDate,
+                            firstDate ?? lastDate,
+                          ];
+                        }
+                        if (result[0] != null && result[1] != null)
+                          Navigator.pop(context, result);
                       } catch (e) {
-                        result = [
-                          firstDate ?? lastDate,
-                          firstDate ?? lastDate,
-                        ];
+                        print(e);
                       }
-                      if (result[0] != null && result[1] != null)
-                        Navigator.pop(context, result);
-                    } catch (e) {
-                      print(e);
-                    }
-                  },
-                ),
-              ],
-            ),
-          ],
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -105,6 +108,7 @@ class DatePickerDialogState extends State<DatePickerDialog> {
           Text(
             title,
             style: theme.title,
+            textAlign: TextAlign.center,
           ),
           Flexible(
             fit: FlexFit.tight,

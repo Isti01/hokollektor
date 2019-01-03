@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:hokollektor/bloc/DataClasses.dart';
 import 'package:hokollektor/chart/ChartLogic.dart';
-import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/URLs.dart' as urls;
 import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
@@ -77,7 +76,6 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
         manualFailed: manualData == null,
         tempFailed: tempData == null,
         profileFailed: profileData == null,
-        errorMessage: event.message ?? '',
         profileLoaded: profileData != null,
         tempLoaded: tempData != null,
       );
@@ -88,7 +86,7 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
     fetching = true;
     try {
       if (!await isConnected()) {
-        dispatch(DataErrorEvent(message: loc.getText(loc.noInternet)));
+        dispatch(DataErrorEvent());
         return;
       }
 
@@ -105,7 +103,7 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
       ));
     } catch (e) {
       print(e);
-      dispatch(DataErrorEvent(message: loc.getText(loc.fetchFailed)));
+      dispatch(DataErrorEvent());
     }
     fetching = false;
   }

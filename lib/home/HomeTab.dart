@@ -41,7 +41,7 @@ class HomeBackpanel extends StatelessWidget {
           type: MaterialType.transparency,
           child: ListTile(
             title: Text(
-              "Presentation Time!",
+              loc.getText(loc.presentationTime),
               textAlign: TextAlign.center,
               style:
                   Theme.of(context).textTheme.title.copyWith(color: fontColor),
