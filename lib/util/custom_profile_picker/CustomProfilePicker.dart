@@ -11,8 +11,7 @@ class CustomProfilePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment(0.0, -0.5),
+    return Center(
       child: SingleChildScrollView(
         child: Material(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),

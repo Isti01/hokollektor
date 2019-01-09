@@ -8,7 +8,6 @@ const String OneDayChartURL =
     ProfileSubmitURL =
         'http://hokollektor.site.in.rs/Hokollektor/ProfileImportImproved.php?p=',
     loginURL = 'http://hokollektor.site.in.rs/Hokollektor/IstvanLogin.php',
-    stayLoggedInKey = 'stayLoggedIn',
     CustomChartURL =
         'http://hokollektor.site.in.rs/Istvan.yolo/IstvanDatum.php',
     customProfileURL = 'http://hokollektor.site.in.rs/customProfileForNode.php',

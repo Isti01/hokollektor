@@ -5,6 +5,7 @@ import 'package:hokollektor/bloc/CustomProfileBloc.dart';
 import 'package:hokollektor/bloc/DataClasses.dart';
 import 'package:hokollektor/chart/Chart.dart';
 import 'package:hokollektor/localization.dart' as loc;
+import 'package:hokollektor/main.dart';
 import 'package:hokollektor/presentation/presentation.dart';
 import 'package:hokollektor/util/custom_profile_picker/CustomProfilePicker.dart';
 import 'package:hokollektor/util/tabbedBackdrop.dart';
@@ -36,6 +37,7 @@ class HomeBackpanel extends StatelessWidget {
           bloc: bloc,
           builder: _buildManual,
         ),
+        LanguageSetting(),
         SizedBox(height: 1000),
         Material(
           type: MaterialType.transparency,
@@ -88,7 +90,7 @@ class HomeBackpanel extends StatelessWidget {
     final data = state.manualData;
 
     return data.rpm2 != null
-        ? _buildCategoryTile(
+        ? buildFrame(
             theme: theme,
             title: loc.getText(loc.manualConf),
             children: [
@@ -166,71 +168,48 @@ class HomeBackpanel extends StatelessWidget {
         ),
       );
 
-    return Theme(
-      data: theme.copyWith(unselectedWidgetColor: Colors.white),
-      child: _buildCategoryTile(
-        theme: theme,
-        title: loc.getText(loc.profiles),
-        initiallyExpanded: true,
-        children: [
-          _radioTile(
-            loc.getText(loc.optimal),
-            loc.getText(loc.profileOptimalDescription),
-            profileState.optimal,
-            theme.textTheme,
-            state,
-          ),
-          _radioTile(
-            loc.getText(loc.minimal),
-            loc.getText(loc.profileMinimalDescription),
-            profileState.minimal,
-            theme.textTheme,
-            state,
-          ),
-          _radioTile(
-            loc.getText(loc.maximal),
-            loc.getText(loc.profileMaximalDescription),
-            profileState.maximal,
-            theme.textTheme,
-            state,
-          ),
-          _radioTile(
-            loc.getText(loc.manual),
-            loc.getText(loc.profileManualDescription),
-            profileState.manual,
-            theme.textTheme,
-            state,
-          ),
-          _radioTile(
-            loc.getText(loc.custom),
-            loc.getText(loc.profileCustomDescription),
-            profileState.custom,
-            theme.textTheme,
-            state,
-            (value) => _customProfileTileClicked(value, context, state),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategoryTile({
-    List<Widget> children,
-    String title,
-    ThemeData theme,
-    bool initiallyExpanded = false,
-  }) {
-    return ListTileTheme(
-      iconColor: fontColor,
-      child: ExpansionTile(
-        initiallyExpanded: initiallyExpanded,
-        children: children,
-        title: Text(
-          title,
-          style: theme.textTheme.title.copyWith(
-              fontSize: theme.textTheme.title.fontSize + 6.0, color: fontColor),
+    return buildFrame(
+      theme: theme,
+      title: loc.getText(loc.profiles),
+      initiallyExpanded: true,
+      children: [
+        _radioTile(
+          loc.getText(loc.optimal),
+          loc.getText(loc.profileOptimalDescription),
+          profileState.optimal,
+          theme.textTheme,
+          state,
         ),
-      ),
+        _radioTile(
+          loc.getText(loc.minimal),
+          loc.getText(loc.profileMinimalDescription),
+          profileState.minimal,
+          theme.textTheme,
+          state,
+        ),
+        _radioTile(
+          loc.getText(loc.maximal),
+          loc.getText(loc.profileMaximalDescription),
+          profileState.maximal,
+          theme.textTheme,
+          state,
+        ),
+        _radioTile(
+          loc.getText(loc.manual),
+          loc.getText(loc.profileManualDescription),
+          profileState.manual,
+          theme.textTheme,
+          state,
+        ),
+        _radioTile(
+          loc.getText(loc.custom),
+          loc.getText(loc.profileCustomDescription),
+          profileState.custom,
+          theme.textTheme,
+          state,
+          (value) => _customProfileTileClicked(value, context, state),
+        ),
+      ],
     );
   }
 
@@ -496,4 +475,150 @@ class _ManualSliderState extends State<ManualSlider> {
       ),
     );
   }
+}
+
+class LanguageSetting extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Material(
+      type: MaterialType.transparency,
+      child: ListTile(
+          onTap: () => showDialog(
+              context: context,
+              builder: (context) => Theme(
+                    data: Theme.of(context),
+                    child: LanguageDialog(),
+                  )),
+          title: Text(
+            loc.getText(loc.changeLanguage),
+            style: theme.textTheme.title.copyWith(
+              fontSize: theme.textTheme.title.fontSize + 6.0,
+              color: fontColor,
+            ),
+          )),
+    );
+  }
+}
+
+class LanguageDialog extends StatefulWidget {
+  @override
+  _LanguageDialogState createState() => _LanguageDialogState();
+}
+
+class _LanguageDialogState extends State<LanguageDialog> {
+  List<DropdownMenuItem<String>> languages;
+  String chosenValue;
+
+  _initLangs(List<String> langs) => this.languages = langs
+      .map((lang) => DropdownMenuItem<String>(
+            value: lang,
+            child: Center(
+              child: Text(loc.languageToOption(lang)),
+            ),
+          ))
+      .toList();
+
+  @override
+  void initState() {
+    super.initState();
+    final langs = loc.getLanguageOptions();
+
+    chosenValue = loc.getPreferredLanguage();
+
+    _initLangs(langs);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Center(
+      child: Material(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12.0))),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
+          child: IntrinsicWidth(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  loc.getText(loc.changeLanguage),
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.title,
+                ),
+                SizedBox(height: 12.0),
+                DropdownButton<String>(
+                  items: languages,
+                  onChanged: (newValue) =>
+                      this.setState(() => chosenValue = newValue),
+                  value: chosenValue,
+                  isExpanded: true,
+                ),
+                ButtonBar(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    OutlineButton(
+                      borderSide: BorderSide(color: theme.primaryColor),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(12.0))),
+                      child: Text(
+                        loc.getText(loc.cancel),
+                        style: theme.textTheme.button
+                            .copyWith(color: theme.primaryColor),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    RaisedButton(
+                      color: theme.primaryColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(12.0))),
+                      child: Text(
+                        loc.getText(loc.save),
+                        style:
+                            theme.textTheme.button.copyWith(color: fontColor),
+                      ),
+                      onPressed: () async {
+                        await saveLanguagePreference(chosenValue);
+                        Navigator.pop(context);
+                        loc.onLocaleChange();
+                      },
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+buildFrame({
+  List<Widget> children,
+  String title,
+  ThemeData theme,
+  bool initiallyExpanded = false,
+}) {
+  return Theme(
+      data: theme.copyWith(unselectedWidgetColor: Colors.white),
+      child: ListTileTheme(
+        iconColor: fontColor,
+        child: ExpansionTile(
+          initiallyExpanded: initiallyExpanded,
+          children: children,
+          title: Text(
+            title,
+            style: theme.textTheme.title.copyWith(
+              fontSize: theme.textTheme.title.fontSize + 6.0,
+              color: fontColor,
+            ),
+          ),
+        ),
+      ));
 }

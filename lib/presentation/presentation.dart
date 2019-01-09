@@ -76,6 +76,12 @@ class PresentationPageState extends State<PresentationPage>
           children: slides,
         ));
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 }
 
 class Slide extends StatelessWidget {

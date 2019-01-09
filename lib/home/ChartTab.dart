@@ -203,18 +203,24 @@ class ChartFrontState extends State<ChartFront> {
     _createWidgets();
 
     widget.bloc.state.listen((ChartTabState data) {
-      this.setState(() {
+      if (mounted) {
+        this.setState(() {
+          this.chart = data.chart;
+          this.startDate = data.startDate;
+          this.endDate = data.endDate;
+          _createWidgets();
+        });
+      } else {
         this.chart = data.chart;
         this.startDate = data.startDate;
         this.endDate = data.endDate;
         _createWidgets();
-      });
+      }
     });
   }
 
   void _createWidgets() {
     this.title = getChartTitle(this.chart);
-    this.chartWidget = null;
     this.chartWidget = _getChart(
       chart,
       startDate: startDate,

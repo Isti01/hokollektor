@@ -1,4 +1,33 @@
-var locale = "en";
+var locale = "en", preferredLanguage;
+
+void Function() onLocaleChange;
+
+String getPreferredLanguage() {
+  if (preferredLanguage == null || !localizations.contains(preferredLanguage))
+    return "";
+  return preferredLanguage;
+}
+
+List<String> getLanguageOptions() {
+  final options = localizations.map((val) => val).toList();
+  options.add("");
+  return options;
+}
+
+languageToOption(language) {
+  switch (language) {
+    case "hu":
+      return getText(langHu);
+    case "sr":
+      return getText(langSrCiril);
+    case "sr_Latn":
+      return getText(langSrLatn);
+    case "en":
+      return getText(langEn);
+    default:
+      return getText(langAuto);
+  }
+}
 
 void initLocale(String loc) {
   if (localizations.contains(loc))
@@ -89,7 +118,13 @@ const Map<String, Map<String, String>> localizedTexts = {
     theApplication: "Az App",
     theApplicationText:
         "A célunk az, hogy bárhol hozzáférhessünk a kollektorhoz, ezért készült ez az applikáció.",
-    collectorControllingImageDescription: "A vezérlés egy édesség dobozban"
+    collectorControllingImageDescription: "A vezérlés egy édesség dobozban",
+    langHu: "Magyar",
+    langEn: "Angol",
+    langSrLatn: "Szerb Latin",
+    langSrCiril: "Szerb Cirill",
+    langAuto: "Automatikus",
+    changeLanguage: "Nyelv megváltoztatása"
   },
   "sr": {},
   "sr_Latn": {},
@@ -154,14 +189,21 @@ const Map<String, Map<String, String>> localizedTexts = {
     aboutCollector: "About the collector",
     aboutCollectorText:
         "Péter, our IT teacher in the spring of 2017 finished the collector.\n\nWe got the opportunity to automate it.",
-    aboutCollectorImageDescription: "A tanár úr és a kollektor",
-    collectorControlling: "A vezérlés",
+    aboutCollectorImageDescription: "Péter and the collector",
+    collectorControlling: "The control",
     collectorControllingText:
         "First, we installed the Node MCU and three heat sensors, then we could measure and monitor the temperatures realtime and we could control the collector.",
     theApplication: "The application",
     theApplicationText:
         "We made this app with these goals, make the collector accessible from anywhere, and make everything as simple as possible.",
-    collectorControllingImageDescription: "All the electronics in one candy box"
+    collectorControllingImageDescription:
+        "All the electronics in one candy box",
+    langHu: "Hungarian",
+    langEn: "English",
+    langSrLatn: "Serbian Latin",
+    langSrCiril: "Serbian Cyrillic",
+    langAuto: "Automatic",
+    changeLanguage: "Change Lanugage"
   },
 };
 
@@ -225,7 +267,13 @@ const invalidUsername = "invalidUsername",
     theApplication = "theApplication",
     theApplicationText = "theApplicationText",
     collectorControllingImageDescription =
-        "collectorControllingImageDescription";
+        "collectorControllingImageDescription",
+    langHu = 'langHu',
+    langEn = 'langEn',
+    langSrLatn = 'langSrLatn',
+    langSrCiril = 'langSrCiril',
+    langAuto = 'langAuto',
+    changeLanguage = "changeLanguage";
 
 bool test(String locale) {
   if (!localizations.contains(locale)) return false;

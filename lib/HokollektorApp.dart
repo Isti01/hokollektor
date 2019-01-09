@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hokollektor/localization.dart';
 
-Locale locale;
+const AppFontFamily = "Rubik";
+const AppTitle = 'Collector App';
 
 class HokollektorApp extends StatelessWidget {
   final Widget child;
@@ -11,24 +12,49 @@ class HokollektorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-//
-
     return new MaterialApp(
-      localizationsDelegates: localizations
-          .map((languageCode) => GlobalMaterialLocalizations.delegate)
-          .toList(),
-
-      // ... app-specific localization delegate[s] here
-
-      supportedLocales:
-          localizations.map((languageCode) => Locale(languageCode)).toList(),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+      ],
+      supportedLocales: localizations.map((languageCode) {
+        return Locale(languageCode);
+      }).toList(),
       debugShowCheckedModeBanner: false,
-      title: 'Collector App',
+      title: AppTitle,
       theme: new ThemeData(
-        fontFamily: 'Rubik',
+        fontFamily: AppFontFamily,
         primarySwatch: Colors.blue,
       ),
-      home: child,
+      home: LocaleInitializerLayer(child: child),
     );
+  }
+}
+
+class LocaleInitializerLayer extends StatefulWidget {
+  final child;
+
+  const LocaleInitializerLayer({Key key, this.child}) : super(key: key);
+
+  @override
+  LocaleInitializerLayerState createState() {
+    return new LocaleInitializerLayerState();
+  }
+}
+
+class LocaleInitializerLayerState extends State<LocaleInitializerLayer> {
+  var key = UniqueKey();
+
+  @override
+  void initState() {
+    super.initState();
+    onLocaleChange = () => this.setState(() => key = UniqueKey());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    initLocale(
+        preferredLanguage ?? Localizations.localeOf(context).languageCode);
+    return Container(key: key, child: widget.child);
   }
 }

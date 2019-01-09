@@ -7,6 +7,7 @@ import 'package:hokollektor/HokollektorApp.dart';
 import 'package:hokollektor/Loading.dart';
 import 'package:hokollektor/home/Home.dart';
 import 'package:hokollektor/localization.dart' as loc;
+import 'package:hokollektor/main.dart';
 import 'package:hokollektor/util/URLs.dart';
 import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
@@ -15,7 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    loc.initLocale(Localizations.localeOf(context).languageCode);
     final s = MediaQuery.of(context).size;
     final ratio = s.width / s.height;
     final size = ratio * 350;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hokollektor/HokollektorApp.dart';
 import 'package:hokollektor/bloc/AppDataBloc.dart';
 import 'package:hokollektor/bloc/ChartTabBloc.dart';
 import 'package:hokollektor/home/ChartTab.dart';
@@ -18,7 +19,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    loc.initLocale(Localizations.localeOf(context).languageCode);
     return Scaffold(
       body: TabbedBackdrop(
         key: backdropKey,
@@ -30,12 +30,18 @@ class HomePage extends StatelessWidget {
           BackdropComponent(
             // frontPadding: 12.0,
             frontLayer: Theme(
-              data: Theme.of(context).copyWith(primaryColor: HomePanelColor),
+              data: ThemeData(
+                primarySwatch: HomePanelColor,
+                fontFamily: AppFontFamily,
+              ),
               child: HomeFront(bloc: appBloc),
             ),
             frontHeading: Text(loc.getText(loc.configureHeader)),
             backLayer: Theme(
-              data: Theme.of(context).copyWith(primaryColor: HomePanelColor),
+              data: ThemeData(
+                primarySwatch: HomePanelColor,
+                fontFamily: AppFontFamily,
+              ),
               child: HomeBackpanel(bloc: appBloc),
             ),
             backgroundColor: HomePanelColor,
@@ -43,12 +49,18 @@ class HomePage extends StatelessWidget {
           BackdropComponent(
             // frontPadding: 12.0,
             frontLayer: Theme(
-              data: Theme.of(context).copyWith(primaryColor: ChartPanelColor),
+              data: ThemeData(
+                primarySwatch: ChartPanelColor,
+                fontFamily: AppFontFamily,
+              ),
               child: ChartFront(realTimeBloc: appBloc, bloc: chartBloc),
             ),
             frontHeading: Text(loc.getText(loc.chartHeader)),
             backLayer: Theme(
-              data: Theme.of(context).copyWith(primaryColor: ChartPanelColor),
+              data: ThemeData(
+                primarySwatch: ChartPanelColor,
+                fontFamily: AppFontFamily,
+              ),
               child: ChartBackpanel(bloc: chartBloc, onReturn: _toggleBackdrop),
             ),
             backgroundColor: ChartPanelColor,
