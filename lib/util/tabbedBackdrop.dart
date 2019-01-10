@@ -243,7 +243,7 @@ class TabbedBackdropState extends State<TabbedBackdrop>
               indicatorPadding:
                   const EdgeInsets.symmetric(horizontal: kFrontHeadingHeight),
               isScrollable: true,
-              labelPadding: EdgeInsets.symmetric(horizontal: 52.0),
+              labelPadding: EdgeInsets.symmetric(horizontal: 44.0),
               controller: _tabController,
               tabs: widget.tabs,
               indicatorColor: Colors.white,

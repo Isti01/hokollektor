@@ -71,77 +71,15 @@ class ChartBackpanel extends StatelessWidget {
     Color color = Colors.white;
 
     var onPressed = () async {
-      if (chart == Charts.custom) {
-        try {
-          final dates = await showDialog(
-            context: context,
-            builder: (BuildContext context) => DatePickerDialog(),
-            barrierDismissible: true,
-          );
+      if (chart == Charts.custom) await _showCustomChart(context);
 
-          DateTime elso = DateTime(
-            dates[0].year,
-            dates[0].month,
-            dates[0].day,
-          );
-
-          DateTime masodik = DateTime(
-            dates[1].year,
-            dates[1].month,
-            dates[1].day,
-            23,
-            59,
-          );
-
-          int startDate = elso.millisecondsSinceEpoch ~/ 1000;
-          int endDate = masodik.millisecondsSinceEpoch ~/ 1000;
-
-          bloc.dispatch(CustomChartTabEvent(
-            Charts.custom,
-            startDate,
-            endDate,
-          ));
-        } catch (e) {
-          print(e.toString());
-        }
-      }
       onReturn();
     };
 
     if (state.chart != chart) {
       onPressed = () async {
         if (chart == Charts.custom) {
-          try {
-            final dates = await showDialog(
-                context: context,
-                builder: (BuildContext context) => DatePickerDialog(),
-                barrierDismissible: true);
-
-            DateTime elso = DateTime(
-              dates[0].year,
-              dates[0].month,
-              dates[0].day,
-            );
-
-            DateTime masodik = DateTime(
-              dates[1].year,
-              dates[1].month,
-              dates[1].day,
-              23,
-              30,
-            );
-
-            int startDate = elso.millisecondsSinceEpoch ~/ 1000;
-            int endDate = masodik.millisecondsSinceEpoch ~/ 1000;
-
-            bloc.dispatch(CustomChartTabEvent(
-              Charts.custom,
-              startDate,
-              endDate,
-            ));
-          } catch (e) {
-            print(e.toString());
-          }
+          await _showCustomChart(context);
         } else {
           bloc.dispatch(ChartTabEvent(chart));
         }
@@ -168,6 +106,40 @@ class ChartBackpanel extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _showCustomChart(context) async {
+    try {
+      final List<DateTime> dates = await showDialog(
+          context: context,
+          builder: (BuildContext context) => DatePickerDialog(),
+          barrierDismissible: true);
+
+      DateTime elso = DateTime(
+        dates[0].year,
+        dates[0].month,
+        dates[0].day,
+      );
+
+      DateTime masodik = DateTime(
+        dates[1].year,
+        dates[1].month,
+        dates[1].day,
+        23,
+        59,
+      );
+
+      int startDate = elso.millisecondsSinceEpoch ~/ 1000;
+      int endDate = masodik.millisecondsSinceEpoch ~/ 1000;
+
+      bloc.dispatch(CustomChartTabEvent(
+        Charts.custom,
+        startDate,
+        endDate,
+      ));
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }
 

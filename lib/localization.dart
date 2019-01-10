@@ -42,10 +42,10 @@ String getText(String textKey) =>
     localizedTexts[locale][textKey] ?? "_nincs ilyen string_";
 
 const localizations = [
-  "hu",
-//  "sr",
-//  "sr_Latn",
   "en",
+  "hu",
+  "sr",
+  "sr_Latn",
 ];
 
 const Map<String, Map<String, String>> localizedTexts = {
@@ -126,8 +126,158 @@ const Map<String, Map<String, String>> localizedTexts = {
     langAuto: "Automatikus",
     changeLanguage: "Nyelv megváltoztatása"
   },
-  "sr": {},
-  "sr_Latn": {},
+  "sr": {
+    noInternet: "Нема интернета",
+    invalidUsername: "Погрешно корисничко име",
+    invalidPassword: "Погрешна лозинка",
+    correctPass:
+        "Лозинка мора да буде од 8 карактера и мора да садржи слова и бројеве.",
+    failedToLoadChart: "Неуспешно учитавање",
+    tempKoll: "Температура колектора",
+    tempOutside: "Спољна температура",
+    tempInside: "Унутрашња температура",
+    koll: "Колектор",
+    outside: "Спољна",
+    inside: "Унутрашња",
+    pickInterval: "Изаберите временски период",
+    cancel: "Отказати",
+    save: "Сачувати",
+    weeklyChart: "Недељни графикон",
+    dailyChart: "Дневни графикон",
+    hourlyChart: "Графикон од сат времена",
+    realtimeChart: "Графикон у реалном времену",
+    customChart: "Јединставени графикон",
+    home: "Почетна страница ",
+    charts: "Графикони",
+    configureHeader: "Притисните за конфигурације",
+    chartHeader: "Притисните за избор графикона ",
+    profiles: "Профили ",
+    optimal: "Оптималан",
+    minimal: "Минималан",
+    maximal: "Маxималан",
+    manual: "Мануалан",
+    custom: "Јединствен",
+    house: "Кућа",
+    minTemp: "Минимална температура: ",
+    maxTemp: "Маxимална температура: ",
+    tapToReload: "Притисните за допуњавање",
+    manualConf: "Мануална конфигурација",
+    vent0: "Вентилатор #0",
+    vent1: "Вентилатор #1",
+    user: "Корисничко име ",
+    pass: "Лозинка",
+    stayLoggedIn: "Останите пријављени",
+    login: "Пријављивање",
+    expanded: "Проширен",
+    simplified: "Смањен",
+    noTextAdded: "Није дат текст.",
+    invalidUserInfo: "Погрешна лозинка или корисничко име.",
+    onDeg: "он",
+    profileMinimalDescription:
+        "Брзина вентилатора је мања, а унутрашња температура је нижа.",
+    profileMaximalDescription:
+        "Брзина вентилатора је маxимална, унутрашња температура је виша.",
+    profileOptimalDescription:
+        "Брзина вентилатора и унутрашња температура су оптимални.",
+    profileCustomDescription:
+        "Корисник бира на основу температуре брзину вентилатора.",
+    profileManualDescription: "Брзина вентилатора се мануално подешава.",
+    presentationTime: "Скок до презентације!",
+    appName: "Цоллецтор Апп",
+    aboutCollector: "О колектору",
+    aboutCollectorText:
+        "Наш професор је направио соларни колектор  2017. године.\n\nНаша група је добила прилику да направи контролну јединицу за управљење колектором.",
+    aboutCollectorImageDescription: "Професор и колектор",
+    collectorControlling: "Управљање",
+    collectorControllingText:
+        "Уградили смо један Ноде МЦУ и топлотни сензор са којим меримо температуру у реалном времену и управљамо колектором.",
+    theApplication: "Апликација",
+    theApplicationText:
+        "Наш циљ је да нам колектор било где буде доступан, зато је направљена ова апликација.",
+    collectorControllingImageDescription: "Управљање у кутији за слаткише",
+    langHu: "Мађарски",
+    langEn: "Енгелски",
+    langSrLatn: "Српски (Латиница)",
+    langSrCiril: "Српски (Ћирилица)",
+    langAuto: "Аутоматски",
+    changeLanguage: "Промена језика"
+  },
+  "sr_Latn": {
+    noInternet: "Nema interneta",
+    invalidUsername: "Pogrešno korisničko ime",
+    invalidPassword: "Pogrešna lozinka",
+    correctPass:
+        "Lozinka mora da bude od 8 karaktera i mora da sadrži slova i brojeve.",
+    failedToLoadChart: "Neuspešno učitavanje",
+    tempKoll: "Temperatura kolektora",
+    tempOutside: "Spoljna temperatura",
+    tempInside: "Unutrašnja temperatura",
+    koll: "Kolektor",
+    outside: "Spoljna",
+    inside: "Unutrašnja",
+    pickInterval: "Izaberite vremenski period",
+    cancel: "Otkazati",
+    save: "Sačuvati",
+    weeklyChart: "Nedeljni grafikon",
+    dailyChart: "Dnevni grafikon",
+    hourlyChart: "Grafikon od sat vremena",
+    realtimeChart: "Grafikon u realnom vremenu",
+    customChart: "Jedinstaveni grafikon",
+    home: "Početna stranica ",
+    charts: "Grafikoni",
+    configureHeader: "Pritisnite za konfiguracije",
+    chartHeader: "Pritisnite za izbor grafikona ",
+    profiles: "Profili ",
+    optimal: " Optimalan",
+    minimal: "Minimalan",
+    maximal: "Maximalan",
+    manual: "Manualan",
+    custom: "Jedinstven",
+    house: "Kuća",
+    minTemp: "Minimalna temperatura: ",
+    maxTemp: "Maximalna temperatura: ",
+    tapToReload: "Pritisnite za dopunjavanje",
+    manualConf: "Manualna konfiguracija",
+    vent0: "Ventilator #0",
+    vent1: "Ventilator #1",
+    user: "Korisničko ime ",
+    pass: "Lozinka",
+    stayLoggedIn: "Ostanite prijavljeni",
+    login: "Prijavljivanje",
+    expanded: "Proširen",
+    simplified: "Smanjen",
+    noTextAdded: "Nije dat tekst.",
+    invalidUserInfo: "Pogrešna lozinka ili korisničko ime.",
+    onDeg: "on",
+    profileMinimalDescription:
+        "Brzina ventilatora je manja, a unutrašnja temperatura je niža.",
+    profileMaximalDescription:
+        "Brzina ventilatora je maximalna, unutrašnja temperatura je viša.",
+    profileOptimalDescription:
+        "Brzina ventilatora i unutrašnja temperatura su optimalni.",
+    profileCustomDescription:
+        "Korisnik bira na osnovu temperature brzinu ventilatora.",
+    profileManualDescription: "Brzina ventilatora se manualno podešava.",
+    presentationTime: "Skok do prezentacije!",
+    appName: "Collector App",
+    aboutCollector: "O kolektoru",
+    aboutCollectorText:
+        "Naš profesor je napravio solarni kolektor  2017. godine.\n\nNaša grupa je dobila priliku da napravi kontrolnu jedinicu za upravljenje kolektorom.",
+    aboutCollectorImageDescription: "Profesor i kolektor",
+    collectorControlling: "Upravljanje",
+    collectorControllingText:
+        "Ugradili smo jedan Node MCU i toplotni senzor sa kojim merimo temperaturu u realnom vremenu i upravljamo kolektorom.",
+    theApplication: "Aplikacija",
+    theApplicationText:
+        "Naš cilj je da nam kolektor bilo gde bude dostupan, zato je napravljena ova aplikacija.",
+    collectorControllingImageDescription: "Upravljanje u kutiji za slatkiše",
+    langHu: "Mađarski",
+    langEn: "Engelski",
+    langSrLatn: "Srpski (Latinica)",
+    langSrCiril: "Srpski (Ćirilica)",
+    langAuto: "Automatski",
+    changeLanguage: "Promena jezika"
+  },
   "en": {
     noInternet: "No Internet Connection",
     invalidUsername: "Invalid Username",
@@ -278,51 +428,135 @@ const invalidUsername = "invalidUsername",
 bool test(String locale) {
   if (!localizations.contains(locale)) return false;
 
-  if (localizedTexts[locale][invalidUsername] == null) return false;
-  if (localizedTexts[locale][noInternet] == null) return false;
-  if (localizedTexts[locale][correctPass] == null) return false;
-  if (localizedTexts[locale][tempKoll] == null) return false;
-  if (localizedTexts[locale][tempOutside] == null) return false;
-  if (localizedTexts[locale][tempInside] == null) return false;
-  if (localizedTexts[locale][koll] == null) return false;
-  if (localizedTexts[locale][outside] == null) return false;
-  if (localizedTexts[locale][inside] == null) return false;
-  if (localizedTexts[locale][cancel] == null) return false;
-  if (localizedTexts[locale][save] == null) return false;
-  if (localizedTexts[locale][home] == null) return false;
-  if (localizedTexts[locale][charts] == null) return false;
-  if (localizedTexts[locale][minTemp] == null) return false;
-  if (localizedTexts[locale][maxTemp] == null) return false;
-  if (localizedTexts[locale][stayLoggedIn] == null) return false;
-  if (localizedTexts[locale][tapToReload] == null) return false;
-  if (localizedTexts[locale][configureHeader] == null) return false;
-  if (localizedTexts[locale][chartHeader] == null) return false;
-  if (localizedTexts[locale][weeklyChart] == null) return false;
-  if (localizedTexts[locale][dailyChart] == null) return false;
-  if (localizedTexts[locale][hourlyChart] == null) return false;
-  if (localizedTexts[locale][realtimeChart] == null) return false;
-  if (localizedTexts[locale][customChart] == null) return false;
-  if (localizedTexts[locale][profiles] == null) return false;
-  if (localizedTexts[locale][optimal] == null) return false;
-  if (localizedTexts[locale][minimal] == null) return false;
-  if (localizedTexts[locale][maximal] == null) return false;
-  if (localizedTexts[locale][manualConf] == null) return false;
-  if (localizedTexts[locale][vent0] == null) return false;
-  if (localizedTexts[locale][vent1] == null) return false;
-  if (localizedTexts[locale][manual] == null) return false;
-  if (localizedTexts[locale][expanded] == null) return false;
-  if (localizedTexts[locale][simplified] == null) return false;
-  if (localizedTexts[locale][onDeg] == null) return false;
-  if (localizedTexts[locale][custom] == null) return false;
-  if (localizedTexts[locale][house] == null) return false;
-  if (localizedTexts[locale][noTextAdded] == null) return false;
-  if (localizedTexts[locale][user] == null) return false;
-  if (localizedTexts[locale][pass] == null) return false;
-  if (localizedTexts[locale][invalidUserInfo] == null) return false;
-  if (localizedTexts[locale][login] == null) return false;
-  if (localizedTexts[locale][pickInterval] == null) return false;
-  if (localizedTexts[locale][failedToLoadChart] == null) return false;
-  if (localizedTexts[locale][invalidPassword] == null) return false;
+  if (localizedTexts[locale][invalidUsername] == null ||
+      localizedTexts[locale][noInternet] == null ||
+      localizedTexts[locale][correctPass] == null ||
+      localizedTexts[locale][tempKoll] == null ||
+      localizedTexts[locale][tempOutside] == null ||
+      localizedTexts[locale][tempInside] == null ||
+      localizedTexts[locale][koll] == null ||
+      localizedTexts[locale][outside] == null ||
+      localizedTexts[locale][inside] == null ||
+      localizedTexts[locale][cancel] == null ||
+      localizedTexts[locale][save] == null ||
+      localizedTexts[locale][home] == null ||
+      localizedTexts[locale][charts] == null ||
+      localizedTexts[locale][minTemp] == null ||
+      localizedTexts[locale][maxTemp] == null ||
+      localizedTexts[locale][stayLoggedIn] == null ||
+      localizedTexts[locale][tapToReload] == null ||
+      localizedTexts[locale][configureHeader] == null ||
+      localizedTexts[locale][chartHeader] == null ||
+      localizedTexts[locale][weeklyChart] == null ||
+      localizedTexts[locale][dailyChart] == null ||
+      localizedTexts[locale][hourlyChart] == null ||
+      localizedTexts[locale][realtimeChart] == null ||
+      localizedTexts[locale][customChart] == null ||
+      localizedTexts[locale][profiles] == null ||
+      localizedTexts[locale][optimal] == null ||
+      localizedTexts[locale][minimal] == null ||
+      localizedTexts[locale][maximal] == null ||
+      localizedTexts[locale][manualConf] == null ||
+      localizedTexts[locale][vent0] == null ||
+      localizedTexts[locale][vent1] == null ||
+      localizedTexts[locale][manual] == null ||
+      localizedTexts[locale][expanded] == null ||
+      localizedTexts[locale][simplified] == null ||
+      localizedTexts[locale][onDeg] == null ||
+      localizedTexts[locale][custom] == null ||
+      localizedTexts[locale][house] == null ||
+      localizedTexts[locale][noTextAdded] == null ||
+      localizedTexts[locale][user] == null ||
+      localizedTexts[locale][pass] == null ||
+      localizedTexts[locale][invalidUserInfo] == null ||
+      localizedTexts[locale][login] == null ||
+      localizedTexts[locale][pickInterval] == null ||
+      localizedTexts[locale][failedToLoadChart] == null ||
+      localizedTexts[locale][invalidPassword] == null ||
+      localizedTexts[locale][profileMinimalDescription] == null ||
+      localizedTexts[locale][profileMaximalDescription] == null ||
+      localizedTexts[locale][profileOptimalDescription] == null ||
+      localizedTexts[locale][profileCustomDescription] == null ||
+      localizedTexts[locale][profileManualDescription] == null ||
+      localizedTexts[locale][presentationTime] == null ||
+      localizedTexts[locale][appName] == null ||
+      localizedTexts[locale][aboutCollector] == null ||
+      localizedTexts[locale][aboutCollectorText] == null ||
+      localizedTexts[locale][aboutCollectorImageDescription] == null ||
+      localizedTexts[locale][collectorControlling] == null ||
+      localizedTexts[locale][collectorControllingText] == null ||
+      localizedTexts[locale][theApplication] == null ||
+      localizedTexts[locale][theApplicationText] == null ||
+      localizedTexts[locale][collectorControllingImageDescription] == null ||
+      localizedTexts[locale][langHu] == null ||
+      localizedTexts[locale][langEn] == null ||
+      localizedTexts[locale][langSrLatn] == null ||
+      localizedTexts[locale][langSrCiril] == null ||
+      localizedTexts[locale][langAuto] == null ||
+      localizedTexts[locale][changeLanguage] == null) return false;
 
   return true;
 }
+
+const a = [
+  "Нема интернета",
+  "Погрешно корисничко име",
+  "Погрешна лозинка",
+  "Лозинка мора да буде од 8 карактера и мора да садржи слова и бројеве.",
+  "Неуспешно учитавање",
+  "Температура колектора",
+  "Спољна температура",
+  "Унутрашња температура",
+  "Колектор",
+  "Спољна",
+  "Унутрашња",
+  "Изаберите временски период",
+  "Отказати",
+  "Сачувати",
+  "Недељни графикон",
+  "Дневни графикон",
+  "Графикон од сат времена",
+  "Графикон у реалном времену",
+  "Јединставени графикон",
+  "Почетна страница ",
+  "Графикони",
+  "Притисните за конфигурације",
+  "Притисните за избор графикона ",
+  "Профили ",
+  "Оптималан",
+  "Минималан",
+  "Маxималан",
+  "Мануалан",
+  "Јединствен",
+  "Кућа",
+  "Минимална температура: ",
+  "Маxимална температура: ",
+  "Притисните за допуњавање",
+  "Мануална конфигурација",
+  "Вентилатор #0",
+  "Вентилатор #1",
+  "Корисничко име ",
+  "Лозинка",
+  "Останите пријављени",
+  "Пријављивање",
+  "Проширен",
+  "Смањен",
+  "Није дат текст.",
+  "Погрешна лозинка или корисничко име.",
+  "он",
+  "Брзина вентилатора је мања, а унутрашња температура је нижа.",
+  "Брзина вентилатора је маxимална, унутрашња температура је виша.",
+  "Брзина вентилатора и унутрашња температура су оптимални.",
+  "Корисник бира на основу температуре брзину вентилатора.",
+  "Брзина вентилатора се мануално подешава.",
+  "Скок до презентације!",
+  "Цоллецтор Апп",
+  "О колектору",
+  "Наш професор је направио соларни колектор  2017. године.\н\нНаша група је добила прилику да направи контролну јединицу за управљење колектором.",
+  "Професор и колектор",
+  "Управљање",
+  "Уградили смо један Ноде МЦУ и топлотни сензор са којим меримо температуру у реалном времену и управљамо колектором.",
+  "Апликација",
+  "Наш циљ је да нам колектор било где буде доступан, зато је направљена ова апликација.",
+  "Управљање у кутији за слаткише",
+];
