@@ -79,7 +79,7 @@ class ExpandedSliderPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 0.0),
+      margin: EdgeInsets.symmetric(horizontal: 0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -195,7 +195,7 @@ class _mSliderState extends State<_mSlider> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text(textToShow),
-        SizedBox(width: 4.0),
+        SizedBox(width: 4),
         SizedBox(
           width: size / 2.5,
           child: Slider(

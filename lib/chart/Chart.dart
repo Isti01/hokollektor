@@ -21,7 +21,7 @@ class KollChart extends StatefulWidget {
     Key key,
     @required this.url,
     this.animate = true,
-    this.height = 300.0,
+    this.height = 300,
     this.clickable = false,
   }) : super(key: key);
 
@@ -133,7 +133,7 @@ class PreloadedKollChart extends StatefulWidget {
   PreloadedKollChart({
     @required this.bloc,
     this.animate = true,
-    this.height = 300.0,
+    this.height = 300,
     this.clickable = false,
     this.title,
   });
@@ -181,9 +181,9 @@ class PreloadedKollChartState extends State<PreloadedKollChart>
           widget.title != null && snapshot.kollData != null
               ? Padding(
                   padding: const EdgeInsets.only(
-                    left: 8.0,
-                    right: 8.0,
-                    bottom: 8.0,
+                    left: 8,
+                    right: 8,
+                    bottom: 8,
                   ),
                   child: Text(
                     widget.title,
@@ -212,7 +212,7 @@ class PreloadedKollChartState extends State<PreloadedKollChart>
       return Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Material(
               child: InkWell(
                 onTap: () => widget.bloc.reload(),

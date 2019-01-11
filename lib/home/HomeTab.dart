@@ -75,7 +75,7 @@ class HomeBackpanel extends StatelessWidget {
           onTap: bloc.reload,
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.all(24),
               child: Text(
                 loc.getText(loc.tapToReload),
                 style: theme.textTheme.title.copyWith(color: fontColor),
@@ -146,7 +146,7 @@ class HomeBackpanel extends StatelessWidget {
     if (state.loading && state.profileData == null)
       return const Center(
         child: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(8),
           child: backpanelIndicator,
         ),
       );
@@ -158,7 +158,7 @@ class HomeBackpanel extends StatelessWidget {
           onTap: bloc.reload,
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.all(24),
               child: Text(
                 loc.getText(loc.tapToReload),
                 style: theme.textTheme.title.copyWith(color: fontColor),
@@ -222,7 +222,7 @@ class HomeBackpanel extends StatelessWidget {
     Function(profileState value) onChanged,
   ]) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: RadioListTile<profileState>(
         activeColor: radioActiveColor,
         title: Text(
@@ -264,13 +264,13 @@ class HomeFront extends StatelessWidget {
         ),
         Divider(),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RealTimeChart(
                 bloc: bloc,
-                height: 450.0,
+                height: 450,
                 title: loc.getText(loc.realtimeChart),
               ),
             ],
@@ -305,21 +305,21 @@ class InformationCards extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(loc.getText(loc.koll), style: theme.textTheme.title),
                 const SizedBox(
-                  height: 8.0,
+                  height: 8,
                 ),
                 Text(
                   loc.getText(loc.minTemp) + '${data.legkisebbKoll}°C',
                   style: theme.textTheme.subhead.copyWith(),
                 ),
                 const SizedBox(
-                  height: 4.0,
+                  height: 4,
                 ),
                 Text(
                   loc.getText(loc.maxTemp) + '${data.legnagyobbKoll}°C',
@@ -330,21 +330,21 @@ class InformationCards extends StatelessWidget {
           ),
           Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(loc.getText(loc.house), style: theme.textTheme.title),
                 const SizedBox(
-                  height: 8.0,
+                  height: 8,
                 ),
                 Text(
                   loc.getText(loc.minTemp) + '${data.legkisebbBenti}°C',
                   style: theme.textTheme.subhead.copyWith(),
                 ),
                 const SizedBox(
-                  height: 4.0,
+                  height: 4,
                 ),
                 Text(
                   loc.getText(loc.maxTemp) + '${data.legnagyobbBenti}°C',
@@ -358,12 +358,12 @@ class InformationCards extends StatelessWidget {
     } else if (state.loading) {
       return const Center(
           child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.0),
+        padding: EdgeInsets.symmetric(vertical: 16),
         child: CircularProgressIndicator(),
       ));
     } else {
       return Card(
-        elevation: 0.0,
+        elevation: 0,
         child: InkWell(
           onTap: bloc.reload,
           child: Column(
@@ -371,7 +371,7 @@ class InformationCards extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16),
                 child: Text(
                   loc.getText(loc.tapToReload),
                 ),
@@ -411,10 +411,10 @@ class _ManualSliderState extends State<ManualSlider> {
     sliderValue = ((widget.initialValue ?? 0) / 100).toDouble();
 
     if (sliderValue < 0) {
-      sliderValue = 0.0;
+      sliderValue = 0;
     }
     if (sliderValue > 1) {
-      sliderValue = 1.0;
+      sliderValue = 1;
     }
 
     value = widget.initialValue ?? 0;
@@ -429,15 +429,15 @@ class _ManualSliderState extends State<ManualSlider> {
     final theme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(
-        horizontal: 12.0,
-        vertical: 8.0,
+        horizontal: 12,
+        vertical: 8,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            padding: const EdgeInsets.symmetric(vertical: 4),
             child: Text(
               widget.sliderLabel,
               style: theme.body2.copyWith(
@@ -493,7 +493,7 @@ class LanguageSetting extends StatelessWidget {
           title: Text(
             loc.getText(loc.changeLanguage),
             style: theme.textTheme.title.copyWith(
-              fontSize: theme.textTheme.title.fontSize + 6.0,
+              fontSize: theme.textTheme.title.fontSize + 6,
               color: fontColor,
             ),
           )),
@@ -536,9 +536,9 @@ class _LanguageDialogState extends State<LanguageDialog> {
     return Center(
       child: Material(
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12.0))),
+            borderRadius: BorderRadius.all(Radius.circular(12))),
         child: Padding(
-          padding: const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
+          padding: const EdgeInsets.only(top: 12, left: 12, right: 12),
           child: IntrinsicWidth(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -549,7 +549,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
                   textAlign: TextAlign.center,
                   style: theme.textTheme.title,
                 ),
-                SizedBox(height: 12.0),
+                SizedBox(height: 12),
                 DropdownButton<String>(
                   items: languages,
                   onChanged: (newValue) =>
@@ -564,7 +564,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
                       borderSide: BorderSide(color: theme.primaryColor),
                       shape: RoundedRectangleBorder(
                           borderRadius:
-                              BorderRadius.all(Radius.circular(12.0))),
+                              BorderRadius.all(Radius.circular(12))),
                       child: Text(
                         loc.getText(loc.cancel),
                         style: theme.textTheme.button
@@ -576,7 +576,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
                       color: theme.primaryColor,
                       shape: RoundedRectangleBorder(
                           borderRadius:
-                              BorderRadius.all(Radius.circular(12.0))),
+                              BorderRadius.all(Radius.circular(12))),
                       child: Text(
                         loc.getText(loc.save),
                         style:
@@ -615,7 +615,7 @@ buildFrame({
           title: Text(
             title,
             style: theme.textTheme.title.copyWith(
-              fontSize: theme.textTheme.title.fontSize + 6.0,
+              fontSize: theme.textTheme.title.fontSize + 6,
               color: fontColor,
             ),
           ),

@@ -18,7 +18,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = MediaQuery.of(context).size;
     final ratio = s.width / s.height;
-    final size = ratio * 350;
+    final size = ratio * 225;
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
@@ -73,107 +73,77 @@ class LoginFormState extends State<LoginForm> {
     return Stack(
       alignment: Alignment.bottomCenter,
       children: <Widget>[
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 28.0,
-                  vertical: 16.0,
-                ),
-                child: Material(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(6.0))),
-                  elevation: 4.0,
-                  color: Colors.white,
-                  child: Form(
-                    key: formKey,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(height: 8.0),
-                          LoginInput(
-                            controller: _userController,
-                            labelText: loc.getText(loc.user),
-                            icon: Icon(Icons.person),
-                            node: nodes[0],
-                            onSubmitted: (String text) {
-                              FocusScope.of(context).requestFocus(nodes[1]);
-                            },
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Divider(
-                              color: Colors.grey,
-                            ),
-                          ),
-                          LoginInput(
-                            controller: _passController,
-                            labelText: loc.getText(loc.pass),
-                            icon: Icon(Icons.lock),
-                            obscureText: true,
-                            node: nodes[1],
-                            onSubmitted: (String text) => nodes[1].unfocus(),
-                          ),
-                          SizedBox(height: 2.0),
-                          error != null
-                              ? Text(error,
-                                  textAlign: TextAlign.center,
-                                  style:
-                                      theme.button.copyWith(color: Colors.red))
-                              : loading
-                                  ? Wrap(children: [
-                                      const Center(
-                                          child: CircularProgressIndicator())
-                                    ])
-                                  : Container(),
-                          SizedBox(height: 2.0),
-                          CheckBoxTile(
-                            value: stayLoggedIn,
-                            onChanged: (bool value) =>
-                                this.setState(() => stayLoggedIn = value),
-                            title: Text(
-                              loc.getText(loc.stayLoggedIn),
-                              textAlign: TextAlign.end,
-                            ),
-                          ),
-                          SizedBox(height: 32.0),
-                        ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+          child: Material(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12))),
+            elevation: 4,
+            color: Colors.white,
+            child: Form(
+              key: formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 8),
+                    LoginInput(
+                      controller: _userController,
+                      labelText: loc.getText(loc.user),
+                      icon: Icon(Icons.person),
+                      node: nodes[0],
+                      onSubmitted: (String text) {
+                        FocusScope.of(context).requestFocus(nodes[1]);
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Divider(
+                        color: Colors.grey,
                       ),
                     ),
-                  ),
-                )),
-          ],
+                    LoginInput(
+                      controller: _passController,
+                      labelText: loc.getText(loc.pass),
+                      icon: Icon(Icons.lock),
+                      obscureText: true,
+                      node: nodes[1],
+                      onSubmitted: (String text) => nodes[1].unfocus(),
+                    ),
+                    SizedBox(height: 2),
+                    error != null
+                        ? Text(
+                            error,
+                            textAlign: TextAlign.center,
+                            style: theme.button.copyWith(color: Colors.red),
+                          )
+                        : loading
+                            ? Wrap(children: [
+                                const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              ])
+                            : Container(),
+                    SizedBox(height: 2),
+                    CheckBoxTile(
+                      value: stayLoggedIn,
+                      onChanged: (bool value) =>
+                          this.setState(() => stayLoggedIn = value),
+                      title: Text(
+                        loc.getText(loc.stayLoggedIn),
+                        textAlign: TextAlign.end,
+                      ),
+                    ),
+                    SizedBox(height: 32),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
-        LoginButton(
-          onPressed: () async {
-            if (!formKey.currentState.validate()) return;
-            this.setState(() => loading = true);
-            String res =
-                await _login(_userController.text, _passController.text);
-
-            if (res == '') {
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (BuildContext context) {
-                return HokollektorApp(
-                  child: HomePage(),
-                );
-              }));
-              if (stayLoggedIn) {
-                _saveStayLoggedIn();
-              }
-            } else {
-              this.setState(() {
-                this.error = res;
-                this.loading = false;
-              });
-            }
-          },
-        ),
+        LoginButton(onPressed: _loginButtonPressed),
       ],
     );
   }
@@ -187,6 +157,29 @@ class LoginFormState extends State<LoginForm> {
     _userController.dispose();
     _passController.dispose();
   }
+
+  _loginButtonPressed() async {
+    if (!formKey.currentState.validate()) return;
+    this.setState(() => loading = true);
+    String res = await _login(_userController.text, _passController.text);
+
+    if (res == '') {
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
+        return HokollektorApp(
+          child: HomePage(),
+        );
+      }));
+      if (stayLoggedIn) {
+        _saveStayLoggedIn();
+      }
+    } else {
+      this.setState(() {
+        this.error = res;
+        this.loading = false;
+      });
+    }
+  }
 }
 
 class LoginButton extends StatelessWidget {
@@ -198,13 +191,11 @@ class LoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
     return Container(
-        margin: EdgeInsets.symmetric(horizontal: 60.0),
-        width: double.infinity,
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
               color: Colors.grey[800],
-              offset: Offset(0.0, 1.5),
+              offset: Offset(0, 1.5),
               blurRadius: 1.5,
             ),
           ],
@@ -212,16 +203,15 @@ class LoginButton extends StatelessWidget {
             HomePanelColor,
             ChartPanelColor,
           ]),
-          borderRadius: BorderRadius.all(Radius.circular(6.0)),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-            borderRadius: BorderRadius.all(Radius.circular(6.0)),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
             onTap: onPressed,
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 12.0, horizontal: 44.0),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 72),
               child: Text(
                 loc.getText(loc.login),
                 style: theme.title.copyWith(color: Colors.white),
@@ -254,8 +244,11 @@ class LoginInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final border = UnderlineInputBorder(
-        borderSide:
-            BorderSide(style: BorderStyle.none, color: Colors.transparent));
+      borderSide: BorderSide(
+        style: BorderStyle.none,
+        color: Colors.transparent,
+      ),
+    );
 
     return TextFormField(
       validator: (String text) {
@@ -267,15 +260,17 @@ class LoginInput extends StatelessWidget {
       obscureText: obscureText,
       onFieldSubmitted: onSubmitted,
       decoration: InputDecoration(
-          fillColor: Colors.transparent,
-          prefixIcon: icon,
-          labelText: labelText,
-          border: border,
-          disabledBorder: border,
-          enabledBorder: border,
-          errorBorder: border,
-          focusedBorder: border,
-          focusedErrorBorder: border),
+        fillColor: Colors.transparent,
+        prefixIcon: icon,
+        labelText: labelText,
+        border: border,
+        disabledBorder: border,
+        enabledBorder: border,
+        errorBorder: border,
+        focusedBorder: border,
+        focusedErrorBorder: border,
+        contentPadding: EdgeInsets.symmetric(horizontal: 16),
+      ),
     );
   }
 }
@@ -332,15 +327,15 @@ class CheckBoxTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 35.0,
+      height: 35,
       child: Row(
         children: <Widget>[
           Spacer(),
           InkWell(
-            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
             onTap: () => onChanged(!value),
             child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
+              padding: const EdgeInsets.only(left: 8),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[

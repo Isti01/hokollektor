@@ -14,10 +14,10 @@ class CustomProfilePicker extends StatelessWidget {
     return Center(
       child: SingleChildScrollView(
         child: Material(
-          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
           child: Padding(
               padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                  const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: BlocBuilder<CustomProfileEvent, CustomProfileState>(
                 bloc: bloc,
                 builder: _buildLayout,
@@ -75,14 +75,14 @@ class CustomProfilePicker extends StatelessWidget {
                 child: Text(loc.getText(loc.cancel)),
                 borderSide: BorderSide(color: Theme.of(context).primaryColor),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                 ),
                 textColor: Theme.of(context).primaryColor,
                 onPressed: () => Navigator.pop(context)),
             RaisedButton(
               child: Text(loc.getText(loc.save)),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                borderRadius: BorderRadius.all(Radius.circular(12)),
               ),
               textColor: Colors.white,
               color: Theme.of(context).primaryColor,

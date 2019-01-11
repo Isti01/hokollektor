@@ -22,8 +22,8 @@ class CollectorProgressIndicator extends StatefulWidget {
     this.color1,
     this.color2,
     this.onFinished,
-    this.size = 70.0,
-    this.elevation = 2.0,
+    this.size = 70,
+    this.elevation = 2,
     this.duration = const Duration(seconds: 3),
   }) : super(key: key);
 
@@ -60,25 +60,25 @@ class _CollectorProgressIndicatorState extends State<CollectorProgressIndicator>
 
   double _getMotionAnimation1() {
     if (_controller.value < 0.25)
-      return Tween<double>(begin: 0.0, end: maxSize1).evaluate(
-          CurvedAnimation(parent: _controller, curve: Interval(0.0, 0.25)));
+      return Tween<double>(begin: 0, end: maxSize1).evaluate(
+          CurvedAnimation(parent: _controller, curve: Interval(0, 0.25)));
     else
-      return Tween<double>(begin: maxSize1, end: 0.0).evaluate(
+      return Tween<double>(begin: maxSize1, end: 0).evaluate(
           CurvedAnimation(parent: _controller, curve: Interval(0.25, 0.66)));
   }
 
   double _getMotionAnimation2() {
     if (_controller.value < 0.25)
-      return Tween<double>(begin: 0.0, end: maxSize2).evaluate(
-          CurvedAnimation(parent: _controller, curve: Interval(0.0, 0.25)));
+      return Tween<double>(begin: 0, end: maxSize2).evaluate(
+          CurvedAnimation(parent: _controller, curve: Interval(0, 0.25)));
     else if (_controller.value < 0.5)
-      return Tween<double>(begin: maxSize2, end: 0.0).evaluate(
+      return Tween<double>(begin: maxSize2, end: 0).evaluate(
           CurvedAnimation(parent: _controller, curve: Interval(0.25, 0.5)));
     else if (_controller.value < 0.75)
-      return Tween<double>(begin: 0.0, end: maxSize2).evaluate(
+      return Tween<double>(begin: 0, end: maxSize2).evaluate(
           CurvedAnimation(parent: _controller, curve: Interval(0.5, 0.75)));
     else
-      return Tween<double>(begin: maxSize2, end: 0.0).evaluate(
+      return Tween<double>(begin: maxSize2, end: 0).evaluate(
           CurvedAnimation(parent: _controller, curve: Interval(0.75, 1)));
   }
 
@@ -90,12 +90,12 @@ class _CollectorProgressIndicatorState extends State<CollectorProgressIndicator>
 
   @override
   Widget build(BuildContext context) {
-    final size1 = widget.size / 3 * (2 + _getMotionAnimation1() ?? 0.0);
+    final size1 = widget.size / 3 * (2 + _getMotionAnimation1() ?? 0);
 
-    final size2 = widget.size / 3 * (2 + _getMotionAnimation2() ?? 0.0);
+    final size2 = widget.size / 3 * (2 + _getMotionAnimation2() ?? 0);
 
     return Transform.rotate(
-      angle: math.pi * _sizeAnimation?.value ?? 0.0,
+      angle: math.pi * _sizeAnimation?.value ?? 0,
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[

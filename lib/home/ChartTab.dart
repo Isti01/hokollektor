@@ -35,27 +35,27 @@ class ChartBackpanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8),
               child: _buildEntry(
                   Charts.weekly, loc.getText(loc.weeklyChart), context, state),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8),
               child: _buildEntry(
                   Charts.daily, loc.getText(loc.dailyChart), context, state),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8),
               child: _buildEntry(
                   Charts.hourly, loc.getText(loc.hourlyChart), context, state),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8),
               child: _buildEntry(Charts.realTime,
                   loc.getText(loc.realtimeChart), context, state),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8),
               child: _buildEntry(
                   Charts.custom, loc.getText(loc.customChart), context, state),
             ),
@@ -89,16 +89,16 @@ class ChartBackpanel extends StatelessWidget {
     }
 
     return RaisedButton(
-      elevation: 0.0,
-      highlightElevation: 0.0,
-      disabledElevation: 0.0,
+      elevation: 0,
+      highlightElevation: 0,
+      disabledElevation: 0,
       shape: RoundedRectangleBorder(
-          side: BorderSide(color: color, width: 2.0),
-          borderRadius: const BorderRadius.all(Radius.circular(12.0))),
+          side: BorderSide(color: color, width: 2),
+          borderRadius: const BorderRadius.all(Radius.circular(12))),
       color: Colors.transparent,
       onPressed: onPressed,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12.0),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         child: Text(
           text,
           style:
@@ -208,13 +208,13 @@ class ChartFrontState extends State<ChartFront> {
 
   Widget _build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: ListView(
         physics: const BouncingScrollPhysics(),
         children: [
           const SizedBox(height: kFrontHeadingHeight),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Text(
               this.title,
               style: Theme.of(context).textTheme.title,
@@ -252,27 +252,27 @@ class ChartFrontState extends State<ChartFront> {
       case Charts.realTime:
         return RealTimeChart(
           bloc: bloc,
-          height: 450.0,
+          height: 450,
         );
       case Charts.hourly:
         return OneHourChart(
           key: UniqueKey(),
-          height: 450.0,
+          height: 450,
         );
       case Charts.daily:
         return OneDayChart(
           key: UniqueKey(),
-          height: 450.0,
+          height: 450,
         );
       case Charts.weekly:
         return OneWeekChart(
           key: UniqueKey(),
-          height: 450.0,
+          height: 450,
         );
       case Charts.custom:
         return new CustomChart(
           key: UniqueKey(),
-          height: 450.0,
+          height: 450,
           startDate: startDate,
           endDate: endDate,
         );

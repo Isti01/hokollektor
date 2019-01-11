@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
         ],
         backdrops: [
           BackdropComponent(
-            // frontPadding: 12.0,
+            // frontPadding: 12,
             frontLayer: Theme(
               data: ThemeData(
                 primarySwatch: HomePanelColor,
@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
             backgroundColor: HomePanelColor,
           ),
           BackdropComponent(
-            // frontPadding: 12.0,
+            // frontPadding: 12,
             frontLayer: Theme(
               data: ThemeData(
                 primarySwatch: ChartPanelColor,

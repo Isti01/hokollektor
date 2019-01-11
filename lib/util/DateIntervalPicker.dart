@@ -16,19 +16,19 @@ enum DatePickerMode {
 class _MonthPickerSortKey extends OrdinalSortKey {
   const _MonthPickerSortKey(double order) : super(order);
 
-  static const _MonthPickerSortKey previousMonth = _MonthPickerSortKey(1.0);
-  static const _MonthPickerSortKey nextMonth = _MonthPickerSortKey(2.0);
-  static const _MonthPickerSortKey calendar = _MonthPickerSortKey(3.0);
+  static const _MonthPickerSortKey previousMonth = _MonthPickerSortKey(1);
+  static const _MonthPickerSortKey nextMonth = _MonthPickerSortKey(2);
+  static const _MonthPickerSortKey calendar = _MonthPickerSortKey(3);
 }
 
 const Duration _kMonthScrollDuration = Duration(milliseconds: 200);
-const double _kDayPickerRowHeight = 42.0;
+const double _kDayPickerRowHeight = 42;
 const int _kMaxDayPickerRowCount = 6; // A 31 day month that starts on Saturday.
 // Two extra rows: one for the day-of-week header and one for the month header.
 const double _kMaxDayPickerHeight =
     _kDayPickerRowHeight * (_kMaxDayPickerRowCount + 2);
 
-const double _kMonthPickerPortraitWidth = 330.0;
+const double _kMonthPickerPortraitWidth = 330;
 
 class DayPicker extends StatelessWidget {
   DayPicker({
@@ -101,7 +101,7 @@ class DayPicker extends StatelessWidget {
           ),
           color: Color.lerp(themeData.accentColor, Colors.white, 0.5),
           shape: BoxShape.rectangle),
-      margin: EdgeInsets.symmetric(vertical: 2.0, horizontal: 0.0),
+      margin: EdgeInsets.symmetric(vertical: 2, horizontal: 0),
     );
   }
 
@@ -341,7 +341,7 @@ class DayPicker extends StatelessWidget {
         }
 
         Widget dayWidget = Container(
-          margin: EdgeInsets.symmetric(vertical: 2.0, horizontal: 0.0),
+          margin: EdgeInsets.symmetric(vertical: 2, horizontal: 0),
           decoration: decoration,
           child: Center(
             child: Semantics(
@@ -530,7 +530,7 @@ class MonthPicker extends StatefulWidget {
 class _MonthPickerState extends State<MonthPicker>
     with SingleTickerProviderStateMixin {
   static final Animatable<double> _chevronOpacityTween =
-      Tween<double>(begin: 1.0, end: 0.0)
+      Tween<double>(begin: 1, end: 0)
           .chain(CurveTween(curve: Curves.easeInOut));
 
   @override
@@ -706,8 +706,8 @@ class _MonthPickerState extends State<MonthPicker>
             ),
           ),
           PositionedDirectional(
-            top: 0.0,
-            start: 8.0,
+            top: 0,
+            start: 8,
             child: Semantics(
               sortKey: _MonthPickerSortKey.previousMonth,
               child: FadeTransition(
@@ -724,8 +724,8 @@ class _MonthPickerState extends State<MonthPicker>
             ),
           ),
           PositionedDirectional(
-            top: 0.0,
-            end: 8.0,
+            top: 0,
+            end: 8,
             child: Semantics(
               sortKey: _MonthPickerSortKey.nextMonth,
               child: FadeTransition(

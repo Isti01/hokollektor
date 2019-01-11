@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/main.dart';
 
-const imagePadding = 6.0;
+const double imagePadding = 6;
 
 initSlides() => [
       Slide(
@@ -118,11 +118,11 @@ class Slide extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Material(
-            elevation: 4.0,
+            elevation: 4,
             color: this.topColor,
             child: Padding(
               padding: const EdgeInsets.only(
-                  top: 20.0, left: 24.0, right: 24.0, bottom: 20.0),
+                  top: 20, left: 24, right: 24, bottom: 20),
               child: Text(
                 title,
                 style: theme.display1.copyWith(color: this.textColor),
@@ -165,7 +165,7 @@ class Slide extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
+                              padding: const EdgeInsets.only(top: 4),
                               child: Text(
                                 imageDescription,
                                 style: theme.caption,
@@ -185,10 +185,10 @@ class Slide extends StatelessWidget {
 
   _buildText(TextTheme theme) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Text(
         text,
-        style: theme.headline.copyWith(fontSize: 20.0),
+        style: theme.headline.copyWith(fontSize: 20),
         textAlign: TextAlign.start,
       ),
     );

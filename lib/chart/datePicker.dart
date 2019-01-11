@@ -24,17 +24,17 @@ class DatePickerDialogState extends State<DatePickerDialog> {
     final theme = Theme.of(context).textTheme;
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+        borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top: 12.0),
+          padding: const EdgeInsets.only(top: 12),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                height: 300.0,
+                height: 300,
                 child: _buildDatePickerCard(
                   title: loc.getText(loc.pickInterval),
                   theme: theme,
@@ -51,14 +51,14 @@ class DatePickerDialogState extends State<DatePickerDialog> {
                       borderSide:
                           BorderSide(color: Theme.of(context).primaryColor),
                       shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
                       ),
                       textColor: Theme.of(context).primaryColor,
                       onPressed: () => Navigator.pop(context)),
                   RaisedButton(
                     child: Text(loc.getText(loc.save)),
                     shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
                     ),
                     textColor: Colors.white,
                     color: Theme.of(context).primaryColor,
