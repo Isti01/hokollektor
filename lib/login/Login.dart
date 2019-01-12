@@ -76,8 +76,7 @@ class LoginFormState extends State<LoginForm> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
           child: Material(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12))),
+            shape: RoundedRectangleBorder(borderRadius: appBorderRadius),
             elevation: 4,
             color: Colors.white,
             child: Form(
@@ -203,12 +202,12 @@ class LoginButton extends StatelessWidget {
             HomePanelColor,
             ChartPanelColor,
           ]),
-          borderRadius: BorderRadius.all(Radius.circular(12)),
+          borderRadius: appBorderRadius,
         ),
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius: appBorderRadius,
             onTap: onPressed,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 72),
@@ -332,7 +331,7 @@ class CheckBoxTile extends StatelessWidget {
         children: <Widget>[
           Spacer(),
           InkWell(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius: appBorderRadius,
             onTap: () => onChanged(!value),
             child: Padding(
               padding: const EdgeInsets.only(left: 8),

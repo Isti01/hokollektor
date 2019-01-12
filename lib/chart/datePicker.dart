@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hokollektor/home/Home.dart';
 import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/DateIntervalPicker.dart' as picker;
 import 'package:hokollektor/util/SimpleScrollBehavior.dart';
@@ -22,70 +23,86 @@ class DatePickerDialogState extends State<DatePickerDialog> {
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final theme = Theme.of(context).textTheme;
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+    final languageCode = loc.locale.split("_")[0];
+    String scriptCode;
+
+    try {
+      scriptCode = loc.locale.split("_")[1].trim();
+    } catch (e) {
+      print(e.toString());
+    }
+
+    return Localizations.override(
+      context: context,
+      locale: Locale.fromSubtags(
+        languageCode: languageCode,
+        scriptCode: scriptCode,
       ),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                height: 300,
-                child: _buildDatePickerCard(
-                  title: loc.getText(loc.pickInterval),
-                  theme: theme,
-                  selectedDate2: lastDate,
-                  currentDate: firstDate,
-                  now: now,
-                  onDateChanged: _handleDateChange,
-                ),
-              ),
-              ButtonBar(
-                children: <Widget>[
-                  OutlineButton(
-                      child: Text(loc.getText(loc.cancel)),
-                      borderSide:
-                          BorderSide(color: Theme.of(context).primaryColor),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                      ),
-                      textColor: Theme.of(context).primaryColor,
-                      onPressed: () => Navigator.pop(context)),
-                  RaisedButton(
-                    child: Text(loc.getText(loc.save)),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
-                    ),
-                    textColor: Colors.white,
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      var result;
-                      try {
-                        try {
-                          result = [
-                            firstDate.isAfter(lastDate) ? lastDate : firstDate,
-                            firstDate.isAfter(lastDate) ? firstDate : lastDate,
-                          ];
-                        } catch (e) {
-                          result = [
-                            firstDate ?? lastDate,
-                            firstDate ?? lastDate,
-                          ];
-                        }
-                        if (result[0] != null && result[1] != null)
-                          Navigator.pop(context, result);
-                      } catch (e) {
-                        print(e);
-                      }
-                    },
+      child: Dialog(
+        shape: RoundedRectangleBorder(borderRadius: appBorderRadius),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  height: 300,
+                  child: _buildDatePickerCard(
+                    title: loc.getText(loc.pickInterval),
+                    theme: theme,
+                    selectedDate2: lastDate,
+                    currentDate: firstDate,
+                    now: now,
+                    onDateChanged: _handleDateChange,
                   ),
-                ],
-              ),
-            ],
+                ),
+                ButtonBar(
+                  children: <Widget>[
+                    OutlineButton(
+                        child: Text(loc.getText(loc.cancel)),
+                        borderSide:
+                            BorderSide(color: Theme.of(context).primaryColor),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: appBorderRadius),
+                        textColor: Theme.of(context).primaryColor,
+                        onPressed: () => Navigator.pop(context)),
+                    RaisedButton(
+                      child: Text(loc.getText(loc.save)),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: appBorderRadius),
+                      textColor: Colors.white,
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        var result;
+                        try {
+                          try {
+                            result = [
+                              firstDate.isAfter(lastDate)
+                                  ? lastDate
+                                  : firstDate,
+                              firstDate.isAfter(lastDate)
+                                  ? firstDate
+                                  : lastDate,
+                            ];
+                          } catch (e) {
+                            result = [
+                              firstDate ?? lastDate,
+                              firstDate ?? lastDate,
+                            ];
+                          }
+                          if (result[0] != null && result[1] != null)
+                            Navigator.pop(context, result);
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

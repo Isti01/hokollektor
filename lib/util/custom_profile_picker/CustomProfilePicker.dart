@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hokollektor/bloc/CustomProfileBloc.dart';
+import 'package:hokollektor/home/Home.dart';
 import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/custom_profile_picker/SliderPicker.dart';
 
@@ -14,10 +15,9 @@ class CustomProfilePicker extends StatelessWidget {
     return Center(
       child: SingleChildScrollView(
         child: Material(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
+          borderRadius: appBorderRadius,
           child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: BlocBuilder<CustomProfileEvent, CustomProfileState>(
                 bloc: bloc,
                 builder: _buildLayout,
@@ -74,16 +74,12 @@ class CustomProfilePicker extends StatelessWidget {
             OutlineButton(
                 child: Text(loc.getText(loc.cancel)),
                 borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: appBorderRadius),
                 textColor: Theme.of(context).primaryColor,
                 onPressed: () => Navigator.pop(context)),
             RaisedButton(
               child: Text(loc.getText(loc.save)),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: appBorderRadius),
               textColor: Colors.white,
               color: Theme.of(context).primaryColor,
               onPressed: () {

@@ -4,6 +4,7 @@ import 'package:hokollektor/bloc/AppDataBloc.dart';
 import 'package:hokollektor/bloc/ChartTabBloc.dart';
 import 'package:hokollektor/chart/Chart.dart';
 import 'package:hokollektor/chart/datePicker.dart';
+import 'package:hokollektor/home/Home.dart';
 import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/tabbedBackdrop.dart';
 
@@ -93,8 +94,9 @@ class ChartBackpanel extends StatelessWidget {
       highlightElevation: 0,
       disabledElevation: 0,
       shape: RoundedRectangleBorder(
-          side: BorderSide(color: color, width: 2),
-          borderRadius: const BorderRadius.all(Radius.circular(12))),
+        side: BorderSide(color: color, width: 2),
+        borderRadius: appBorderRadius,
+      ),
       color: Colors.transparent,
       onPressed: onPressed,
       child: Padding(

@@ -4,6 +4,7 @@ import 'package:hokollektor/bloc/AppDataBloc.dart';
 import 'package:hokollektor/bloc/CustomProfileBloc.dart';
 import 'package:hokollektor/bloc/DataClasses.dart';
 import 'package:hokollektor/chart/Chart.dart';
+import 'package:hokollektor/home/Home.dart';
 import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/main.dart';
 import 'package:hokollektor/presentation/presentation.dart';
@@ -329,8 +330,7 @@ class InformationCards extends StatelessWidget {
             ),
           ),
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
@@ -535,8 +535,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
 
     return Center(
       child: Material(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12))),
+        shape: RoundedRectangleBorder(borderRadius: appBorderRadius),
         child: Padding(
           padding: const EdgeInsets.only(top: 12, left: 12, right: 12),
           child: IntrinsicWidth(
@@ -562,9 +561,8 @@ class _LanguageDialogState extends State<LanguageDialog> {
                   children: [
                     OutlineButton(
                       borderSide: BorderSide(color: theme.primaryColor),
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(12))),
+                      shape:
+                          RoundedRectangleBorder(borderRadius: appBorderRadius),
                       child: Text(
                         loc.getText(loc.cancel),
                         style: theme.textTheme.button
@@ -574,9 +572,8 @@ class _LanguageDialogState extends State<LanguageDialog> {
                     ),
                     RaisedButton(
                       color: theme.primaryColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(12))),
+                      shape:
+                          RoundedRectangleBorder(borderRadius: appBorderRadius),
                       child: Text(
                         loc.getText(loc.save),
                         style:
