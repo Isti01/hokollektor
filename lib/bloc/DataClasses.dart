@@ -23,7 +23,6 @@ class DataUpdateEvent extends DataEvent {
 }
 
 class DataErrorEvent extends DataEvent {
-
   const DataErrorEvent();
 }
 

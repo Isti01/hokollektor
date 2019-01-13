@@ -48,6 +48,102 @@ const localizations = [
   "sr_Latn",
 ];
 
+List<String> get narrowWeekdays {
+  switch (locale) {
+    case "hu":
+      return ["V", "H", "K", "Sz", "Cs", "P", "Sz"];
+    case "sr":
+      return ["Н", "П", "У", "С", "Ч", "П", "С"];
+    case "sr_Latn":
+      return ["N", "P", "U", "S", "Č", "P", "S"];
+    default:
+      return ["S", "M", "T", "W", "T", "F", "S"];
+  }
+}
+
+String formatMonthYear(DateTime date) =>
+    "${months[date.month - 1]} ${date.year}";
+
+String formatDecimal(int number) {
+  return number.toString();
+}
+
+int get firstDayOfWeekIndex {
+  switch (locale) {
+    case "hu":
+    case "sr":
+    case "sr_Latn":
+      return 1;
+    default:
+      return 0;
+  }
+}
+
+List<String> get months {
+  switch (locale) {
+    case "hu":
+      return [
+        "Január",
+        "Február",
+        "Március",
+        "Április",
+        "Május",
+        "Június",
+        "Július",
+        "Augusztus",
+        "Szeptember",
+        "Október",
+        "November",
+        "December",
+      ];
+    case "sr":
+      return [
+        "Јануар",
+        "Фебруар",
+        "Март",
+        "Април",
+        "Мај",
+        "Јун",
+        "Јул",
+        "Август",
+        "Септембар",
+        "Октобар",
+        "Новембар",
+        "Децембар",
+      ];
+    case "sr_Latn":
+      return [
+        "Januar",
+        "Februar",
+        "Mart",
+        "April",
+        "Maj",
+        "Jun",
+        "Jul",
+        "Avgust",
+        "Septembar",
+        "Oktobar",
+        "Novembar",
+        "Decembar",
+      ];
+    default:
+      return [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+  }
+}
+
 const Map<String, Map<String, String>> localizedTexts = {
   "hu": {
     noInternet: "Nincs Internet Kapcsolat",
@@ -183,7 +279,7 @@ const Map<String, Map<String, String>> localizedTexts = {
         "Корисник бира на основу температуре брзину вентилатора.",
     profileManualDescription: "Брзина вентилатора се мануално подешава.",
     presentationTime: "Скок до презентације!",
-    appName: "Цоллецтор Апп",
+    appName: "Collector app",
     aboutCollector: "О колектору",
     aboutCollectorText:
         "Наш професор је направио соларни колектор  2017. године.\n\nНаша група је добила прилику да направи контролну јединицу за управљење колектором.",
@@ -196,7 +292,7 @@ const Map<String, Map<String, String>> localizedTexts = {
         "Наш циљ је да нам колектор било где буде доступан, зато је направљена ова апликација.",
     collectorControllingImageDescription: "Управљање у кутији за слаткише",
     langHu: "Мађарски",
-    langEn: "Енгелски",
+    langEn: "Енглески",
     langSrLatn: "Српски (Латиница)",
     langSrCiril: "Српски (Ћирилица)",
     langAuto: "Аутоматски",
@@ -272,7 +368,7 @@ const Map<String, Map<String, String>> localizedTexts = {
         "Naš cilj je da nam kolektor bilo gde bude dostupan, zato je napravljena ova aplikacija.",
     collectorControllingImageDescription: "Upravljanje u kutiji za slatkiše",
     langHu: "Mađarski",
-    langEn: "Engelski",
+    langEn: "Engleski",
     langSrLatn: "Srpski (Latinica)",
     langSrCiril: "Srpski (Ćirilica)",
     langAuto: "Automatski",

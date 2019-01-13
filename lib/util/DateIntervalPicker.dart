@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:hokollektor/localization.dart' as loc;
 
 ///  * <https://material.io/guidelines/components/pickers.html#pickers-date-pickers>
 enum DatePickerMode {
@@ -123,15 +124,14 @@ class DayPicker extends StatelessWidget {
   /// _ _ _ _ 1 2 3
   /// 4 5 6 7 8 9 10
   /// ```
-  List<Widget> _getDayHeaders(
-      TextStyle headerStyle, MaterialLocalizations localizations) {
+  List<Widget> _getDayHeaders(TextStyle headerStyle) {
     final List<Widget> result = <Widget>[];
-    for (int i = localizations.firstDayOfWeekIndex; true; i = (i + 1) % 7) {
-      final String weekday = localizations.narrowWeekdays[i];
+    for (int i = loc.firstDayOfWeekIndex; true; i = (i + 1) % 7) {
+      final String weekday = loc.narrowWeekdays[i];
       result.add(ExcludeSemantics(
         child: Center(child: Text(weekday, style: headerStyle)),
       ));
-      if (i == (localizations.firstDayOfWeekIndex - 1) % 7) break;
+      if (i == (loc.firstDayOfWeekIndex - 1) % 7) break;
     }
     return result;
   }
@@ -199,12 +199,11 @@ class DayPicker extends StatelessWidget {
   ///   into the [MaterialLocalizations.narrowWeekdays] list.
   /// - [MaterialLocalizations.narrowWeekdays] list provides localized names of
   ///   days of week, always starting with Sunday and ending with Saturday.
-  int _computeFirstDayOffset(
-      int year, int month, MaterialLocalizations localizations) {
+  int _computeFirstDayOffset(int year, int month) {
     // 0-based day of week, with 0 representing Monday.
     final int weekdayFromMonday = DateTime(year, month).weekday - 1;
     // 0-based day of week, with 0 representing Sunday.
-    final int firstDayOfWeekFromSunday = localizations.firstDayOfWeekIndex;
+    final int firstDayOfWeekFromSunday = loc.firstDayOfWeekIndex;
     // firstDayOfWeekFromSunday recomputed to be Monday-based
     final int firstDayOfWeekFromMonday = (firstDayOfWeekFromSunday - 1) % 7;
     // Number of days between the first day of week appearing on the calendar,
@@ -220,13 +219,11 @@ class DayPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    final MaterialLocalizations localizations =
-        MaterialLocalizations.of(context);
+
     final int year = displayedMonth.year;
     final int month = displayedMonth.month;
     final int daysInMonth = getDaysInMonth(year, month);
-    final int firstDayOffset =
-        _computeFirstDayOffset(year, month, localizations);
+    final int firstDayOffset = _computeFirstDayOffset(year, month);
     final List<Widget> labels = <Widget>[];
     DateTime date1;
     DateTime date2;
@@ -240,7 +237,7 @@ class DayPicker extends StatelessWidget {
       date1 = selectedDate2;
       date2 = selectedDate;
     }
-    labels.addAll(_getDayHeaders(themeData.textTheme.caption, localizations));
+    labels.addAll(_getDayHeaders(themeData.textTheme.caption));
     for (int i = 0; true; i += 1) {
       // 1-based day of month, e.g. 1-31 for January, and 1-29 for February on
       // a leap year.
@@ -344,20 +341,7 @@ class DayPicker extends StatelessWidget {
           margin: EdgeInsets.symmetric(vertical: 2, horizontal: 0),
           decoration: decoration,
           child: Center(
-            child: Semantics(
-              // We want the day of month to be spoken first irrespective of the
-              // locale-specific preferences or TextDirection. This is because
-              // an accessibility user is more likely to be interested in the
-              // day of month before the rest of the date, as they are looking
-              // for the day of month. To do that we prepend day of month to the
-              // formatted full date.
-              label:
-                  '${localizations.formatDecimal(day)}, ${localizations.formatFullDate(dayToBuild)}',
-              selected: isSelectedDay,
-              child: ExcludeSemantics(
-                child: Text(localizations.formatDecimal(day), style: itemStyle),
-              ),
-            ),
+            child: Text(loc.formatDecimal(day), style: itemStyle),
           ),
         );
 
@@ -386,19 +370,6 @@ class DayPicker extends StatelessWidget {
                 if (selectedDate != null) onChanged(null, selectedDate2);
               } else {
                 onChanged(dayToBuild, null);
-
-                /*final dif1 = selectedDate.difference(dayToBuild).inDays.abs();
-                final dif2 = selectedDate2.difference(dayToBuild).inDays.abs();
-
-                print(
-                    'Date1: ${selectedDate.toString()} Date2: ${selectedDate2.toString()}');
-                print('Dif1 $dif1, Dif2: $dif2');
-
-                if (dif1 < dif2) {
-                  onChanged(dayToBuild, selectedDate2);
-                } else {
-                  onChanged(selectedDate, dayToBuild);
-                }*/
               }
             },
             child: dayWidget,
@@ -422,8 +393,6 @@ class DayPicker extends StatelessWidget {
       for (int i = 0; i < iteration; i++) {
         labels.add(_outOfMonthSelected(themeData));
       }
-
-      //print('adding placeholders with iteartion $iteration');
     }
 
     return Column(
@@ -432,11 +401,9 @@ class DayPicker extends StatelessWidget {
         Container(
           height: _kDayPickerRowHeight,
           child: Center(
-            child: ExcludeSemantics(
-              child: Text(
-                localizations.formatMonthYear(displayedMonth),
-                style: themeData.textTheme.subhead,
-              ),
+            child: Text(
+              loc.formatMonthYear(displayedMonth),
+              style: themeData.textTheme.subhead,
             ),
           ),
         ),
@@ -561,13 +528,11 @@ class _MonthPickerState extends State<MonthPicker>
     }
   }
 
-  MaterialLocalizations localizations;
   TextDirection textDirection;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    localizations = MaterialLocalizations.of(context);
     textDirection = Directionality.of(context);
   }
 
@@ -635,7 +600,7 @@ class _MonthPickerState extends State<MonthPicker>
   void _handleNextMonth() {
     if (!_isDisplayingLastMonth) {
       SemanticsService.announce(
-          localizations.formatMonthYear(_nextMonthDate), textDirection);
+          loc.formatMonthYear(_nextMonthDate), textDirection);
       _dayPickerController.nextPage(
           duration: _kMonthScrollDuration, curve: Curves.ease);
     }
@@ -644,7 +609,7 @@ class _MonthPickerState extends State<MonthPicker>
   void _handlePreviousMonth() {
     if (!_isDisplayingFirstMonth) {
       SemanticsService.announce(
-          localizations.formatMonthYear(_previousMonthDate), textDirection);
+          loc.formatMonthYear(_previousMonthDate), textDirection);
       _dayPickerController.previousPage(
           duration: _kMonthScrollDuration, curve: Curves.ease);
     }
@@ -714,9 +679,6 @@ class _MonthPickerState extends State<MonthPicker>
                 opacity: _chevronOpacityAnimation,
                 child: IconButton(
                   icon: const Icon(Icons.chevron_left),
-                  tooltip: _isDisplayingFirstMonth
-                      ? null
-                      : '${localizations.previousMonthTooltip} ${localizations.formatMonthYear(_previousMonthDate)}',
                   onPressed:
                       _isDisplayingFirstMonth ? null : _handlePreviousMonth,
                 ),
@@ -732,9 +694,6 @@ class _MonthPickerState extends State<MonthPicker>
                 opacity: _chevronOpacityAnimation,
                 child: IconButton(
                   icon: const Icon(Icons.chevron_right),
-                  tooltip: _isDisplayingLastMonth
-                      ? null
-                      : '${localizations.nextMonthTooltip} ${localizations.formatMonthYear(_nextMonthDate)}',
                   onPressed: _isDisplayingLastMonth ? null : _handleNextMonth,
                 ),
               ),
