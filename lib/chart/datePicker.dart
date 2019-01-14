@@ -16,8 +16,19 @@ class DatePickerDialog extends StatefulWidget {
 }
 
 class DatePickerDialogState extends State<DatePickerDialog> {
-  DateTime firstDate = DateTime.now();
-  DateTime lastDate = DateTime.now().subtract(Duration(days: lastDay - 1));
+  DateTime firstDate;
+  DateTime lastDate;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final now = DateTime.now();
+
+    firstDate = DateTime(now.year, now.month, now.day);
+    lastDate = DateTime(now.year, now.month, now.day, 23, 59)
+        .subtract(Duration(days: lastDay - 1));
+  }
 
   @override
   Widget build(BuildContext context) {

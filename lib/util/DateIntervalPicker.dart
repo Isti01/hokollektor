@@ -237,6 +237,12 @@ class DayPicker extends StatelessWidget {
       date1 = selectedDate2;
       date2 = selectedDate;
     }
+
+    if (date1 != null) date1 = DateTime(date1.year, date1.month, date1.day);
+
+    if (date2 != null)
+      date2 = DateTime(date2.year, date2.month, date2.day, 23, 59);
+
     labels.addAll(_getDayHeaders(themeData.textTheme.caption));
     for (int i = 0; true; i += 1) {
       // 1-based day of month, e.g. 1-31 for January, and 1-29 for February on
