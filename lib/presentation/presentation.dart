@@ -30,6 +30,7 @@ initSlides() => [
         textColor: Colors.black87,
         topColor: Colors.yellow,
         imageDescription: loc.getText(loc.collectorControllingImageDescription),
+        textImageRatio: 3 / 5,
       ),
       Slide(
         title: loc.getText(loc.theApplication),

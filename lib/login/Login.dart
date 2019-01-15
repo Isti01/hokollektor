@@ -210,7 +210,7 @@ class LoginButton extends StatelessWidget {
             borderRadius: appBorderRadius,
             onTap: onPressed,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 72),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 42),
               child: Text(
                 loc.getText(loc.login),
                 style: theme.title.copyWith(color: Colors.white),
