@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hokollektor/localization.dart' as loc;
 
-class MinifiedSliderPicker extends StatelessWidget {
+class SliderPicker extends StatelessWidget {
   final List<int> values;
   final Function(List<int> value) onChanged;
   final maxLength = (' 100%  ' + loc.getText(loc.onDeg) + ' 100°C').length;
+  final numItems;
+  final diffBetweenElements;
 
-  MinifiedSliderPicker({
+  SliderPicker({
     Key key,
     this.values,
     this.onChanged,
+    this.numItems,
+    this.diffBetweenElements,
   }) : super(key: key);
 
   void _onChanged(double value, int index) {
@@ -24,138 +28,26 @@ class MinifiedSliderPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        _mSlider(
-          maxLength: this.maxLength,
-          label: '0',
-          value: values[0] / 100,
-          onChanged: (value) => _onChanged(value, 0),
-        ),
-        _mSlider(
-          maxLength: this.maxLength,
-          label: '25',
-          value: values[1] / 100,
-          onChanged: (value) => _onChanged(value, 1),
-        ),
-        _mSlider(
-          maxLength: this.maxLength,
-          label: '50',
-          value: values[2] / 100,
-          onChanged: (value) => _onChanged(value, 2),
-        ),
-        _mSlider(
-          maxLength: this.maxLength,
-          label: '75',
-          value: values[3] / 100,
-          onChanged: (value) => _onChanged(value, 3),
-        ),
-        _mSlider(
-          maxLength: this.maxLength,
-          label: '100',
-          value: values[4] / 100,
-          onChanged: (value) => _onChanged(value, 4),
-        ),
-      ],
-    );
-  }
-}
-
-class ExpandedSliderPicker extends StatelessWidget {
-  final List<int> values;
-  final Function(List<int> value) onChanged;
-  final maxLength = (' 100% ' + loc.getText(loc.onDeg) + ' 100°C').length;
-
-  ExpandedSliderPicker({Key key, this.values, this.onChanged})
-      : super(key: key);
-
-  void _onChanged(double value, int index) {
-    var copy = values;
-
-    copy[index] = (value * 100).toInt();
-
-    onChanged(copy);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          _mSlider(
-            maxLength: this.maxLength,
-            label: '0',
-            value: values[0] / 100,
-            onChanged: (value) => _onChanged(value, 0),
-          ),
-          _mSlider(
-            maxLength: this.maxLength,
-            label: '10',
-            value: values[1] / 100,
-            onChanged: (value) => _onChanged(value, 1),
-          ),
-          _mSlider(
-            maxLength: this.maxLength,
-            label: '20',
-            value: values[2] / 100,
-            onChanged: (value) => _onChanged(value, 2),
-          ),
-          _mSlider(
-            maxLength: this.maxLength,
-            label: '30',
-            value: values[3] / 100,
-            onChanged: (value) => _onChanged(value, 3),
-          ),
-          _mSlider(
-            maxLength: this.maxLength,
-            label: '40',
-            value: values[4] / 100,
-            onChanged: (value) => _onChanged(value, 4),
-          ),
-          _mSlider(
-            maxLength: this.maxLength,
-            label: '50',
-            value: values[5] / 100,
-            onChanged: (value) => _onChanged(value, 5),
-          ),
-          _mSlider(
-            maxLength: this.maxLength,
-            label: '60',
-            value: values[6] / 100,
-            onChanged: (value) => _onChanged(value, 6),
-          ),
-          _mSlider(
-            maxLength: this.maxLength,
-            label: '70',
-            value: values[7] / 100,
-            onChanged: (value) => _onChanged(value, 7),
-          ),
-          _mSlider(
-            maxLength: this.maxLength,
-            label: '85',
-            value: values[8] / 100,
-            onChanged: (value) => _onChanged(value, 8),
-          ),
-          _mSlider(
-            maxLength: this.maxLength,
-            label: '100',
-            value: values[9] / 100,
-            onChanged: (value) => _onChanged(value, 9),
-          ),
-        ],
+      children: List.generate(
+        this.numItems,
+        (index) => _TempSlider(
+              maxLength: this.maxLength,
+              label: (index * this.diffBetweenElements).toString(),
+              value: values[index] / 100,
+              onChanged: (value) => _onChanged(value, index),
+            ),
       ),
     );
   }
 }
 
-class _mSlider extends StatefulWidget {
+class _TempSlider extends StatefulWidget {
   final value;
   final Function(double value) onChanged;
   final String label;
   final maxLength;
 
-  const _mSlider({
+  const _TempSlider({
     Key key,
     this.value,
     this.onChanged,
@@ -164,10 +56,10 @@ class _mSlider extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _mSliderState createState() => _mSliderState();
+  _TempSliderState createState() => _TempSliderState();
 }
 
-class _mSliderState extends State<_mSlider> {
+class _TempSliderState extends State<_TempSlider> {
   double value;
 
   @override

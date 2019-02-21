@@ -9,7 +9,7 @@ import 'package:hokollektor/util/tabbedBackdrop.dart';
 
 const HomePanelColor = Colors.blue;
 const ChartPanelColor = Colors.teal;
-const appBorderRadius =BorderRadius.all(Radius.circular(12));
+const appBorderRadius = BorderRadius.all(Radius.circular(12));
 
 class HomePage extends StatelessWidget {
   final GlobalKey<TabbedBackdropState> backdropKey =

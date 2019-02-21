@@ -54,19 +54,23 @@ class CustomProfilePicker extends StatelessWidget {
         state.loading
             ? CircularProgressIndicator()
             : state.expanded
-                ? ExpandedSliderPicker(
+                ? SliderPicker(
                     values: state.values,
                     onChanged: (value) => bloc.dispatch(ValueChangeEvent(
                         expanded: value.length == expandedSize,
                         initial: false,
                         newValues: value)),
+                    diffBetweenElements: 10,
+                    numItems: 10,
                   )
-                : MinifiedSliderPicker(
+                : SliderPicker(
                     values: state.values,
                     onChanged: (value) => bloc.dispatch(ValueChangeEvent(
                         expanded: value.length == expandedSize,
                         initial: false,
                         newValues: value)),
+                    diffBetweenElements: 25,
+                    numItems: 5,
                   ),
         ButtonBar(
           mainAxisSize: MainAxisSize.min,
