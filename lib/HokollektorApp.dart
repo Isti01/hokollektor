@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:hokollektor/localization.dart';
+import 'package:hokollektor/Localization.dart';
 
 const AppFontFamily = "Rubik";
 const AppTitle = 'Collector App';

@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:hokollektor/localization.dart' as loc;
+import 'package:hokollektor/Localization.dart' as loc;
 
 ///  * <https://material.io/guidelines/components/pickers.html#pickers-date-pickers>
 enum DatePickerMode {

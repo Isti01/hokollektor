@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hokollektor/Localization.dart' as loc;
 import 'package:hokollektor/bloc/AppDataBloc.dart';
 import 'package:hokollektor/bloc/DataClasses.dart';
 import 'package:hokollektor/chart/ChartExplanation.dart';
 import 'package:hokollektor/chart/ChartLogic.dart';
-import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/URLs.dart' as urls;
 
 class KollChart extends StatefulWidget {

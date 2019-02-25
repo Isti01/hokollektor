@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hokollektor/Localization.dart' as loc;
 import 'package:hokollektor/bloc/AppDataBloc.dart';
 import 'package:hokollektor/bloc/CustomProfileBloc.dart';
 import 'package:hokollektor/bloc/DataClasses.dart';
 import 'package:hokollektor/chart/Chart.dart';
 import 'package:hokollektor/home/Home.dart';
-import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/main.dart';
-import 'package:hokollektor/presentation/presentation.dart';
+import 'package:hokollektor/presentation/Presentation.dart';
+import 'package:hokollektor/util/TabbedBackdrop.dart';
 import 'package:hokollektor/util/custom_profile_picker/CustomProfilePicker.dart';
-import 'package:hokollektor/util/tabbedBackdrop.dart';
 
 const fontColor = Colors.white;
 const radioActiveColor = Colors.white;
@@ -29,15 +29,19 @@ class HomeBackpanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       physics: BouncingScrollPhysics(),
-      children: <Widget>[
-        BlocBuilder<DataEvent, AppDataState>(
-          bloc: bloc,
-          builder: _buildProfile,
-        ),
-        BlocBuilder<DataEvent, AppDataState>(
-          bloc: bloc,
-          builder: _buildManual,
-        ),
+      children: [
+        inGuestMode
+            ? SizedBox()
+            : BlocBuilder<DataEvent, AppDataState>(
+                bloc: bloc,
+                builder: _buildProfile,
+              ),
+        inGuestMode
+            ? SizedBox()
+            : BlocBuilder<DataEvent, AppDataState>(
+                bloc: bloc,
+                builder: _buildManual,
+              ),
         LanguageSetting(),
         SizedBox(height: 1000),
         Material(

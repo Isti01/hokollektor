@@ -5,11 +5,11 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:hokollektor/HokollektorApp.dart';
 import 'package:hokollektor/Loading.dart';
+import 'package:hokollektor/Localization.dart' as loc;
 import 'package:hokollektor/home/Home.dart';
-import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/main.dart';
+import 'package:hokollektor/util/Networking.dart';
 import 'package:hokollektor/util/URLs.dart';
-import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,25 +19,47 @@ class LoginPage extends StatelessWidget {
     final s = MediaQuery.of(context).size;
     final ratio = s.width / s.height;
     final size = ratio * 225;
-    return Container(
-      decoration: BoxDecoration(
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
           image: DecorationImage(
-        image: AssetImage('assets/login.jpg'),
-        fit: BoxFit.cover,
-      )),
-      child: Stack(children: [
-        Transform.translate(
-          offset: Offset(size / s.width * 100, -size / s.height * 200),
-          child: Align(
-            alignment: Alignment.topRight,
-            child: CollectorProgressIndicator(
-              size: size,
-            ),
+            image: AssetImage('assets/login.jpg'),
+            fit: BoxFit.cover,
           ),
         ),
-        Center(child: LoginForm()),
-      ]),
+        child: Stack(children: [
+          Transform.translate(
+            offset: Offset(size / s.width * 100, -size / s.height * 200),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: CollectorProgressIndicator(
+                size: size,
+              ),
+            ),
+          ),
+          Center(
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              LoginForm(),
+              LoginAsGuest(
+                onTap: () => _loginAsGuest(context),
+              ),
+            ],
+          )),
+        ]),
+      ),
     );
+  }
+
+  _loginAsGuest(context) {
+    inGuestMode = true;
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
+      return HokollektorApp(
+        child: HomePage(),
+      );
+    }));
   }
 }
 
@@ -142,7 +164,14 @@ class LoginFormState extends State<LoginForm> {
             ),
           ),
         ),
-        LoginButton(onPressed: _loginButtonPressed),
+        LoginButton(
+          text: loc.getText(loc.login),
+          onPressed: _loginButtonPressed,
+          gradientColors: [
+            HomePanelColor,
+            ChartPanelColor,
+          ],
+        ),
       ],
     );
   }
@@ -183,8 +212,11 @@ class LoginFormState extends State<LoginForm> {
 
 class LoginButton extends StatelessWidget {
   final onPressed;
+  final gradientColors;
+  final text;
 
-  const LoginButton({Key key, this.onPressed}) : super(key: key);
+  const LoginButton({Key key, this.onPressed, this.gradientColors, this.text})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -198,10 +230,7 @@ class LoginButton extends StatelessWidget {
               blurRadius: 1.5,
             ),
           ],
-          gradient: LinearGradient(colors: [
-            HomePanelColor,
-            ChartPanelColor,
-          ]),
+          gradient: LinearGradient(colors: gradientColors),
           borderRadius: appBorderRadius,
         ),
         child: Material(
@@ -212,7 +241,7 @@ class LoginButton extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 42),
               child: Text(
-                loc.getText(loc.login),
+                text,
                 style: theme.title.copyWith(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -347,6 +376,63 @@ class CheckBoxTile extends StatelessWidget {
           Spacer(),
         ],
       ),
+    );
+  }
+}
+
+class LoginAsGuest extends StatelessWidget {
+  final color;
+  final onTap;
+
+  const LoginAsGuest({Key key, this.color = Colors.white, this.onTap})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: OrLine(text: loc.getText(loc.or), color: color),
+        ),
+        LoginButton(
+          text: loc.getText(loc.signInAsGuest),
+          onPressed: onTap,
+          gradientColors: [
+            ChartPanelColor,
+            HomePanelColor,
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class OrLine extends StatelessWidget {
+  final text;
+  final color;
+
+  const OrLine({Key key, this.text, this.color}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Spacer(flex: 6),
+        Flexible(flex: 4, child: Container(height: 1, color: color)),
+        Flexible(flex: 3, child: Container(height: 2, color: color)),
+        SizedBox(width: 8),
+        Text(
+          text,
+          style: Theme.of(context).textTheme.subhead.copyWith(color: color),
+        ),
+        SizedBox(width: 8),
+        Flexible(flex: 3, child: Container(height: 2, color: color)),
+        Flexible(flex: 4, child: Container(height: 1, color: color)),
+        Spacer(flex: 6),
+      ],
     );
   }
 }

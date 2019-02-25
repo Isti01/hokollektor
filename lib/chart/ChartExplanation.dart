@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hokollektor/localization.dart' as loc;
+import 'package:hokollektor/Localization.dart' as loc;
 
 class ChartExplanation extends StatelessWidget {
   final collectorText = loc.getText(loc.tempKoll);

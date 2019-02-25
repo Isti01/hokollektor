@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hokollektor/localization.dart' as loc;
+import 'package:hokollektor/Localization.dart' as loc;
 
 class SliderPicker extends StatelessWidget {
   final List<int> values;

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hokollektor/Localization.dart' as loc;
 import 'package:hokollektor/bloc/AppDataBloc.dart';
 import 'package:hokollektor/bloc/ChartTabBloc.dart';
 import 'package:hokollektor/chart/Chart.dart';
 import 'package:hokollektor/chart/datePicker.dart';
 import 'package:hokollektor/home/Home.dart';
-import 'package:hokollektor/localization.dart' as loc;
-import 'package:hokollektor/util/tabbedBackdrop.dart';
+import 'package:hokollektor/util/TabbedBackdrop.dart';
 
 class ChartBackpanel extends StatelessWidget {
   final VoidCallback onReturn;

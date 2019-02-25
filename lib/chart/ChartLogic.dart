@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:charts_common/common.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:hokollektor/localization.dart' as loc;
-import 'package:hokollektor/util/network.dart';
+import 'package:hokollektor/Localization.dart' as loc;
+import 'package:hokollektor/util/Networking.dart';
 import 'package:http/http.dart' as http;
 
 const tempBent = 'bnt';

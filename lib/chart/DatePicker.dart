@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hokollektor/Localization.dart' as loc;
 import 'package:hokollektor/home/Home.dart';
-import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/DateIntervalPicker.dart' as picker;
 import 'package:hokollektor/util/SimpleScrollBehavior.dart';
 

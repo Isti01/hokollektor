@@ -220,7 +220,9 @@ const Map<String, Map<String, String>> localizedTexts = {
     langSrLatn: "Szerb Latin",
     langSrCiril: "Szerb Cirill",
     langAuto: "Automatikus",
-    changeLanguage: "Nyelv megváltoztatása"
+    changeLanguage: "Nyelv megváltoztatása",
+    signInAsGuest: "Belépés vendégként",
+    or: "vagy"
   },
   "sr": {
     noInternet: "Нема интернет конекције",
@@ -297,7 +299,9 @@ const Map<String, Map<String, String>> localizedTexts = {
     langSrLatn: "Српски (Латиница)",
     langSrCiril: "Српски (Ћирилица)",
     langAuto: "Аутоматски",
-    changeLanguage: "Промена језика"
+    changeLanguage: "Промена језика",
+    signInAsGuest: "Улогуј се као гост",
+    or: "или"
   },
   "sr_Latn": {
     noInternet: "Nema internet konekcije",
@@ -374,7 +378,9 @@ const Map<String, Map<String, String>> localizedTexts = {
     langSrLatn: "Srpski (Latinica)",
     langSrCiril: "Srpski (Ćirilica)",
     langAuto: "Automatski",
-    changeLanguage: "Promena jezika"
+    changeLanguage: "Promena jezika",
+    signInAsGuest: "Uloguj se kao gost",
+    or: "ili"
   },
   "en": {
     noInternet: "No Internet Connection",
@@ -451,7 +457,9 @@ const Map<String, Map<String, String>> localizedTexts = {
     langSrLatn: "Serbian Latin",
     langSrCiril: "Serbian Cyrillic",
     langAuto: "Automatic",
-    changeLanguage: "Change Lanugage"
+    changeLanguage: "Change Lanugage",
+    signInAsGuest: "Sign in as Guest",
+    or: "or"
   },
 };
 
@@ -521,7 +529,9 @@ const invalidUsername = "invalidUsername",
     langSrLatn = 'langSrLatn',
     langSrCiril = 'langSrCiril',
     langAuto = 'langAuto',
-    changeLanguage = "changeLanguage";
+    changeLanguage = "changeLanguage",
+    signInAsGuest = 'signInAsGuest',
+    or = "or";
 
 bool test(String locale) {
   if (!localizations.contains(locale)) return false;

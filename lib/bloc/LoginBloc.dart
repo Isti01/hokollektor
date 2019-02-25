@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:hokollektor/localization.dart' as loc;
-import 'package:hokollektor/util/network.dart';
+import 'package:hokollektor/Localization.dart' as loc;
+import 'package:hokollektor/util/Networking.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   bool _userValid(String user) {

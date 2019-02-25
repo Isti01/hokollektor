@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hokollektor/Localization.dart' as loc;
 import 'package:hokollektor/bloc/CustomProfileBloc.dart';
 import 'package:hokollektor/home/Home.dart';
-import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/custom_profile_picker/SliderPicker.dart';
 
 class CustomProfilePicker extends StatelessWidget {

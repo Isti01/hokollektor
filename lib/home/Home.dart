@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hokollektor/HokollektorApp.dart';
+import 'package:hokollektor/Localization.dart' as loc;
 import 'package:hokollektor/bloc/AppDataBloc.dart';
 import 'package:hokollektor/bloc/ChartTabBloc.dart';
 import 'package:hokollektor/home/ChartTab.dart';
 import 'package:hokollektor/home/HomeTab.dart';
-import 'package:hokollektor/localization.dart' as loc;
-import 'package:hokollektor/util/tabbedBackdrop.dart';
+import 'package:hokollektor/util/TabbedBackdrop.dart';
 
 const HomePanelColor = Colors.blue;
 const ChartPanelColor = Colors.teal;

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hokollektor/HokollektorApp.dart';
+import 'package:hokollektor/Localization.dart';
 import 'package:hokollektor/home/Home.dart';
-import 'package:hokollektor/localization.dart';
 import 'package:hokollektor/login/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+bool inGuestMode = false;
 
 const String stayLoggedInKey = 'stayLoggedIn';
 const String languagePrefKey = 'language';

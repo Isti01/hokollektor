@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:hokollektor/util/Networking.dart';
 import 'package:hokollektor/util/URLs.dart' as urls;
-import 'package:hokollektor/util/network.dart';
 import 'package:http/http.dart' as http;
 
 const int minifiedSize = 5;
