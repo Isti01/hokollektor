@@ -2,8 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-const double kFrontHeadingHeight = 32; // front layer beveled rectangle
-const double kFrontClosedHeight = 92; // front layer height when closed
+const double kFrontHeadingHeight = 32.0; // front layer beveled rectangle
+const double kFrontClosedHeight = 92.0; // front layer height when closed
 const double _kBackAppBarHeight = 48; // back layer (options) appbar height
 // The size of the front layer heading's left and right beveled corners.
 final Animatable<BorderRadius> _kFrontHeadingRoundRadius = BorderRadiusTween(
@@ -142,12 +142,14 @@ class TabbedBackdrop extends StatefulWidget {
     this.backdrops,
     this.tabs,
     this.initialIndex = 0,
+    this.labelPadding = 44,
     Key key,
   }) : super(key: key);
 
   final List<BackdropComponent> backdrops;
   final List<Tab> tabs;
   final int initialIndex;
+  final double labelPadding;
 
   @override
   TabbedBackdropState createState() => TabbedBackdropState();
@@ -240,10 +242,13 @@ class TabbedBackdropState extends State<TabbedBackdrop>
             alignment: Alignment.topCenter,
             child: TabBar(
               indicatorSize: TabBarIndicatorSize.tab,
-              indicatorPadding:
-                  const EdgeInsets.symmetric(horizontal: kFrontHeadingHeight),
+              indicatorPadding: const EdgeInsets.symmetric(
+                horizontal: kFrontHeadingHeight,
+              ),
               isScrollable: true,
-              labelPadding: EdgeInsets.symmetric(horizontal: 44),
+              labelPadding: EdgeInsets.symmetric(
+                horizontal: widget.labelPadding,
+              ),
               controller: _tabController,
               tabs: widget.tabs,
               indicatorColor: Colors.white,

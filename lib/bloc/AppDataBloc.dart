@@ -90,10 +90,13 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
         return;
       }
 
+      final uploadingP = uploadingProfile;
+      final uploadingM = uploadingManual;
+
       final http.Response res = await http.get(urls.dataUrl);
       final content = jsonDecode(res.body);
 
-      _parseContent(content);
+      _parseContent(content, uploadingP, uploadingM);
 
       dispatch(DataUpdateEvent(
         kollData: kollData,
@@ -108,7 +111,7 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
     fetching = false;
   }
 
-  _parseContent(content) {
+  _parseContent(content, uploadingProfile, uploadingManual) {
     try {
       kollData = parseChartData(content['realTimeKoll']) ?? kollData;
     } catch (e) {
@@ -135,9 +138,10 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
 
   uploadData(data) async {
     if (data is Rpm) {
+      manualData = data;
       dispatch(DataUpdateEvent(
         kollData: kollData,
-        manualData: data,
+        manualData: manualData,
         tempData: tempData,
         profileData: profileData,
       ));
@@ -154,14 +158,17 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
       }
       uploadingManual = false;
     } else if (data is profileState) {
+      profileData = data;
+
       dispatch(DataUpdateEvent(
         kollData: kollData,
         manualData: manualData,
         tempData: tempData,
-        profileData: data,
+        profileData: profileData,
       ));
       final url = createProfileURL(data);
       uploadingProfile = true;
+
       try {
         await http.get(url);
       } catch (e) {
