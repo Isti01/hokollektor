@@ -267,7 +267,6 @@ class HomeFront extends StatelessWidget {
         InformationCards(
           bloc: bloc,
         ),
-        Divider(),
         Padding(
           padding: const EdgeInsets.all(8),
           child: Column(
@@ -302,7 +301,7 @@ class InformationCards extends StatelessWidget {
   Widget _buildCards(BuildContext context, AppDataState state) {
     final theme = Theme.of(context);
 
-    if (state.tempData != null) {
+    if (state.tempData != null && state.kwhData != null) {
       InformationHolder data = state.tempData;
 
       return Column(
@@ -328,6 +327,13 @@ class InformationCards extends StatelessWidget {
                 ),
                 Text(
                   loc.getText(loc.maxTemp) + '${data.legnagyobbKoll}°C',
+                  style: theme.textTheme.subhead.copyWith(),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  loc.getText(loc.kwhText) + '${state.kwhData}KWh',
                   style: theme.textTheme.subhead.copyWith(),
                 ),
               ],
@@ -357,6 +363,7 @@ class InformationCards extends StatelessWidget {
               ],
             ),
           ),
+          Divider(),
         ],
       );
     } else if (state.loading) {

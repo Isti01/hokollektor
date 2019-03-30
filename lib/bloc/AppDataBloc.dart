@@ -12,7 +12,7 @@ const reloadAfter = 15;
 
 class AppBloc extends Bloc<DataEvent, AppDataState> {
   Timer timer;
-  var kollData, tempData, profileData, manualData;
+  var kollData, tempData, profileData, manualData, kwhData;
   bool loaded = false,
       fetching = false,
       uploadingManual = false,
@@ -34,6 +34,7 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
       kollData: kollData,
       tempData: tempData,
       manualData: manualData,
+      kwhData: kwhData,
     );
   }
 
@@ -47,13 +48,13 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
       kollData: kollData,
       tempData: tempData,
       manualData: manualData,
+      kwhData: kwhData,
       reload: true,
     ));
   }
 
   @override
-  Stream<AppDataState> mapEventToState(
-      AppDataState state, DataEvent event) async* {
+  Stream<AppDataState> mapEventToState(DataEvent event) async* {
     if (event is DataUpdateEvent) {
       yield AppDataState(
         loading: event.reload,
@@ -61,6 +62,7 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
         tempData: event.tempData ?? tempData,
         manualData: event.manualData ?? manualData,
         kollData: event.kollData ?? kollData,
+        kwhData: event.kwhData ?? kwhData,
         profileLoaded: (event.profileData ?? profileData) != null,
         tempLoaded: (event.tempData ?? tempData) != null,
       );
@@ -72,6 +74,7 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
         tempData: tempData,
         manualData: manualData,
         kollData: kollData,
+        kwhFailed: kwhData == null,
         kollFailed: kollData == null,
         manualFailed: manualData == null,
         tempFailed: tempData == null,
@@ -103,6 +106,7 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
         manualData: manualData,
         tempData: tempData,
         profileData: profileData,
+        kwhData: kwhData,
       ));
     } catch (e) {
       print(e);
@@ -134,17 +138,23 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
     } catch (e) {
       print(e.toString());
     }
+
+    try {
+      kwhData = content['kwh'];
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   uploadData(data) async {
     if (data is Rpm) {
       manualData = data;
       dispatch(DataUpdateEvent(
-        kollData: kollData,
-        manualData: manualData,
-        tempData: tempData,
-        profileData: profileData,
-      ));
+          kollData: kollData,
+          manualData: manualData,
+          tempData: tempData,
+          profileData: profileData,
+          kwhData: kwhData));
       final url = createManualURL(
         data.rpm1,
         data.rpm2,
@@ -161,11 +171,11 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
       profileData = data;
 
       dispatch(DataUpdateEvent(
-        kollData: kollData,
-        manualData: manualData,
-        tempData: tempData,
-        profileData: profileData,
-      ));
+          kollData: kollData,
+          manualData: manualData,
+          tempData: tempData,
+          profileData: profileData,
+          kwhData: kwhData));
       final url = createProfileURL(data);
       uploadingProfile = true;
 

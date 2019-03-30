@@ -54,8 +54,7 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
   }
 
   @override
-  Stream<CustomProfileState> mapEventToState(
-      CustomProfileState state, CustomProfileEvent event) async* {
+  Stream<CustomProfileState> mapEventToState(CustomProfileEvent event) async* {
     if (event is ProfileErrorEvent) {
       yield CustomProfileState.error();
     }
@@ -69,7 +68,7 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
 
     if (event is SizeChangedEvent) {
       // print('updating size');
-      yield CustomProfileState.success(state.values, expanded: event.expanded);
+      yield CustomProfileState.success(currentState.values, expanded: event.expanded);
     }
 
     // print('Unknown profile event');

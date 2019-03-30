@@ -15,7 +15,8 @@ class KollChart extends StatefulWidget {
   final double height;
   final bool animate;
   final bool clickable;
-  final chartExplanation = ChartExplanation();
+  final bool wattChart;
+  final chartExplanation;
 
   KollChart({
     Key key,
@@ -23,7 +24,9 @@ class KollChart extends StatefulWidget {
     this.animate = true,
     this.height = 300,
     this.clickable = false,
-  }) : super(key: key);
+    this.wattChart = false,
+  })  : chartExplanation = ChartExplanation(wattChart: wattChart),
+        super(key: key);
 
   @override
   KollChartState createState() {
@@ -39,7 +42,7 @@ class KollChartState extends State<KollChart>
     var data;
 
     try {
-      data = await fetchChartData(widget.url);
+      data = await fetchChartData(widget.url, widget.wattChart);
     } catch (e) {
       print(e.toString());
     }
@@ -270,5 +273,15 @@ class CustomChart extends KollChart {
           key: key,
           height: height,
           url: urls.CustomChartURL + '?ki=$startDate&vi=$endDate',
+        );
+}
+
+class WattChart extends KollChart {
+  WattChart({double height, int startDate, int endDate, Key key})
+      : super(
+          key: key,
+          height: height,
+          url: urls.wattChartURL + '?ki=$startDate&vi=$endDate',
+          wattChart: true,
         );
 }

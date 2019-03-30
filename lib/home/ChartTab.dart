@@ -60,6 +60,11 @@ class ChartBackpanel extends StatelessWidget {
               child: _buildEntry(
                   Charts.custom, loc.getText(loc.customChart), context, state),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: _buildEntry(
+                  Charts.watt, loc.getText(loc.wattChart), context, state),
+            ),
             const SizedBox(height: kFrontClosedHeight),
           ],
         ));
@@ -70,15 +75,16 @@ class ChartBackpanel extends StatelessWidget {
     Color color = Colors.white;
 
     var onPressed = () async {
-      if (chart == Charts.custom) await _showCustomChart(context);
+      if (chart == Charts.custom || chart == Charts.watt)
+        await _showCustomChart(context, chart == Charts.watt);
 
       onReturn();
     };
 
     if (state.chart != chart) {
       onPressed = () async {
-        if (chart == Charts.custom) {
-          await _showCustomChart(context);
+        if (chart == Charts.custom || chart == Charts.watt) {
+          await _showCustomChart(context, chart == Charts.watt);
         } else {
           bloc.dispatch(ChartTabEvent(chart));
         }
@@ -108,7 +114,7 @@ class ChartBackpanel extends StatelessWidget {
     );
   }
 
-  _showCustomChart(context) async {
+  _showCustomChart(context, wattChart) async {
     try {
       final List<DateTime> dates = await showDialog(
           context: context,
@@ -133,7 +139,7 @@ class ChartBackpanel extends StatelessWidget {
       int endDate = masodik.millisecondsSinceEpoch ~/ 1000;
 
       bloc.dispatch(CustomChartTabEvent(
-        Charts.custom,
+        wattChart ? Charts.watt : Charts.custom,
         startDate,
         endDate,
       ));
@@ -238,6 +244,8 @@ class ChartFrontState extends State<ChartFront> {
         return loc.getText(loc.weeklyChart);
       case Charts.custom:
         return loc.getText(loc.customChart);
+      case Charts.watt:
+        return loc.getText(loc.wattChart);
     }
     return '';
   }
@@ -271,6 +279,13 @@ class ChartFrontState extends State<ChartFront> {
         );
       case Charts.custom:
         return new CustomChart(
+          key: UniqueKey(),
+          height: 450,
+          startDate: startDate,
+          endDate: endDate,
+        );
+      case Charts.watt:
+        return new WattChart(
           key: UniqueKey(),
           height: 450,
           startDate: startDate,

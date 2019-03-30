@@ -26,10 +26,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginState get initialState => LoginState.init();
 
   @override
-  Stream<LoginState> mapEventToState(
-    LoginState state,
-    LoginEvent event,
-  ) async* {
+  Stream<LoginState> mapEventToState(LoginEvent event) async* {
     if (event is FormSubmitEvent) {
       FormSubmitEvent submitEvent = event as FormSubmitEvent;
 

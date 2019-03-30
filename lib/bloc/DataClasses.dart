@@ -12,12 +12,14 @@ class DataUpdateEvent extends DataEvent {
   final List<charts.Series<ChartDataPoint, DateTime>> kollData;
   final profileState profileData;
   final Rpm manualData;
+  final double kwhData;
 
   const DataUpdateEvent({
     this.manualData,
     this.tempData,
     this.kollData,
     this.profileData,
+    this.kwhData,
     this.reload = false,
   });
 }
@@ -28,11 +30,17 @@ class DataErrorEvent extends DataEvent {
 
 class AppDataState {
   final bool tempLoaded, profileLoaded;
-  final bool kollFailed, profileFailed, manualFailed, tempFailed, loading;
+  final bool kollFailed,
+      profileFailed,
+      manualFailed,
+      tempFailed,
+      kwhFailed,
+      loading;
   final InformationHolder tempData;
   final List<charts.Series<ChartDataPoint, DateTime>> kollData;
   final profileState profileData;
   final Rpm manualData;
+  final double kwhData;
 
   const AppDataState({
     this.tempLoaded,
@@ -42,13 +50,21 @@ class AppDataState {
     this.tempData,
     this.kollData = const [],
     this.profileData,
+    this.kwhData,
     this.kollFailed = false,
     this.profileFailed = false,
     this.manualFailed = false,
     this.tempFailed = false,
+    this.kwhFailed,
   });
 
-  factory AppDataState.init({tempData, kollData, profileData, manualData}) =>
+  factory AppDataState.init({
+    tempData,
+    kollData,
+    profileData,
+    manualData,
+    kwhData,
+  }) =>
       AppDataState(
         tempLoaded: false,
         profileLoaded: false,
@@ -57,6 +73,7 @@ class AppDataState {
         kollData: kollData,
         profileData: profileData,
         manualData: manualData,
+        kwhData: kwhData,
       );
 
   factory AppDataState.error(errorMessage) => AppDataState(
@@ -66,6 +83,7 @@ class AppDataState {
         profileFailed: true,
         manualFailed: true,
         tempFailed: true,
+        kwhFailed: false,
       );
 }
 

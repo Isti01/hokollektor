@@ -13,4 +13,5 @@ const String OneDayChartURL =
     customProfileURL = 'http://hokollektor.site.in.rs/customProfileForNode.php',
     dataUrl = 'http://hokollektor.site.in.rs/Istvan.yolo/GetKollData.php',
     importCustomProfileURL =
-        'http://hokollektor.site.in.rs/importCustomProfile.php';
+        'http://hokollektor.site.in.rs/importCustomProfile.php',
+    wattChartURL = 'http://hokollektor.site.in.rs/Istvan.yolo/wattChart.php';

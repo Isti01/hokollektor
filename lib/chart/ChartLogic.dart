@@ -10,6 +10,7 @@ const tempBent = 'bnt';
 const tempKint = 'knt';
 const tempKoll = 'kll';
 const datum = 'dt';
+const wattKey = 'w';
 
 final List<Color> chartColors = [
   charts.MaterialPalette.red.shadeDefault,
@@ -17,8 +18,8 @@ final List<Color> chartColors = [
   charts.MaterialPalette.yellow.shadeDefault,
 ];
 
-Future<List<charts.Series<ChartDataPoint, DateTime>>> fetchChartData(
-    String url) async {
+Future<List<charts.Series<ChartDataPoint, DateTime>>> fetchChartData(String url,
+    [bool wattChart = false]) async {
   if (!(await isConnected())) return null;
 
   http.Response connection = await http.get(url);
@@ -26,10 +27,11 @@ Future<List<charts.Series<ChartDataPoint, DateTime>>> fetchChartData(
   String body = connection.body;
 
   final json = jsonDecode(body);
-
-  final data = parseChartData(json);
-
-  return data;
+  if (wattChart) {
+    return parseWattChartData(json);
+  } else {
+    return parseChartData(json);
+  }
 }
 
 class ChartDataPoint {
@@ -85,6 +87,31 @@ List<charts.Series<ChartDataPoint, DateTime>> parseChartData(json) {
     ];
     return result;
   } catch (e) {
+    print(e.toString());
+    return null;
+  }
+}
+
+List<charts.Series<ChartDataPoint, DateTime>> parseWattChartData(json) {
+  List<ChartDataPoint> watt = [];
+
+  try {
+    for (var subJson in json['adatokkollektor']) {
+      watt.add(ChartDataPoint.fromJson(subJson, wattKey));
+    }
+
+    final result = [
+      charts.Series<ChartDataPoint, DateTime>(
+          id: 'Watt',
+          colorFn: (_, __) => chartColors[1],
+          domainFn: (ChartDataPoint sales, _) => sales.date,
+          measureFn: (ChartDataPoint sales, _) => sales.value,
+          data: watt,
+          displayName: loc.getText(loc.performance)),
+    ];
+    return result;
+  } catch (e) {
+    print('itt');
     print(e.toString());
     return null;
   }

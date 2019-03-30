@@ -10,6 +10,7 @@ enum Charts {
   hourly,
   realTime,
   custom,
+  watt,
 }
 
 class ChartTabBloc extends Bloc<ChartEvent, ChartTabState> {
@@ -27,8 +28,7 @@ class ChartTabBloc extends Bloc<ChartEvent, ChartTabState> {
   }
 
   @override
-  Stream<ChartTabState> mapEventToState(
-      ChartTabState state, ChartEvent event) async* {
+  Stream<ChartTabState> mapEventToState(ChartEvent event) async* {
     try {
       if (event == null) {
         this.initial = Charts.weekly;

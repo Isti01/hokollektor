@@ -222,7 +222,10 @@ const Map<String, Map<String, String>> localizedTexts = {
     langAuto: "Automatikus",
     changeLanguage: "Nyelv megváltoztatása",
     signInAsGuest: "Belépés vendégként",
-    or: "vagy"
+    or: "vagy",
+    kwhText: "Napi termelt energia: ",
+    performance: "Teljesítmény (Watt)",
+    wattChart: "Teljesítmény grafikon",
   },
   "sr": {
     noInternet: "Нема интернет конекције",
@@ -301,7 +304,10 @@ const Map<String, Map<String, String>> localizedTexts = {
     langAuto: "Аутоматски",
     changeLanguage: "Промена језика",
     signInAsGuest: "Улогуј се као гост",
-    or: "или"
+    or: "или",
+    kwhText: "Дневна произведена енергија: ",
+    performance: "Снага (Ват)",
+    wattChart: "Снага графикон",
   },
   "sr_Latn": {
     noInternet: "Nema internet konekcije",
@@ -380,7 +386,10 @@ const Map<String, Map<String, String>> localizedTexts = {
     langAuto: "Automatski",
     changeLanguage: "Promena jezika",
     signInAsGuest: "Uloguj se kao gost",
-    or: "ili"
+    or: "ili",
+    kwhText: "Dnevno proizvedena energija: ",
+    performance: "Snaga (Watt)",
+    wattChart: "Snaga grafikon",
   },
   "en": {
     noInternet: "No Internet Connection",
@@ -459,7 +468,10 @@ const Map<String, Map<String, String>> localizedTexts = {
     langAuto: "Automatic",
     changeLanguage: "Change Lanugage",
     signInAsGuest: "Sign in as Guest",
-    or: "or"
+    or: "or",
+    kwhText: "Daily produced energy: ",
+    performance: "Power (Watt)",
+    wattChart: "Power chart",
   },
 };
 
@@ -531,7 +543,10 @@ const invalidUsername = "invalidUsername",
     langAuto = 'langAuto',
     changeLanguage = "changeLanguage",
     signInAsGuest = 'signInAsGuest',
-    or = "or";
+    or = "or",
+    kwhText = 'kwhText',
+    performance = 'performance',
+    wattChart = 'wattChart';
 
 bool test(String locale) {
   if (!localizations.contains(locale)) return false;
