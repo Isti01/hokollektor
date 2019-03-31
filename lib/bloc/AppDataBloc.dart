@@ -140,7 +140,7 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
     }
 
     try {
-      kwhData = content['kwh'];
+      kwhData = content['kwh'] ?? kwhData;
     } catch (e) {
       print(e.toString());
     }

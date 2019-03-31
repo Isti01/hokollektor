@@ -111,7 +111,6 @@ List<charts.Series<ChartDataPoint, DateTime>> parseWattChartData(json) {
     ];
     return result;
   } catch (e) {
-    print('itt');
     print(e.toString());
     return null;
   }
