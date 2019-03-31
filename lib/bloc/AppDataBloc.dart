@@ -12,7 +12,6 @@ const reloadAfter = 15;
 
 class AppBloc extends Bloc<DataEvent, AppDataState> {
   Timer timer;
-  var kollData, tempData, profileData, manualData, kwhData;
   bool loaded = false,
       fetching = false,
       uploadingManual = false,
@@ -28,14 +27,7 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
         if (!fetching) _fetchData();
       });
     }
-
-    return AppDataState.init(
-      profileData: profileData,
-      kollData: kollData,
-      tempData: tempData,
-      manualData: manualData,
-      kwhData: kwhData,
-    );
+    return AppDataState.init();
   }
 
   void reload() {
@@ -44,11 +36,6 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
     }
 
     dispatch(DataUpdateEvent(
-      profileData: profileData,
-      kollData: kollData,
-      tempData: tempData,
-      manualData: manualData,
-      kwhData: kwhData,
       reload: true,
     ));
   }
@@ -58,29 +45,29 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
     if (event is DataUpdateEvent) {
       yield AppDataState(
         loading: event.reload,
-        profileData: event.profileData ?? profileData,
-        tempData: event.tempData ?? tempData,
-        manualData: event.manualData ?? manualData,
-        kollData: event.kollData ?? kollData,
-        kwhData: event.kwhData ?? kwhData,
-        profileLoaded: (event.profileData ?? profileData) != null,
-        tempLoaded: (event.tempData ?? tempData) != null,
+        profileData: event.profileData ?? currentState?.profileData,
+        tempData: event.tempData ?? currentState?.tempData,
+        manualData: event.manualData ?? currentState?.manualData,
+        kollData: event.kollData ?? currentState?.kollData,
+        kwhData: event.kwhData ?? currentState?.kwhData,
+        profileLoaded: (event.profileData ?? currentState?.profileData) != null,
+        tempLoaded: (event.tempData ?? currentState?.tempData) != null,
       );
     }
 
     if (event is DataErrorEvent) {
       yield AppDataState(
-        profileData: profileData,
-        tempData: tempData,
-        manualData: manualData,
-        kollData: kollData,
-        kwhFailed: kwhData == null,
-        kollFailed: kollData == null,
-        manualFailed: manualData == null,
-        tempFailed: tempData == null,
-        profileFailed: profileData == null,
-        profileLoaded: profileData != null,
-        tempLoaded: tempData != null,
+        profileData: currentState?.profileData,
+        tempData: currentState?.tempData,
+        manualData: currentState?.manualData,
+        kollData: currentState?.kollData,
+        kwhFailed: currentState?.kwhData == null,
+        kollFailed: currentState?.kollData == null,
+        manualFailed: currentState?.manualData == null,
+        tempFailed: currentState?.tempData == null,
+        profileFailed: currentState?.profileData == null,
+        profileLoaded: currentState?.profileData != null,
+        tempLoaded: currentState?.tempData != null,
       );
     }
   }
@@ -99,15 +86,7 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
       final http.Response res = await http.get(urls.dataUrl);
       final content = jsonDecode(res.body);
 
-      _parseContent(content, uploadingP, uploadingM);
-
-      dispatch(DataUpdateEvent(
-        kollData: kollData,
-        manualData: manualData,
-        tempData: tempData,
-        profileData: profileData,
-        kwhData: kwhData,
-      ));
+      dispatch(_parseContent(content, uploadingP, uploadingM));
     } catch (e) {
       print(e);
       dispatch(DataErrorEvent());
@@ -116,6 +95,8 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
   }
 
   _parseContent(content, uploadingProfile, uploadingManual) {
+    var kollData, tempData, profileData, manualData, kwhData;
+
     try {
       kollData = parseChartData(content['realTimeKoll']) ?? kollData;
     } catch (e) {
@@ -144,17 +125,20 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
     } catch (e) {
       print(e.toString());
     }
+
+    return DataUpdateEvent(
+      kollData: kollData,
+      manualData: manualData,
+      tempData: tempData,
+      profileData: profileData,
+      kwhData: kwhData,
+    );
   }
 
   uploadData(data) async {
     if (data is Rpm) {
-      manualData = data;
-      dispatch(DataUpdateEvent(
-          kollData: kollData,
-          manualData: manualData,
-          tempData: tempData,
-          profileData: profileData,
-          kwhData: kwhData));
+      dispatch(DataUpdateEvent(manualData: data));
+
       final url = createManualURL(
         data.rpm1,
         data.rpm2,
@@ -168,14 +152,8 @@ class AppBloc extends Bloc<DataEvent, AppDataState> {
       }
       uploadingManual = false;
     } else if (data is profileState) {
-      profileData = data;
+      dispatch(DataUpdateEvent(profileData: data));
 
-      dispatch(DataUpdateEvent(
-          kollData: kollData,
-          manualData: manualData,
-          tempData: tempData,
-          profileData: profileData,
-          kwhData: kwhData));
       final url = createProfileURL(data);
       uploadingProfile = true;
 
