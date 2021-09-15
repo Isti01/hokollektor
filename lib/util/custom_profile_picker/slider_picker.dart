@@ -9,11 +9,11 @@ class SliderPicker extends StatelessWidget {
   final int diffBetweenElements;
 
   SliderPicker({
-    Key key,
-    this.values,
-    this.onChanged,
-    this.numItems,
-    this.diffBetweenElements,
+    Key? key,
+    required this.values,
+    required this.onChanged,
+    required this.numItems,
+    required this.diffBetweenElements,
   }) : super(key: key);
 
   void _onChanged(double value, int index) {
@@ -48,11 +48,11 @@ class _TempSlider extends StatefulWidget {
   final int maxLength;
 
   const _TempSlider({
-    Key key,
-    this.value,
-    this.onChanged,
-    this.label,
-    this.maxLength,
+    Key? key,
+    required this.value,
+    required this.onChanged,
+    required this.label,
+    required this.maxLength,
   }) : super(key: key);
 
   @override
@@ -60,7 +60,7 @@ class _TempSlider extends StatefulWidget {
 }
 
 class _TempSliderState extends State<_TempSlider> {
-  double value;
+  late double value;
 
   @override
   void initState() {

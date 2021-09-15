@@ -68,7 +68,7 @@ class LoginSucceed extends LoginEvent {
 }
 
 class LoginFailed extends LoginEvent {
-  final String userError, passError, otherError;
+  final String? userError, passError, otherError;
 
   const LoginFailed({
     this.userError,
@@ -79,12 +79,12 @@ class LoginFailed extends LoginEvent {
 
 class LoginState {
   final bool initial, loading, succeed;
-  final String userError, passError, otherError;
+  final String? userError, passError, otherError;
 
   const LoginState({
     this.loading = false,
     this.initial = false,
-    this.succeed,
+    this.succeed = false,
     this.userError,
     this.passError,
     this.otherError,
@@ -93,9 +93,9 @@ class LoginState {
   factory LoginState.success() => const LoginState(succeed: true);
 
   factory LoginState.failed({
-    String userError,
-    String passError,
-    String otherError,
+    String? userError,
+    String? passError,
+    String? otherError,
   }) {
     return LoginState(
       succeed: false,

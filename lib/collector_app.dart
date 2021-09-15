@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hokollektor/localization.dart';
@@ -8,7 +10,7 @@ const kAppTitle = 'Collector App';
 class CollectorApp extends StatelessWidget {
   final Widget child;
 
-  const CollectorApp({Key key, this.child}) : super(key: key);
+  const CollectorApp({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class CollectorApp extends StatelessWidget {
 class LocaleInitializerLayer extends StatefulWidget {
   final Widget child;
 
-  const LocaleInitializerLayer({Key key, this.child}) : super(key: key);
+  const LocaleInitializerLayer({Key? key, required this.child}) : super(key: key);
 
   @override
   LocaleInitializerLayerState createState() => LocaleInitializerLayerState();

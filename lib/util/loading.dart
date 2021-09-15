@@ -7,17 +7,17 @@ const maxSize1 = 0.9;
 const maxSize2 = 0.8;
 
 class CollectorProgressIndicator extends StatefulWidget {
-  final Color color0;
-  final Color color1;
-  final Color color2;
+  final Color? color0;
+  final Color? color1;
+  final Color? color2;
 
-  final VoidCallback onFinished;
+  final VoidCallback? onFinished;
   final double size;
   final double elevation;
   final Duration duration;
 
   const CollectorProgressIndicator({
-    Key key,
+    Key? key,
     this.color0,
     this.color1,
     this.color2,
@@ -34,9 +34,9 @@ class CollectorProgressIndicator extends StatefulWidget {
 
 class _CollectorProgressIndicatorState extends State<CollectorProgressIndicator>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
-  Animation<double> _sizeAnimation;
+  Animation<double>? _sizeAnimation;
 
   @override
   void initState() {
@@ -49,9 +49,7 @@ class _CollectorProgressIndicatorState extends State<CollectorProgressIndicator>
       if (status == AnimationStatus.completed) {
         _controller.repeat();
 
-        if (widget.onFinished != null) {
-          widget.onFinished();
-        }
+        widget.onFinished?.call();
       }
     });
 
@@ -63,8 +61,8 @@ class _CollectorProgressIndicatorState extends State<CollectorProgressIndicator>
       return Tween<double>(begin: 0, end: maxSize1).evaluate(
           CurvedAnimation(parent: _controller, curve: const Interval(0, 0.25)));
     } else {
-      return Tween<double>(begin: maxSize1, end: 0).evaluate(
-          CurvedAnimation(parent: _controller, curve: const Interval(0.25, 0.66)));
+      return Tween<double>(begin: maxSize1, end: 0).evaluate(CurvedAnimation(
+          parent: _controller, curve: const Interval(0.25, 0.66)));
     }
   }
 
@@ -73,11 +71,11 @@ class _CollectorProgressIndicatorState extends State<CollectorProgressIndicator>
       return Tween<double>(begin: 0, end: maxSize2).evaluate(
           CurvedAnimation(parent: _controller, curve: const Interval(0, 0.25)));
     } else if (_controller.value < 0.5) {
-      return Tween<double>(begin: maxSize2, end: 0).evaluate(
-          CurvedAnimation(parent: _controller, curve: const Interval(0.25, 0.5)));
+      return Tween<double>(begin: maxSize2, end: 0).evaluate(CurvedAnimation(
+          parent: _controller, curve: const Interval(0.25, 0.5)));
     } else if (_controller.value < 0.75) {
-      return Tween<double>(begin: 0, end: maxSize2).evaluate(
-          CurvedAnimation(parent: _controller, curve: const Interval(0.5, 0.75)));
+      return Tween<double>(begin: 0, end: maxSize2).evaluate(CurvedAnimation(
+          parent: _controller, curve: const Interval(0.5, 0.75)));
     } else {
       return Tween<double>(begin: maxSize2, end: 0).evaluate(
           CurvedAnimation(parent: _controller, curve: const Interval(0.75, 1)));
@@ -92,9 +90,9 @@ class _CollectorProgressIndicatorState extends State<CollectorProgressIndicator>
 
   @override
   Widget build(BuildContext context) {
-    final size1 = widget.size / 3 * (2 + _getMotionAnimation1() ?? 0);
+    final size1 = widget.size / 3 * (2 + _getMotionAnimation1());
 
-    final size2 = widget.size / 3 * (2 + _getMotionAnimation2() ?? 0);
+    final size2 = widget.size / 3 * (2 + _getMotionAnimation2());
 
     return Transform.rotate(
       angle: math.pi * (_sizeAnimation?.value ?? 0),

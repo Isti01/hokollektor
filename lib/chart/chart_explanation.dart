@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:hokollektor/localization.dart' as loc;
 
@@ -8,7 +10,7 @@ class ChartExplanation extends StatelessWidget {
   final wattText = loc.getText(loc.performance);
   final bool wattChart;
 
-  ChartExplanation({Key key, this.wattChart = false}) : super(key: key);
+  ChartExplanation({Key? key, this.wattChart = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -44,7 +44,7 @@ initSlides() => [
     ];
 
 class PresentationPage extends StatefulWidget {
-  const PresentationPage({Key key}) : super(key: key);
+  const PresentationPage({Key? key}) : super(key: key);
 
   @override
   PresentationPageState createState() => PresentationPageState();
@@ -52,8 +52,8 @@ class PresentationPage extends StatefulWidget {
 
 class PresentationPageState extends State<PresentationPage>
     with SingleTickerProviderStateMixin {
-  TabController _controller;
-  List<Widget> slides;
+  late TabController _controller;
+  late List<Widget> slides;
 
   @override
   void initState() {
@@ -86,24 +86,26 @@ class PresentationPageState extends State<PresentationPage>
 }
 
 class Slide extends StatelessWidget {
-  final String title, text, image, imageDescription;
-  final Color topColor, textColor;
+  final String title;
+  final String text;
+  final String? image;
+  final String? imageDescription;
+  final Color topColor;
+  final Color? textColor;
   final bool hasImage, popOnTap;
   final double textImageRatio;
 
   const Slide({
-    Key key,
-    @required this.title,
-    @required this.text,
+    Key? key,
+    required this.title,
+    required this.text,
     this.image,
     this.textColor,
     this.textImageRatio = 2 / 3,
-    @required this.topColor,
+    required this.topColor,
     this.imageDescription,
     this.popOnTap = false,
-  })  : assert(textImageRatio != null
-            ? (textImageRatio < 1 && textImageRatio > 0)
-            : true),
+  })  : assert(textImageRatio < 1 && textImageRatio > 0),
         hasImage = image != null,
         super(key: key);
 
@@ -126,7 +128,7 @@ class Slide extends StatelessWidget {
                   top: 20, left: 24, right: 24, bottom: 20),
               child: Text(
                 title,
-                style: theme.headline4.copyWith(color: textColor),
+                style: theme.headline4!.copyWith(color: textColor),
               ),
             ),
           ),
@@ -158,7 +160,7 @@ class Slide extends StatelessWidget {
                                       2 * imagePadding,
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
-                                    image: AssetImage(image),
+                                    image: AssetImage(image!),
                                     fit: BoxFit.scaleDown,
                                     alignment: Alignment.bottomCenter,
                                   )),
@@ -168,7 +170,7 @@ class Slide extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(top: 4),
                               child: Text(
-                                imageDescription,
+                                imageDescription!,
                                 style: theme.caption,
                               ),
                             ),
@@ -189,7 +191,7 @@ class Slide extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Text(
         text,
-        style: theme.headline5.copyWith(fontSize: 20),
+        style: theme.headline5!.copyWith(fontSize: 20),
         textAlign: TextAlign.start,
       ),
     );

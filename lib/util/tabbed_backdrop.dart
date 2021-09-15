@@ -20,9 +20,9 @@ final _kFrontHeadingRoundRadius = BorderRadiusTween(
 class _TappableWhileStatusIs extends StatefulWidget {
   const _TappableWhileStatusIs(
     this.status, {
-    Key key,
-    this.controller,
-    this.child,
+    Key? key,
+    required this.controller,
+    required this.child,
   }) : super(key: key);
 
   final AnimationController controller;
@@ -34,7 +34,7 @@ class _TappableWhileStatusIs extends StatefulWidget {
 }
 
 class _TappableWhileStatusIsState extends State<_TappableWhileStatusIs> {
-  bool _active;
+  late bool _active;
 
   @override
   void initState() {
@@ -71,16 +71,16 @@ class _CrossFadeTransition extends StatelessWidget {
   final Animation<double> progress;
 
   const _CrossFadeTransition({
-    Key key,
+    Key? key,
     this.alignment = Alignment.center,
-    this.progress,
+    required this.progress,
     this.child0,
     this.child1,
   }) : super(key: key);
 
   final AlignmentGeometry alignment;
-  final Widget child0;
-  final Widget child1;
+  final Widget? child0;
+  final Widget? child1;
 
   @override
   Widget build(BuildContext context) {
@@ -140,11 +140,11 @@ class _CrossFadeTransition extends StatelessWidget {
 
 class TabbedBackdrop extends StatefulWidget {
   const TabbedBackdrop({
-    this.backdrops,
-    this.tabs,
+    required this.backdrops,
+    required this.tabs,
     this.initialIndex = 0,
     this.labelPadding = 44,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final List<BackdropComponent> backdrops;
@@ -159,9 +159,9 @@ class TabbedBackdrop extends StatefulWidget {
 class TabbedBackdropState extends State<TabbedBackdrop>
     with TickerProviderStateMixin {
   final GlobalKey _backdropKey = GlobalKey(debugLabel: 'Backdrop');
-  AnimationController _controller;
-  Animation<double> _frontOpacity;
-  TabController _tabController;
+  late AnimationController _controller;
+  late Animation<double> _frontOpacity;
+  late TabController _tabController;
 
   static final Animatable<double> _frontOpacityTween =
       Tween<double>(begin: 0.2, end: 1).chain(
@@ -183,7 +183,7 @@ class TabbedBackdropState extends State<TabbedBackdrop>
       initialIndex: widget.initialIndex,
     );
 
-    _tabController.animation.addListener(() => setState(() {}));
+    _tabController.animation!.addListener(() => setState(() {}));
   }
 
   @override
@@ -196,14 +196,14 @@ class TabbedBackdropState extends State<TabbedBackdrop>
   double get _backdropHeight {
     // Warning: this can be safely called from the event handlers but it may
     // not be called at build time.
-    final RenderBox renderBox = _backdropKey.currentContext.findRenderObject();
+    final RenderBox renderBox =
+        _backdropKey.currentContext!.findRenderObject() as RenderBox;
     return math.max(
         0, renderBox.size.height - _kBackAppBarHeight - kFrontClosedHeight);
   }
 
   void _handleDragUpdate(DragUpdateDetails details) {
-    _controller.value -=
-        details.primaryDelta / (_backdropHeight ?? details.primaryDelta);
+    _controller.value -= details.primaryDelta! / _backdropHeight;
   }
 
   void _handleDragEnd(DragEndDetails details) {
@@ -226,6 +226,14 @@ class TabbedBackdropState extends State<TabbedBackdrop>
     final bool isOpen = status == AnimationStatus.completed ||
         status == AnimationStatus.forward;
     _controller.fling(velocity: isOpen ? -2 : 2);
+  }
+
+  BorderRadiusGeometry _borderRadiusAnimation(BackdropComponent widget) {
+    final animation = widget.borderRadiusAnimation;
+    if (animation != null) {
+      return animation.transform(_controller.value);
+    }
+    return _kFrontHeadingRoundRadius.transform(_controller.value)!;
   }
 
   Widget _buildStack(BuildContext context, BoxConstraints constraints) {
@@ -270,16 +278,14 @@ class TabbedBackdropState extends State<TabbedBackdrop>
               padding: EdgeInsets.only(top: widget.frontPadding),
               child: AnimatedBuilder(
                 animation: _controller,
-                builder: (BuildContext context, Widget child) {
+                builder: (BuildContext context, Widget? child) {
                   return PhysicalShape(
                     elevation: 12,
                     color: Colors.white,
                     //Theme.of(context).canvasColor,
                     clipper: ShapeBorderClipper(
                       shape: RoundedRectangleBorder(
-                        borderRadius: (widget.borderRadiusAnimation ??
-                                _kFrontHeadingRoundRadius)
-                            .transform(_controller.value),
+                        borderRadius: _borderRadiusAnimation(widget),
                       ),
                     ),
                     clipBehavior: Clip.antiAlias,
@@ -363,30 +369,30 @@ class TabbedBackdropState extends State<TabbedBackdrop>
   }
 
   Animation<double> mapAnimation() {
-    double truncatedValue = _tabController.animation.value.truncateToDouble();
+    double truncatedValue = _tabController.animation!.value.truncateToDouble();
 
     Animation<double> animation = Tween<double>(
       begin: 0 - truncatedValue,
       end: 1 - truncatedValue,
-    ).animate(_tabController.animation);
+    ).animate(_tabController.animation!);
 
     return animation;
   }
 
-  Color _calculateColor() {
+  Color? _calculateColor() {
     Animation<double> animation = mapAnimation();
 
     return Color.lerp(
-      widget.backdrops[_tabController.animation.value.floor()].backgroundColor,
-      widget.backdrops[_tabController.animation.value.ceil()].backgroundColor,
+      widget.backdrops[_tabController.animation!.value.floor()].backgroundColor,
+      widget.backdrops[_tabController.animation!.value.ceil()].backgroundColor,
       animation.value,
     );
   }
 
   Widget _calculateBackpanel() {
     return _calculateFadeTransition(
-      widget.backdrops[_tabController.animation.value.ceil()].backLayer,
-      widget.backdrops[_tabController.animation.value.floor()].backLayer,
+      widget.backdrops[_tabController.animation!.value.ceil()].backLayer,
+      widget.backdrops[_tabController.animation!.value.floor()].backLayer,
     );
   }
 
@@ -402,18 +408,14 @@ class BackdropComponent {
   final Widget backLayer;
   final ColorSwatch backgroundColor;
   final double frontPadding;
-  final Animatable<BorderRadius> borderRadiusAnimation;
+  final Animatable<BorderRadius>? borderRadiusAnimation;
 
   BackdropComponent({
     this.borderRadiusAnimation,
     this.frontPadding = 0,
-    @required this.frontLayer,
-    @required this.frontHeading,
-    @required this.backLayer,
-    @required this.backgroundColor,
-  })  : assert(frontHeading != null),
-        assert(frontPadding != null),
-        assert(backLayer != null),
-        assert(backgroundColor != null),
-        assert(frontLayer != null);
+    required this.frontLayer,
+    required this.frontHeading,
+    required this.backLayer,
+    required this.backgroundColor,
+  });
 }

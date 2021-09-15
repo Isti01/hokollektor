@@ -5,10 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hokollektor/bloc/app_data_bloc.dart';
 import 'package:hokollektor/bloc/chart_tab_bloc.dart';
 import 'package:hokollektor/chart/chart.dart';
-import 'package:hokollektor/chart/date_picker.dart';
 import 'package:hokollektor/home/home.dart';
 import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/util/tabbed_backdrop.dart';
+
+const int kLastDay = 15;
+final DateTime kFirstDate = DateTime(2018, 1, 1);
+const Duration kMaxInterval = Duration(days: 14);
 
 class ChartBackPanel extends StatelessWidget {
   final VoidCallback onReturn;
@@ -16,10 +19,10 @@ class ChartBackPanel extends StatelessWidget {
   final ChartTabBloc bloc;
 
   const ChartBackPanel({
-    Key key,
-    this.onReturn,
+    Key? key,
+    required this.onReturn,
     this.lineColor = Colors.white,
-    this.bloc,
+    required this.bloc,
   }) : super(key: key);
 
   @override
@@ -112,44 +115,50 @@ class ChartBackPanel extends StatelessWidget {
           text,
           style: Theme.of(context)
               .textTheme
-              .headline6
+              .headline6!
               .copyWith(color: Colors.white),
         ),
       ),
     );
   }
 
-  _showCustomChart(context, wattChart) async {
+  _showCustomChart(context, isWattChart) async {
     try {
-      final List<DateTime> dates = await showDialog(
-          context: context,
-          builder: (BuildContext context) => const DatePickerDialog(),
-          barrierDismissible: true);
+      final now = DateTime.now();
 
-      DateTime elso = DateTime(
-        dates[0].year,
-        dates[0].month,
-        dates[0].day,
+      DateTimeRange? range = await showDateRangePicker(
+        context: context,
+        lastDate: DateTime(now.year, now.month, now.day),
+        firstDate: DateTime(now.year, now.month, now.day, 23, 59)
+            .subtract(const Duration(days: kLastDay - 1)),
       );
 
-      DateTime masodik = DateTime(
-        dates[1].year,
-        dates[1].month,
-        dates[1].day,
+      if (range == null) return;
+
+      DateTime first = DateTime(
+        range.start.year,
+        range.start.month,
+        range.start.day,
+      );
+
+      DateTime second = DateTime(
+        range.end.year,
+        range.end.month,
+        range.end.day,
         23,
         59,
       );
 
-      int startDate = elso.millisecondsSinceEpoch ~/ 1000;
-      int endDate = masodik.millisecondsSinceEpoch ~/ 1000;
+      int startDate = first.millisecondsSinceEpoch ~/ 1000;
+      int endDate = second.millisecondsSinceEpoch ~/ 1000;
 
       bloc.add(CustomChartTabEvent(
-        wattChart ? Charts.watt : Charts.custom,
+        isWattChart ? Charts.watt : Charts.custom,
         startDate,
         endDate,
       ));
-    } catch (e) {
-      developer.log(e.toString());
+    } catch (e, s) {
+      developer.log([e, s].toString());
     }
   }
 }
@@ -159,22 +168,21 @@ class ChartFront extends StatefulWidget {
   final AppBloc realTimeBloc;
 
   const ChartFront({
-    Key key,
-    @required this.bloc,
-    this.realTimeBloc,
-  })  : assert(bloc != null),
-        super(key: key);
+    Key? key,
+    required this.bloc,
+    required this.realTimeBloc,
+  }) : super(key: key);
 
   @override
   ChartFrontState createState() => ChartFrontState();
 }
 
 class ChartFrontState extends State<ChartFront> {
-  Widget chartWidget;
-  String title;
-  Charts chart;
-  int startDate;
-  int endDate;
+  late Widget chartWidget;
+  late String title;
+  late Charts chart;
+  int? startDate;
+  int? endDate;
 
   @override
   void initState() {
@@ -250,51 +258,51 @@ class ChartFrontState extends State<ChartFront> {
       case Charts.watt:
         return loc.getText(loc.wattChart);
     }
-    return '';
   }
 
   Widget _getChart(
     Charts chart, {
-    int startDate,
-    int endDate,
-    AppBloc bloc,
+    int? startDate,
+    int? endDate,
+    required AppBloc bloc,
   }) {
+    assert((chart != Charts.custom && chart != Charts.watt) ||
+        (startDate != null && endDate != null));
     switch (chart) {
       case Charts.realTime:
         return RealTimeChart(
           bloc: bloc,
-          height: 450,
+          height: kChartHeight,
         );
       case Charts.hourly:
         return OneHourChart(
           key: UniqueKey(),
-          height: 450,
+          height: kChartHeight,
         );
       case Charts.daily:
         return OneDayChart(
           key: UniqueKey(),
-          height: 450,
+          height: kChartHeight,
         );
       case Charts.weekly:
         return OneWeekChart(
           key: UniqueKey(),
-          height: 450,
+          height: kChartHeight,
         );
       case Charts.custom:
         return CustomChart(
           key: UniqueKey(),
-          height: 450,
-          startDate: startDate,
-          endDate: endDate,
+          height: kChartHeight,
+          startDate: startDate!,
+          endDate: endDate!,
         );
       case Charts.watt:
         return WattChart(
           key: UniqueKey(),
-          height: 450,
-          startDate: startDate,
-          endDate: endDate,
+          height: kChartHeight,
+          startDate: startDate!,
+          endDate: endDate!,
         );
     }
-    return const SizedBox();
   }
 }

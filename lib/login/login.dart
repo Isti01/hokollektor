@@ -15,7 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -65,14 +65,14 @@ class LoginPage extends StatelessWidget {
 }
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({Key key}) : super(key: key);
+  const LoginForm({Key? key}) : super(key: key);
 
   @override
   LoginFormState createState() => LoginFormState();
 }
 
 class LoginFormState extends State<LoginForm> {
-  String error;
+  String? error;
   bool loading = false;
   bool stayLoggedIn = false;
   final formKey = GlobalKey<FormState>(debugLabel: "Login Form Label");
@@ -137,9 +137,9 @@ class LoginFormState extends State<LoginForm> {
                     const SizedBox(height: 2),
                     error != null
                         ? Text(
-                            error,
+                            error!,
                             textAlign: TextAlign.center,
-                            style: theme.button.copyWith(color: Colors.red),
+                            style: theme.button!.copyWith(color: Colors.red),
                           )
                         : loading
                             ? Wrap(children: const [
@@ -151,8 +151,12 @@ class LoginFormState extends State<LoginForm> {
                     const SizedBox(height: 2),
                     CheckBoxTile(
                       value: stayLoggedIn,
-                      onChanged: (bool value) =>
-                          setState(() => stayLoggedIn = value),
+                      onChanged: (bool? value) => {
+                        if (value != null)
+                          {
+                            setState(() => stayLoggedIn = value),
+                          }
+                      },
                       title: Text(
                         loc.getText(loc.stayLoggedIn),
                         textAlign: TextAlign.end,
@@ -190,7 +194,7 @@ class LoginFormState extends State<LoginForm> {
   }
 
   _loginButtonPressed() async {
-    if (!formKey.currentState.validate()) return;
+    if (!formKey.currentState!.validate()) return;
     setState(() => loading = true);
     String res = await _login(_userController.text, _passController.text);
 
@@ -218,7 +222,11 @@ class LoginButton extends StatelessWidget {
   final List<Color> gradientColors;
   final String text;
 
-  const LoginButton({Key key, this.onPressed, this.gradientColors, this.text})
+  const LoginButton(
+      {Key? key,
+      required this.onPressed,
+      required this.gradientColors,
+      required this.text})
       : super(key: key);
 
   @override
@@ -228,7 +236,7 @@ class LoginButton extends StatelessWidget {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.grey[800],
+              color: Colors.grey[800]!,
               offset: const Offset(0, 1.5),
               blurRadius: 1.5,
             ),
@@ -245,7 +253,7 @@ class LoginButton extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 42),
               child: Text(
                 text,
-                style: theme.headline6.copyWith(color: Colors.white),
+                style: theme.headline6!.copyWith(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -263,13 +271,13 @@ class LoginInput extends StatelessWidget {
   final TextEditingController controller;
 
   const LoginInput({
-    Key key,
-    this.onSubmitted,
+    Key? key,
+    required this.onSubmitted,
     this.obscureText = false,
-    this.icon,
-    this.labelText,
-    this.node,
-    this.controller,
+    required this.icon,
+    required this.labelText,
+    required this.node,
+    required this.controller,
   }) : super(key: key);
 
   @override
@@ -282,7 +290,7 @@ class LoginInput extends StatelessWidget {
     );
 
     return TextFormField(
-      validator: (String text) {
+      validator: (String? text) {
         if (text == null) {
           return null;
         }
@@ -333,8 +341,8 @@ Future<String> _login(String user, String pass) async {
     } else {
       return loc.getText(loc.invalidUserInfo);
     }
-  } catch (e) {
-    developer.log(e);
+  } catch (e, s) {
+    developer.log([e, s].toString());
     return loc.getText(loc.invalidUserInfo);
   }
 }
@@ -344,21 +352,21 @@ void _saveStayLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     prefs.setBool(stayLoggedInKey, true);
-  } catch (e) {
-    developer.log(e.toString());
+  } catch (e, s) {
+    developer.log([e, s].toString());
   }
 }
 
 class CheckBoxTile extends StatelessWidget {
   final bool value;
-  final Function(bool value) onChanged;
+  final void Function(bool? value) onChanged;
   final Widget title;
 
   const CheckBoxTile({
-    Key key,
-    this.value,
-    this.onChanged,
-    this.title,
+    Key? key,
+    required this.value,
+    required this.onChanged,
+    required this.title,
   }) : super(key: key);
 
   @override
@@ -393,7 +401,7 @@ class LoginAsGuest extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const LoginAsGuest({Key key, this.color = Colors.white, this.onTap})
+  const LoginAsGuest({Key? key, this.color = Colors.white, required this.onTap})
       : super(key: key);
 
   @override
@@ -422,7 +430,8 @@ class OrLine extends StatelessWidget {
   final String text;
   final Color color;
 
-  const OrLine({Key key, this.text, this.color}) : super(key: key);
+  const OrLine({Key? key, required this.text, required this.color})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -435,7 +444,7 @@ class OrLine extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           text,
-          style: Theme.of(context).textTheme.subtitle1.copyWith(color: color),
+          style: Theme.of(context).textTheme.subtitle1!.copyWith(color: color),
         ),
         const SizedBox(width: 8),
         Flexible(flex: 3, child: Container(height: 2, color: color)),

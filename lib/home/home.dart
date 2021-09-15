@@ -12,7 +12,7 @@ const kChartPanelColor = Colors.teal;
 const kAppBorderRadius = BorderRadius.all(Radius.circular(12));
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -91,6 +91,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _toggleBackdrop() {
-    backdropKey.currentState.toggleFrontLayer();
+    backdropKey.currentState?.toggleFrontLayer();
   }
 }

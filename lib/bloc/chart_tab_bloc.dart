@@ -1,10 +1,9 @@
-import "dart:developer" as developer;
-
 import 'package:bloc/bloc.dart';
 import 'package:hokollektor/chart/chart.dart';
 
 const initialChart = Charts.weekly;
-final initialChartWidget = OneWeekChart();
+const kChartHeight = 450.0;
+final initialChartWidget = OneWeekChart(height: kChartHeight);
 
 enum Charts {
   daily,
@@ -20,13 +19,6 @@ class ChartTabBloc extends Bloc<ChartEvent, ChartTabState> {
 
   @override
   Stream<ChartTabState> mapEventToState(ChartEvent event) async* {
-    try {
-      if (event == null) {
-        yield ChartTabState(Charts.weekly);
-      }
-    } catch (e) {
-      developer.log(e);
-    }
     if (event is CustomChartTabEvent) {
       yield ChartTabState(
         event.newChart,
@@ -70,7 +62,7 @@ class CustomChartTabEvent extends ChartEvent {
 
 class ChartTabState {
   final Charts chart;
-  final int startDate, endDate;
+  final int? startDate, endDate;
 
   const ChartTabState(
     this.chart, {

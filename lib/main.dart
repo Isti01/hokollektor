@@ -14,16 +14,17 @@ const String stayLoggedInKey = 'stayLoggedIn';
 const String languagePrefKey = 'language';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   setPortraitOrientation();
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   bool loggedIn = false;
-  String chosenLanguage;
+  String? chosenLanguage;
 
   try {
     loggedIn = prefs.getBool(stayLoggedInKey) ?? false;
-  } catch (e) {
-    developer.log(e.toString());
+  } catch (e, s) {
+    developer.log([e, s].toString());
   }
 
   try {
@@ -32,8 +33,8 @@ void main() async {
     if (chosenLanguage != null && chosenLanguage.trim().isEmpty) {
       chosenLanguage = null;
     }
-  } catch (e) {
-    developer.log(e.toString());
+  } catch (e, s) {
+    developer.log([e, s].toString());
   }
 
   preferredLanguage = chosenLanguage;
@@ -71,9 +72,8 @@ hideSystemOverlay() {
 saveLanguagePreference(String languageCode) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  if (languageCode.trim().isEmpty) languageCode = null;
-
-  prefs.setString(languagePrefKey, languageCode);
-
-  preferredLanguage = languageCode;
+  if (languageCode.trim().isNotEmpty) {
+    prefs.setString(languagePrefKey, languageCode);
+    preferredLanguage = languageCode;
+  }
 }

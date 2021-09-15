@@ -21,8 +21,8 @@ class HomeBackPanel extends StatelessWidget {
   final AppBloc bloc;
 
   const HomeBackPanel({
-    Key key,
-    this.bloc,
+    Key? key,
+    required this.bloc,
   }) : super(key: key);
 
   @override
@@ -52,7 +52,7 @@ class HomeBackPanel extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
-                  .headline6
+                  .headline6!
                   .copyWith(color: fontColor),
             ),
             onTap: () => Navigator.push(
@@ -89,7 +89,7 @@ class HomeBackPanel extends StatelessWidget {
               padding: const EdgeInsets.all(24),
               child: Text(
                 loc.getText(loc.tapToReload),
-                style: theme.textTheme.headline6.copyWith(color: fontColor),
+                style: theme.textTheme.headline6!.copyWith(color: fontColor),
               ),
             ),
           ),
@@ -101,14 +101,14 @@ class HomeBackPanel extends StatelessWidget {
 
     final data = state.manualData;
 
-    return data.rpm2 != null
+    return data?.rpm1 != null && data?.rpm2 != null
         ? buildFrame(
             theme: theme,
             title: loc.getText(loc.manualConf),
             children: [
               ManualSlider(
                 sliderLabel: loc.getText(loc.vent0),
-                initialValue: data.rpm1,
+                initialValue: data!.rpm1!,
                 onChanged: (value) => bloc.uploadData(RpmData(
                   enabled: data.enabled,
                   rpm1: value,
@@ -117,7 +117,7 @@ class HomeBackPanel extends StatelessWidget {
               ),
               ManualSlider(
                 sliderLabel: loc.getText(loc.vent1),
-                initialValue: data.rpm2,
+                initialValue: data.rpm2!,
                 onChanged: (value) => bloc.uploadData(RpmData(
                   enabled: data.enabled,
                   rpm1: data.rpm1,
@@ -174,7 +174,7 @@ class HomeBackPanel extends StatelessWidget {
               padding: const EdgeInsets.all(24),
               child: Text(
                 loc.getText(loc.tapToReload),
-                style: theme.textTheme.headline6.copyWith(color: fontColor),
+                style: theme.textTheme.headline6!.copyWith(color: fontColor),
               ),
             ),
           ),
@@ -233,7 +233,7 @@ class HomeBackPanel extends StatelessWidget {
     ProfileState value,
     TextTheme theme,
     AppDataState state, [
-    Function(ProfileState value) onChanged,
+    Function(ProfileState value)? onChanged,
   ]) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
@@ -241,16 +241,16 @@ class HomeBackPanel extends StatelessWidget {
         activeColor: radioActiveColor,
         title: Text(
           text,
-          style: theme.headline6.copyWith(color: fontColor),
+          style: theme.headline6!.copyWith(color: fontColor),
         ),
         subtitle: Text(
           description,
-          style: theme.subtitle2.copyWith(color: fontColor),
+          style: theme.subtitle2!.copyWith(color: fontColor),
         ),
         value: value,
         groupValue: state.profileData,
-        onChanged: (ProfileState value) {
-          if (onChanged != null) {
+        onChanged: (ProfileState? value) {
+          if (onChanged != null && value != null) {
             onChanged(value);
           } else {
             bloc.uploadData(value);
@@ -265,7 +265,7 @@ class HomeFront extends StatelessWidget {
   final AppBloc bloc;
   final title = loc.getText(loc.realtimeChart);
 
-  HomeFront({Key key, this.bloc}) : super(key: key);
+  HomeFront({Key? key, required this.bloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -297,7 +297,7 @@ class HomeFront extends StatelessWidget {
 class InformationCards extends StatelessWidget {
   final AppBloc bloc;
 
-  const InformationCards({Key key, this.bloc}) : super(key: key);
+  const InformationCards({Key? key, required this.bloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -311,7 +311,7 @@ class InformationCards extends StatelessWidget {
     final theme = Theme.of(context);
 
     if (state.tempData != null && state.kwhData != null) {
-      TemperatureStatistics data = state.tempData;
+      TemperatureStatistics data = state.tempData!;
 
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -329,21 +329,21 @@ class InformationCards extends StatelessWidget {
                 ),
                 Text(
                   loc.getText(loc.minTemp) + '${data.minCollector}°C',
-                  style: theme.textTheme.subtitle1.copyWith(),
+                  style: theme.textTheme.subtitle1!.copyWith(),
                 ),
                 const SizedBox(
                   height: 4,
                 ),
                 Text(
                   loc.getText(loc.maxTemp) + '${data.maxCollector}°C',
-                  style: theme.textTheme.subtitle1.copyWith(),
+                  style: theme.textTheme.subtitle1!.copyWith(),
                 ),
                 const SizedBox(
                   height: 4,
                 ),
                 Text(
                   loc.getText(loc.kwhText) + '${state.kwhData}KWh',
-                  style: theme.textTheme.subtitle1.copyWith(),
+                  style: theme.textTheme.subtitle1!.copyWith(),
                 ),
               ],
             ),
@@ -360,14 +360,14 @@ class InformationCards extends StatelessWidget {
                 ),
                 Text(
                   loc.getText(loc.minTemp) + '${data.minHouse}°C',
-                  style: theme.textTheme.subtitle1.copyWith(),
+                  style: theme.textTheme.subtitle1!.copyWith(),
                 ),
                 const SizedBox(
                   height: 4,
                 ),
                 Text(
                   loc.getText(loc.maxTemp) + '${data.maxHouse}°C',
-                  style: theme.textTheme.subtitle1.copyWith(),
+                  style: theme.textTheme.subtitle1!.copyWith(),
                 ),
               ],
             ),
@@ -410,10 +410,10 @@ class ManualSlider extends StatefulWidget {
   final int initialValue;
 
   const ManualSlider({
-    Key key,
-    this.onChanged,
-    this.initialValue,
-    this.sliderLabel,
+    Key? key,
+    required this.onChanged,
+    this.initialValue = 0,
+    required this.sliderLabel,
   }) : super(key: key);
 
   @override
@@ -421,14 +421,14 @@ class ManualSlider extends StatefulWidget {
 }
 
 class _ManualSliderState extends State<ManualSlider> {
-  int value;
+  int? value;
 
-  double sliderValue;
+  late double sliderValue;
 
   @override
   void initState() {
     super.initState();
-    sliderValue = ((widget.initialValue ?? 0) / 100).toDouble();
+    sliderValue = (widget.initialValue / 100).toDouble();
 
     if (sliderValue < 0) {
       sliderValue = 0;
@@ -437,7 +437,7 @@ class _ManualSliderState extends State<ManualSlider> {
       sliderValue = 1;
     }
 
-    value = widget.initialValue ?? 0;
+    value = widget.initialValue;
   }
 
   _setValue(dynamic value) {
@@ -460,8 +460,8 @@ class _ManualSliderState extends State<ManualSlider> {
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Text(
               widget.sliderLabel,
-              style: theme.bodyText1.copyWith(
-                fontSize: theme.bodyText1.fontSize + 3,
+              style: theme.bodyText1!.copyWith(
+                fontSize: theme.bodyText1!.fontSize! + 3,
                 color: fontColor,
               ),
             ),
@@ -473,7 +473,7 @@ class _ManualSliderState extends State<ManualSlider> {
             children: <Widget>[
               Text(
                 value.toString(),
-                style: theme.bodyText1.copyWith(color: fontColor),
+                style: theme.bodyText1!.copyWith(color: fontColor),
               ),
               Expanded(
                 child: Slider(
@@ -498,7 +498,7 @@ class _ManualSliderState extends State<ManualSlider> {
 }
 
 class LanguageSetting extends StatelessWidget {
-  const LanguageSetting({Key key}) : super(key: key);
+  const LanguageSetting({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -514,8 +514,8 @@ class LanguageSetting extends StatelessWidget {
                   )),
           title: Text(
             loc.getText(loc.changeLanguage),
-            style: theme.textTheme.headline6.copyWith(
-              fontSize: theme.textTheme.headline6.fontSize + 6,
+            style: theme.textTheme.headline6!.copyWith(
+              fontSize: theme.textTheme.headline6!.fontSize! + 6,
               color: fontColor,
             ),
           )),
@@ -524,15 +524,15 @@ class LanguageSetting extends StatelessWidget {
 }
 
 class LanguageDialog extends StatefulWidget {
-  const LanguageDialog({Key key}) : super(key: key);
+  const LanguageDialog({Key? key}) : super(key: key);
 
   @override
   _LanguageDialogState createState() => _LanguageDialogState();
 }
 
 class _LanguageDialogState extends State<LanguageDialog> {
-  List<DropdownMenuItem<String>> locales;
-  String chosenValue;
+  late List<DropdownMenuItem<String>> locales;
+  String? chosenValue;
 
   _initLocales(List<String> locales) {
     this.locales = locales
@@ -591,7 +591,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
                           borderRadius: kAppBorderRadius),
                       child: Text(
                         loc.getText(loc.cancel),
-                        style: theme.textTheme.button
+                        style: theme.textTheme.button!
                             .copyWith(color: theme.primaryColor),
                       ),
                       onPressed: () => Navigator.pop(context),
@@ -603,10 +603,10 @@ class _LanguageDialogState extends State<LanguageDialog> {
                       child: Text(
                         loc.getText(loc.save),
                         style:
-                            theme.textTheme.button.copyWith(color: fontColor),
+                            theme.textTheme.button!.copyWith(color: fontColor),
                       ),
                       onPressed: () async {
-                        await saveLanguagePreference(chosenValue);
+                        await saveLanguagePreference(chosenValue!);
                         Navigator.pop(context);
                         loc.onLocaleChange();
                       },
@@ -623,9 +623,9 @@ class _LanguageDialogState extends State<LanguageDialog> {
 }
 
 buildFrame({
-  List<Widget> children,
-  String title,
-  ThemeData theme,
+  required List<Widget> children,
+  required String title,
+  required ThemeData theme,
   bool initiallyExpanded = false,
 }) {
   return Theme(
@@ -637,8 +637,8 @@ buildFrame({
           children: children,
           title: Text(
             title,
-            style: theme.textTheme.headline6.copyWith(
-              fontSize: theme.textTheme.headline6.fontSize + 6,
+            style: theme.textTheme.headline6!.copyWith(
+              fontSize: theme.textTheme.headline6!.fontSize! + 6,
               color: fontColor,
             ),
           ),

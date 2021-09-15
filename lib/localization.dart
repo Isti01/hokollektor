@@ -1,11 +1,13 @@
+
+
 import "dart:developer" as developer;
 
 var locale = "en";
-String preferredLanguage;
+String? preferredLanguage;
 
-void Function() onLocaleChange; // todo replace this with an inherited widget
+late void Function() onLocaleChange; // todo replace this with an inherited widget
 
-String getPreferredLanguage() {
+String? getPreferredLanguage() {
   if (preferredLanguage == null || !localizations.contains(preferredLanguage)) {
     return "";
   }
@@ -43,7 +45,7 @@ void initLocale(String loc) {
 }
 
 String getText(String textKey) =>
-    localizedTexts[locale][textKey] ?? "_nincs ilyen string_";
+    localizedTexts[locale]![textKey] ?? "_nincs ilyen string_";
 
 const localizations = [
   "en",
@@ -555,72 +557,72 @@ const invalidUsername = "invalidUsername",
 bool test(String locale) {
   if (!localizations.contains(locale)) return false;
 
-  if (localizedTexts[locale][invalidUsername] == null ||
-      localizedTexts[locale][noInternet] == null ||
-      localizedTexts[locale][correctPass] == null ||
-      localizedTexts[locale][tempKoll] == null ||
-      localizedTexts[locale][tempOutside] == null ||
-      localizedTexts[locale][tempInside] == null ||
-      localizedTexts[locale][koll] == null ||
-      localizedTexts[locale][outside] == null ||
-      localizedTexts[locale][inside] == null ||
-      localizedTexts[locale][cancel] == null ||
-      localizedTexts[locale][save] == null ||
-      localizedTexts[locale][home] == null ||
-      localizedTexts[locale][charts] == null ||
-      localizedTexts[locale][minTemp] == null ||
-      localizedTexts[locale][maxTemp] == null ||
-      localizedTexts[locale][stayLoggedIn] == null ||
-      localizedTexts[locale][tapToReload] == null ||
-      localizedTexts[locale][configureHeader] == null ||
-      localizedTexts[locale][chartHeader] == null ||
-      localizedTexts[locale][weeklyChart] == null ||
-      localizedTexts[locale][dailyChart] == null ||
-      localizedTexts[locale][hourlyChart] == null ||
-      localizedTexts[locale][realtimeChart] == null ||
-      localizedTexts[locale][customChart] == null ||
-      localizedTexts[locale][profiles] == null ||
-      localizedTexts[locale][optimal] == null ||
-      localizedTexts[locale][minimal] == null ||
-      localizedTexts[locale][maximal] == null ||
-      localizedTexts[locale][manualConf] == null ||
-      localizedTexts[locale][vent0] == null ||
-      localizedTexts[locale][vent1] == null ||
-      localizedTexts[locale][manual] == null ||
-      localizedTexts[locale][expanded] == null ||
-      localizedTexts[locale][simplified] == null ||
-      localizedTexts[locale][onDeg] == null ||
-      localizedTexts[locale][custom] == null ||
-      localizedTexts[locale][house] == null ||
-      localizedTexts[locale][noTextAdded] == null ||
-      localizedTexts[locale][user] == null ||
-      localizedTexts[locale][pass] == null ||
-      localizedTexts[locale][invalidUserInfo] == null ||
-      localizedTexts[locale][login] == null ||
-      localizedTexts[locale][pickInterval] == null ||
-      localizedTexts[locale][failedToLoadChart] == null ||
-      localizedTexts[locale][invalidPassword] == null ||
-      localizedTexts[locale][profileMinimalDescription] == null ||
-      localizedTexts[locale][profileMaximalDescription] == null ||
-      localizedTexts[locale][profileOptimalDescription] == null ||
-      localizedTexts[locale][profileCustomDescription] == null ||
-      localizedTexts[locale][profileManualDescription] == null ||
-      localizedTexts[locale][presentationTime] == null ||
-      localizedTexts[locale][appName] == null ||
-      localizedTexts[locale][aboutCollector] == null ||
-      localizedTexts[locale][aboutCollectorText] == null ||
-      localizedTexts[locale][aboutCollectorImageDescription] == null ||
-      localizedTexts[locale][collectorControlling] == null ||
-      localizedTexts[locale][collectorControllingText] == null ||
-      localizedTexts[locale][theApplication] == null ||
-      localizedTexts[locale][theApplicationText] == null ||
-      localizedTexts[locale][collectorControllingImageDescription] == null ||
-      localizedTexts[locale][langHu] == null ||
-      localizedTexts[locale][langEn] == null ||
-      localizedTexts[locale][langSrLatn] == null ||
-      localizedTexts[locale][langSrCiril] == null ||
-      localizedTexts[locale][langAuto] == null ||
-      localizedTexts[locale][changeLanguage] == null) return false;
+  if (localizedTexts[locale]![invalidUsername] == null ||
+      localizedTexts[locale]![noInternet] == null ||
+      localizedTexts[locale]![correctPass] == null ||
+      localizedTexts[locale]![tempKoll] == null ||
+      localizedTexts[locale]![tempOutside] == null ||
+      localizedTexts[locale]![tempInside] == null ||
+      localizedTexts[locale]![koll] == null ||
+      localizedTexts[locale]![outside] == null ||
+      localizedTexts[locale]![inside] == null ||
+      localizedTexts[locale]![cancel] == null ||
+      localizedTexts[locale]![save] == null ||
+      localizedTexts[locale]![home] == null ||
+      localizedTexts[locale]![charts] == null ||
+      localizedTexts[locale]![minTemp] == null ||
+      localizedTexts[locale]![maxTemp] == null ||
+      localizedTexts[locale]![stayLoggedIn] == null ||
+      localizedTexts[locale]![tapToReload] == null ||
+      localizedTexts[locale]![configureHeader] == null ||
+      localizedTexts[locale]![chartHeader] == null ||
+      localizedTexts[locale]![weeklyChart] == null ||
+      localizedTexts[locale]![dailyChart] == null ||
+      localizedTexts[locale]![hourlyChart] == null ||
+      localizedTexts[locale]![realtimeChart] == null ||
+      localizedTexts[locale]![customChart] == null ||
+      localizedTexts[locale]![profiles] == null ||
+      localizedTexts[locale]![optimal] == null ||
+      localizedTexts[locale]![minimal] == null ||
+      localizedTexts[locale]![maximal] == null ||
+      localizedTexts[locale]![manualConf] == null ||
+      localizedTexts[locale]![vent0] == null ||
+      localizedTexts[locale]![vent1] == null ||
+      localizedTexts[locale]![manual] == null ||
+      localizedTexts[locale]![expanded] == null ||
+      localizedTexts[locale]![simplified] == null ||
+      localizedTexts[locale]![onDeg] == null ||
+      localizedTexts[locale]![custom] == null ||
+      localizedTexts[locale]![house] == null ||
+      localizedTexts[locale]![noTextAdded] == null ||
+      localizedTexts[locale]![user] == null ||
+      localizedTexts[locale]![pass] == null ||
+      localizedTexts[locale]![invalidUserInfo] == null ||
+      localizedTexts[locale]![login] == null ||
+      localizedTexts[locale]![pickInterval] == null ||
+      localizedTexts[locale]![failedToLoadChart] == null ||
+      localizedTexts[locale]![invalidPassword] == null ||
+      localizedTexts[locale]![profileMinimalDescription] == null ||
+      localizedTexts[locale]![profileMaximalDescription] == null ||
+      localizedTexts[locale]![profileOptimalDescription] == null ||
+      localizedTexts[locale]![profileCustomDescription] == null ||
+      localizedTexts[locale]![profileManualDescription] == null ||
+      localizedTexts[locale]![presentationTime] == null ||
+      localizedTexts[locale]![appName] == null ||
+      localizedTexts[locale]![aboutCollector] == null ||
+      localizedTexts[locale]![aboutCollectorText] == null ||
+      localizedTexts[locale]![aboutCollectorImageDescription] == null ||
+      localizedTexts[locale]![collectorControlling] == null ||
+      localizedTexts[locale]![collectorControllingText] == null ||
+      localizedTexts[locale]![theApplication] == null ||
+      localizedTexts[locale]![theApplicationText] == null ||
+      localizedTexts[locale]![collectorControllingImageDescription] == null ||
+      localizedTexts[locale]![langHu] == null ||
+      localizedTexts[locale]![langEn] == null ||
+      localizedTexts[locale]![langSrLatn] == null ||
+      localizedTexts[locale]![langSrCiril] == null ||
+      localizedTexts[locale]![langAuto] == null ||
+      localizedTexts[locale]![changeLanguage] == null) return false;
 
   return true;
 }

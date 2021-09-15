@@ -8,11 +8,11 @@ abstract class DataEvent {
 
 class DataUpdateEvent extends DataEvent {
   final bool reload;
-  final TemperatureStatistics tempData;
-  final List<charts.Series<ChartDataPoint, DateTime>> collectorData;
-  final ProfileState profileData;
-  final RpmData manualData;
-  final double kwhData;
+  final TemperatureStatistics? tempData;
+  final List<charts.Series<ChartDataPoint, DateTime>>? collectorData;
+  final ProfileState? profileData;
+  final RpmData? manualData;
+  final double? kwhData;
 
   const DataUpdateEvent({
     this.manualData,
@@ -29,22 +29,22 @@ class DataErrorEvent extends DataEvent {
 }
 
 class AppDataState {
-  final bool tempLoaded, profileLoaded;
-  final bool collFailed,
-      profileFailed,
-      manualFailed,
-      tempFailed,
-      kwhFailed,
-      loading;
-  final TemperatureStatistics tempData;
-  final List<charts.Series<ChartDataPoint, DateTime>> collData;
-  final ProfileState profileData;
-  final RpmData manualData;
-  final double kwhData;
+  final bool tempLoaded;
+  final bool profileLoaded;
+  final bool collFailed;
+  final bool profileFailed;
+  final bool manualFailed;
+  final bool tempFailed;
+  final bool loading;
+  final TemperatureStatistics? tempData;
+  final List<charts.Series<ChartDataPoint, DateTime>>? collData;
+  final ProfileState? profileData;
+  final RpmData? manualData;
+  final double? kwhData;
 
   const AppDataState({
-    this.tempLoaded,
-    this.profileLoaded,
+    required this.tempLoaded,
+    required this.profileLoaded,
     this.manualData,
     this.loading = false,
     this.tempData,
@@ -55,7 +55,6 @@ class AppDataState {
     this.profileFailed = false,
     this.manualFailed = false,
     this.tempFailed = false,
-    this.kwhFailed,
   });
 
   factory AppDataState.init({
@@ -83,18 +82,17 @@ class AppDataState {
         profileFailed: true,
         manualFailed: true,
         tempFailed: true,
-        kwhFailed: false,
       );
 }
 
 class TemperatureStatistics {
-  String minCollector;
-  String minHouse;
-  String maxCollector;
-  String maxHouse;
-  String currentOutside;
-  String currentHouse;
-  String currentCollector;
+  String? minCollector;
+  String? minHouse;
+  String? maxCollector;
+  String? maxHouse;
+  String? currentOutside;
+  String? currentHouse;
+  String? currentCollector;
 
   TemperatureStatistics({
     this.minCollector,
@@ -138,7 +136,6 @@ int getProfileNumber(ProfileState profile) {
     case ProfileState.custom:
       return 5;
   }
-  return 1;
 }
 
 ProfileState getProfileState(int number) {
@@ -169,9 +166,9 @@ ProfileState parseProfileData(json) {
 }
 
 class RpmData {
-  bool enabled;
-  int rpm1;
-  int rpm2;
+  bool? enabled;
+  int? rpm1;
+  int? rpm2;
 
   RpmData({this.enabled, this.rpm1, this.rpm2});
 
@@ -182,7 +179,7 @@ class RpmData {
   }
 }
 
-String createManualURL(int speed0, int speed1, bool enabled) {
+String createManualURL(int? speed0, int? speed1, bool? enabled) {
   return kRpmSubmitURL +
       "?adat1=${enabled != null && enabled ? 1 : 0}&adat2=$speed0&adat3=$speed1";
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import "dart:developer" as developer;
+
 import 'package:bloc/bloc.dart';
 import 'package:hokollektor/util/networking.dart';
 import 'package:hokollektor/util/urls.dart' as urls;
@@ -24,8 +25,8 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
       } else {
         await http.get(Uri.parse(CustomProfile.createLink(values)));
       }
-    } catch (e) {
-      developer.log(e.toString());
+    } catch (e, s) {
+      developer.log([e, s].toString());
     }
   }
 
@@ -46,8 +47,8 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
         initial: true,
         expanded: true,
       ));
-    } catch (e) {
-      developer.log(e.toString());
+    } catch (e, s) {
+      developer.log([e, s].toString());
       add(const ProfileErrorEvent());
     }
   }
@@ -88,8 +89,10 @@ class CustomProfileState {
         hasError: true,
       );
 
-  factory CustomProfileState.success(List<int> values, {bool expanded}) {
-    assert(values != null);
+  factory CustomProfileState.success(
+    List<int> values, {
+    required bool expanded,
+  }) {
     assert(values.length == minifiedSize || values.length == expandedSize);
     List<int> result = values;
 
@@ -103,8 +106,6 @@ class CustomProfileState {
   }
 
   static transformToExpanded(List<int> input) {
-    // developer.log(input.length);
-
     List<int> result = [];
 
     for (int i = 0; i < input.length; i++) {
@@ -115,13 +116,10 @@ class CustomProfileState {
 
     if (result.length == expandedSize - 1) result.add(input[input.length - 1]);
 
-    //developer.log('$input => $result');
-
     return result;
   }
 
   static _transformToMinified(List<int> values) {
-    // developer.log(values.length);
     List<int> result = [];
 
     for (int i = 1; i < values.length; i += 2) {
@@ -145,8 +143,8 @@ class ValueChangeEvent extends CustomProfileEvent {
   final bool expanded, initial;
 
   const ValueChangeEvent({
-    this.newValues,
-    this.expanded,
+    required this.newValues,
+    required this.expanded,
     this.initial = false,
   }) : assert(newValues.length == minifiedSize ||
             newValues.length == expandedSize);
@@ -162,7 +160,7 @@ class CustomProfile {
   final List<int> values;
 
   const CustomProfile({
-    this.values,
+    required this.values,
   });
 
   factory CustomProfile.fromJson(Map<String, dynamic> json) =>

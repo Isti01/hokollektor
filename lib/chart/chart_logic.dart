@@ -19,7 +19,8 @@ final List<Color> chartColors = [
   charts.MaterialPalette.yellow.shadeDefault,
 ];
 
-Future<List<charts.Series<ChartDataPoint, DateTime>>> fetchChartData(String url,
+Future<List<charts.Series<ChartDataPoint, DateTime>>?> fetchChartData(
+    String url,
     [bool wattChart = false]) async {
   if (!(await isConnected())) return null;
 
@@ -39,7 +40,7 @@ class ChartDataPoint {
   final DateTime date;
   final double value;
 
-  ChartDataPoint({this.date, this.value});
+  ChartDataPoint({required this.date, required this.value});
 
   factory ChartDataPoint.fromJson(Map<String, dynamic> json, String key) {
     return ChartDataPoint(
@@ -53,70 +54,73 @@ class ChartDataPoint {
   }
 }
 
-List<charts.Series<ChartDataPoint, DateTime>> parseChartData(json) {
-  List<ChartDataPoint> kinti = [];
-  List<ChartDataPoint> benti = [];
-  List<ChartDataPoint> koll = [];
+List<charts.Series<ChartDataPoint, DateTime>>? parseChartData(json) {
+  List<ChartDataPoint> outside = [];
+  List<ChartDataPoint> house = [];
+  List<ChartDataPoint> coll = [];
 
-  try {
-    for (var subJson in json['adatokkollektor']) {
-      kinti.add(ChartDataPoint.fromJson(subJson, tempOutsideKey));
-      benti.add(ChartDataPoint.fromJson(subJson, tempHouseKey));
-      koll.add(ChartDataPoint.fromJson(subJson, tempCollKey));
+  var collData = json['adatokkollektor'];
+  if (collData == null) return null;
+
+  for (var subJson in collData) {
+    try {
+      outside.add(ChartDataPoint.fromJson(subJson, tempOutsideKey));
+      house.add(ChartDataPoint.fromJson(subJson, tempHouseKey));
+      coll.add(ChartDataPoint.fromJson(subJson, tempCollKey));
+    } catch (e, s) {
+      developer.log([e, s].toString());
     }
-
-    final result = [
-      charts.Series<ChartDataPoint, DateTime>(
-          id: 'Kollektor',
-          colorFn: (_, __) => chartColors[0],
-          domainFn: (ChartDataPoint sales, _) => sales.date,
-          measureFn: (ChartDataPoint sales, _) => sales.value,
-          data: koll,
-          displayName: loc.getText(loc.koll)),
-      charts.Series<ChartDataPoint, DateTime>(
-          id: 'Kint',
-          colorFn: (_, __) => chartColors[1],
-          domainFn: (ChartDataPoint sales, _) => sales.date,
-          measureFn: (ChartDataPoint sales, _) => sales.value,
-          data: kinti,
-          displayName: loc.getText(loc.outside)),
-      charts.Series<ChartDataPoint, DateTime>(
-          id: 'Benti',
-          colorFn: (_, __) => chartColors[2],
-          domainFn: (ChartDataPoint sales, _) => sales.date,
-          measureFn: (ChartDataPoint sales, _) => sales.value,
-          data: benti,
-          displayName: loc.getText(loc.inside)),
-    ];
-    return result;
-  } catch (e) {
-    developer.log(e.toString());
-    return null;
   }
+
+  return [
+    charts.Series<ChartDataPoint, DateTime>(
+        id: 'Kollektor',
+        colorFn: (_, __) => chartColors[0],
+        domainFn: (ChartDataPoint point, _) => point.date,
+        measureFn: (ChartDataPoint point, _) => point.value,
+        data: coll,
+        displayName: loc.getText(loc.koll)),
+    charts.Series<ChartDataPoint, DateTime>(
+        id: 'Kint',
+        colorFn: (_, __) => chartColors[1],
+        domainFn: (ChartDataPoint point, _) => point.date,
+        measureFn: (ChartDataPoint point, _) => point.value,
+        data: outside,
+        displayName: loc.getText(loc.outside)),
+    charts.Series<ChartDataPoint, DateTime>(
+        id: 'Benti',
+        colorFn: (_, __) => chartColors[2],
+        domainFn: (ChartDataPoint point, _) => point.date,
+        measureFn: (ChartDataPoint point, _) => point.value,
+        data: house,
+        displayName: loc.getText(loc.inside)),
+  ];
 }
 
-List<charts.Series<ChartDataPoint, DateTime>> parseWattChartData(json) {
+List<charts.Series<ChartDataPoint, DateTime>>? parseWattChartData(json) {
   List<ChartDataPoint> watt = [];
 
-  try {
-    for (var subJson in json['adatokkollektor']) {
-      watt.add(ChartDataPoint.fromJson(subJson, wattKey));
-    }
+  var collData = json['adatokkollektor'];
+  if (collData == null) return null;
 
-    final result = [
-      charts.Series<ChartDataPoint, DateTime>(
-          id: 'Watt',
-          colorFn: (_, __) => chartColors[1],
-          domainFn: (ChartDataPoint sales, _) => sales.date,
-          measureFn: (ChartDataPoint sales, _) => sales.value,
-          data: watt,
-          displayName: loc.getText(loc.performance)),
-    ];
-    return result;
-  } catch (e) {
-    developer.log(e.toString());
-    return null;
+  for (var subJson in collData) {
+    try {
+      watt.add(ChartDataPoint.fromJson(subJson, wattKey));
+    } catch (e, s) {
+      developer.log([e, s].toString());
+      return null;
+    }
   }
+
+  return [
+    charts.Series<ChartDataPoint, DateTime>(
+        id: 'Watt',
+        colorFn: (_, __) => chartColors[1],
+        domainFn: (ChartDataPoint point, _) => point.date,
+        measureFn: (ChartDataPoint point, _) => point.value,
+        data: watt,
+        displayName: loc.getText(loc.performance)),
+  ];
 }
 
 class ChartResponse {

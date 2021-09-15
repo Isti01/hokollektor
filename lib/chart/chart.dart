@@ -20,8 +20,8 @@ class CollChart extends StatefulWidget {
   final ChartExplanation chartExplanation;
 
   CollChart({
-    Key key,
-    @required this.url,
+    Key? key,
+    required this.url,
     this.animate = true,
     this.height = 300,
     this.clickable = false,
@@ -39,13 +39,13 @@ class CollChartState extends State<CollChart>
     with AutomaticKeepAliveClientMixin {
   bool reloading = false;
 
-  Future<List<charts.Series<ChartDataPoint, DateTime>>> _fetch() async {
-    List<charts.Series<ChartDataPoint, DateTime>> data;
+  Future<List<charts.Series<ChartDataPoint, DateTime>>?> _fetch() async {
+    List<charts.Series<ChartDataPoint, DateTime>>? data;
 
     try {
       data = await fetchChartData(widget.url, widget.wattChart);
-    } catch (e) {
-      developer.log(e.toString());
+    } catch (e, s) {
+      developer.log([e, s].toString());
     }
     reloading = false;
     return data;
@@ -78,30 +78,29 @@ class CollChartState extends State<CollChart>
 
   Widget _build(BuildContext context, AsyncSnapshot snapshot) {
     bool loaded = !snapshot.hasError && snapshot.hasData;
-    return AbsorbPointer(
-      absorbing: (!loaded || !widget.clickable) && !snapshot.hasError,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            height: widget.height,
-            child: _buildChart(context, snapshot),
-          ),
-          loaded ? widget.chartExplanation : const SizedBox(),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          height: widget.height,
+          child: _buildChart(context, snapshot),
+        ),
+        loaded ? widget.chartExplanation : const SizedBox(),
+      ],
     );
   }
 
   Widget _buildChart(BuildContext context, AsyncSnapshot snapshot) {
+    final textTheme = Theme.of(context).textTheme;
+
     if (snapshot.hasData && !reloading) {
       return charts.TimeSeriesChart(
         snapshot.data,
         animate: _animate,
         dateTimeFactory: const charts.LocalDateTimeFactory(),
       );
-    } else if (snapshot.hasError && !reloading) {
+    } else if ((snapshot.hasError || !snapshot.hasData) && !reloading) {
       return Material(
         type: MaterialType.transparency,
         child: InkWell(
@@ -112,8 +111,9 @@ class CollChartState extends State<CollChart>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.error),
-                Text(loc.getText(loc.failedToLoadChart)),
+                const Icon(Icons.refresh),
+                const SizedBox(height: 8),
+                Text(loc.getText(loc.tapToReload))
               ],
             ),
           ),
@@ -134,11 +134,11 @@ class PreloadedCollChart extends StatefulWidget {
   final bool animate;
   final bool clickable;
   final chartExplanation = ChartExplanation();
-  final String title;
+  final String? title;
 
   PreloadedCollChart({
-    Key key,
-    @required this.bloc,
+    Key? key,
+    required this.bloc,
     this.animate = true,
     this.height = 300,
     this.clickable = false,
@@ -187,7 +187,7 @@ class PreloadedCollChartState extends State<PreloadedCollChart>
                     bottom: 8,
                   ),
                   child: Text(
-                    widget.title,
+                    widget.title!,
                     style: Theme.of(context).textTheme.headline6,
                   ),
                 )
@@ -205,7 +205,7 @@ class PreloadedCollChartState extends State<PreloadedCollChart>
   Widget _buildChart(BuildContext context, AppDataState snapshot) {
     if (snapshot.collData != null) {
       return charts.TimeSeriesChart(
-        snapshot.collData,
+        snapshot.collData!,
         animate: _animate,
         dateTimeFactory: const charts.LocalDateTimeFactory(),
       );
@@ -245,31 +245,41 @@ class PreloadedCollChartState extends State<PreloadedCollChart>
 
 class RealTimeChart extends PreloadedCollChart {
   RealTimeChart({
-    Key key,
-    @required AppBloc bloc,
-    double height,
-    String title,
+    Key? key,
+    required AppBloc bloc,
+    required double height,
+    String? title,
   }) : super(key: key, height: height, bloc: bloc, title: title);
 }
 
 class OneDayChart extends CollChart {
-  OneDayChart({double height, Key key})
-      : super(height: height, url: urls.kOneDayChartURL, key: key);
+  OneDayChart({
+    required double height,
+    Key? key,
+  }) : super(height: height, url: urls.kOneDayChartURL, key: key);
 }
 
 class OneWeekChart extends CollChart {
-  OneWeekChart({double height, Key key})
-      : super(height: height, url: urls.kOneWeekChartURL, key: key);
+  OneWeekChart({
+    required double height,
+    Key? key,
+  }) : super(height: height, url: urls.kOneWeekChartURL, key: key);
 }
 
 class OneHourChart extends CollChart {
-  OneHourChart({double height, Key key})
-      : super(height: height, url: urls.kOneHourChartURL, key: key);
+  OneHourChart({
+    required double height,
+    Key? key,
+  }) : super(height: height, url: urls.kOneHourChartURL, key: key);
 }
 
 class CustomChart extends CollChart {
-  CustomChart({double height, int startDate, int endDate, Key key})
-      : super(
+  CustomChart({
+    required double height,
+    required int startDate,
+    required int endDate,
+    Key? key,
+  }) : super(
           key: key,
           height: height,
           url: urls.kCustomChartURL + '?ki=$startDate&vi=$endDate',
@@ -277,8 +287,12 @@ class CustomChart extends CollChart {
 }
 
 class WattChart extends CollChart {
-  WattChart({double height, int startDate, int endDate, Key key})
-      : super(
+  WattChart({
+    required double height,
+    required int startDate,
+    required int endDate,
+    Key? key,
+  }) : super(
           key: key,
           height: height,
           url: urls.kWattChartURL + '?ki=$startDate&vi=$endDate',

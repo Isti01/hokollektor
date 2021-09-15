@@ -8,7 +8,7 @@ import 'package:hokollektor/util/custom_profile_picker/slider_picker.dart';
 class CustomProfilePicker extends StatelessWidget {
   final CustomProfileBloc bloc;
 
-  const CustomProfilePicker({Key key, this.bloc}) : super(key: key);
+  const CustomProfilePicker({Key? key, required this.bloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class CustomProfilePicker extends StatelessWidget {
               )
             ],
             onChanged: (value) {
-              if (value != state.expanded && !state.loading) {
+              if (value != null && value != state.expanded && !state.loading) {
                 bloc.add(SizeChangedEvent(value));
               }
             }),
