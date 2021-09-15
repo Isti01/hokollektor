@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:hokollektor/HokollektorApp.dart';
-import 'package:hokollektor/Localization.dart' as loc;
-import 'package:hokollektor/bloc/AppDataBloc.dart';
-import 'package:hokollektor/bloc/ChartTabBloc.dart';
-import 'package:hokollektor/home/ChartTab.dart';
-import 'package:hokollektor/home/HomeTab.dart';
-import 'package:hokollektor/util/TabbedBackdrop.dart';
+import 'package:hokollektor/bloc/app_data_bloc.dart';
+import 'package:hokollektor/bloc/chart_tab_bloc.dart';
+import 'package:hokollektor/collector_app.dart';
+import 'package:hokollektor/home/chart_tab.dart';
+import 'package:hokollektor/home/home_tab.dart';
+import 'package:hokollektor/localization.dart' as loc;
+import 'package:hokollektor/util/tabbed_backdrop.dart';
 
-const HomePanelColor = Colors.blue;
-const ChartPanelColor = Colors.teal;
-const appBorderRadius = BorderRadius.all(Radius.circular(12));
+const kHomePanelColor = Colors.blue;
+const kChartPanelColor = Colors.teal;
+const kAppBorderRadius = BorderRadius.all(Radius.circular(12));
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  const HomePage({Key key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final GlobalKey<TabbedBackdropState> backdropKey =
       GlobalKey(debugLabel: "Backdrop Key In Home");
 
@@ -31,49 +38,56 @@ class HomePage extends StatelessWidget {
           BackdropComponent(
             frontLayer: Theme(
               data: ThemeData(
-                primarySwatch: HomePanelColor,
-                fontFamily: AppFontFamily,
+                primarySwatch: kHomePanelColor,
+                fontFamily: kAppFontFamily,
               ),
               child: HomeFront(bloc: appBloc),
             ),
             frontHeading: Text(loc.getText(loc.configureHeader)),
             backLayer: Theme(
               data: ThemeData(
-                primarySwatch: HomePanelColor,
-                fontFamily: AppFontFamily,
+                primarySwatch: kHomePanelColor,
+                fontFamily: kAppFontFamily,
               ),
-              child: HomeBackpanel(
+              child: HomeBackPanel(
                 key: UniqueKey(),
                 bloc: appBloc,
               ),
             ),
-            backgroundColor: HomePanelColor,
+            backgroundColor: kHomePanelColor,
           ),
           BackdropComponent(
             frontLayer: Theme(
               data: ThemeData(
-                primarySwatch: ChartPanelColor,
-                fontFamily: AppFontFamily,
+                primarySwatch: kChartPanelColor,
+                fontFamily: kAppFontFamily,
               ),
               child: ChartFront(realTimeBloc: appBloc, bloc: chartBloc),
             ),
             frontHeading: Text(loc.getText(loc.chartHeader)),
             backLayer: Theme(
               data: ThemeData(
-                primarySwatch: ChartPanelColor,
-                fontFamily: AppFontFamily,
+                primarySwatch: kChartPanelColor,
+                fontFamily: kAppFontFamily,
               ),
-              child: ChartBackpanel(
+              child: ChartBackPanel(
                 key: UniqueKey(),
                 bloc: chartBloc,
                 onReturn: _toggleBackdrop,
               ),
             ),
-            backgroundColor: ChartPanelColor,
+            backgroundColor: kChartPanelColor,
           ),
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    appBloc.close();
+    chartBloc.close();
+    super.dispose();
   }
 
   void _toggleBackdrop() {

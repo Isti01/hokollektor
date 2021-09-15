@@ -1,7 +1,9 @@
-import 'package:bloc/bloc.dart';
-import 'package:hokollektor/chart/Chart.dart';
+import "dart:developer" as developer;
 
-final initialChart = Charts.weekly;
+import 'package:bloc/bloc.dart';
+import 'package:hokollektor/chart/chart.dart';
+
+const initialChart = Charts.weekly;
 final initialChartWidget = OneWeekChart();
 
 enum Charts {
@@ -14,33 +16,18 @@ enum Charts {
 }
 
 class ChartTabBloc extends Bloc<ChartEvent, ChartTabState> {
-  Charts initial = initialChart;
-  int startDate;
-  int endDate;
-
-  @override
-  ChartTabState get initialState {
-    return ChartTabState(
-      this.initial,
-      endDate: endDate,
-      startDate: startDate,
-    );
-  }
+  ChartTabBloc() : super(ChartTabState(initialChart));
 
   @override
   Stream<ChartTabState> mapEventToState(ChartEvent event) async* {
     try {
       if (event == null) {
-        this.initial = Charts.weekly;
         yield ChartTabState(Charts.weekly);
       }
     } catch (e) {
-      print(e);
+      developer.log(e);
     }
     if (event is CustomChartTabEvent) {
-      this.initial = Charts.custom;
-      this.startDate = event.startDate;
-      this.endDate = event.endDate;
       yield ChartTabState(
         event.newChart,
         startDate: event.startDate,
@@ -49,10 +36,8 @@ class ChartTabBloc extends Bloc<ChartEvent, ChartTabState> {
     }
 
     if (event is ChartTabEvent) {
-      this.initial = event.newChart;
       yield ChartTabState(event.newChart);
     } else if (event is CustomChartTabEvent) {
-      this.initial = event.newChart;
       yield ChartTabState(
         event.newChart,
         startDate: event.startDate,
@@ -62,19 +47,21 @@ class ChartTabBloc extends Bloc<ChartEvent, ChartTabState> {
   }
 }
 
-abstract class ChartEvent {}
+abstract class ChartEvent {
+  const ChartEvent();
+}
 
 class ChartTabEvent extends ChartEvent {
   final Charts newChart;
 
-  ChartTabEvent(this.newChart);
+  const ChartTabEvent(this.newChart);
 }
 
 class CustomChartTabEvent extends ChartEvent {
   final int startDate, endDate;
   final Charts newChart;
 
-  CustomChartTabEvent(
+  const CustomChartTabEvent(
     this.newChart,
     this.startDate,
     this.endDate,
@@ -85,7 +72,7 @@ class ChartTabState {
   final Charts chart;
   final int startDate, endDate;
 
-  ChartTabState(
+  const ChartTabState(
     this.chart, {
     this.startDate,
     this.endDate,

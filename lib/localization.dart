@@ -1,10 +1,14 @@
-var locale = "en", preferredLanguage;
+import "dart:developer" as developer;
 
-void Function() onLocaleChange;
+var locale = "en";
+String preferredLanguage;
+
+void Function() onLocaleChange; // todo replace this with an inherited widget
 
 String getPreferredLanguage() {
-  if (preferredLanguage == null || !localizations.contains(preferredLanguage))
+  if (preferredLanguage == null || !localizations.contains(preferredLanguage)) {
     return "";
+  }
   return preferredLanguage;
 }
 
@@ -30,11 +34,11 @@ languageToOption(language) {
 }
 
 void initLocale(String loc) {
-  if (localizations.contains(loc))
+  if (localizations.contains(loc)) {
     locale = loc;
-  else {
+  } else {
     locale = "en";
-    print("no such localization: $loc");
+    developer.log("no such localization: $loc");
   }
 }
 

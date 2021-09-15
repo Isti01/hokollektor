@@ -1,19 +1,22 @@
 import 'dart:convert';
+import "dart:developer" as developer;
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
-import 'package:hokollektor/HokollektorApp.dart';
-import 'package:hokollektor/Loading.dart';
-import 'package:hokollektor/Localization.dart' as loc;
-import 'package:hokollektor/home/Home.dart';
+import 'package:hokollektor/collector_app.dart';
+import 'package:hokollektor/home/home.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/main.dart';
-import 'package:hokollektor/util/Networking.dart';
-import 'package:hokollektor/util/URLs.dart';
+import 'package:hokollektor/util/loading.dart';
+import 'package:hokollektor/util/networking.dart';
+import 'package:hokollektor/util/urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatelessWidget {
+  const LoginPage({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final s = MediaQuery.of(context).size;
@@ -21,7 +24,7 @@ class LoginPage extends StatelessWidget {
     final size = ratio * 225;
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/login.jpg'),
             fit: BoxFit.cover,
@@ -41,7 +44,7 @@ class LoginPage extends StatelessWidget {
               child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              LoginForm(),
+              const LoginForm(),
               LoginAsGuest(
                 onTap: () => _loginAsGuest(context),
               ),
@@ -56,32 +59,30 @@ class LoginPage extends StatelessWidget {
     inGuestMode = true;
     Navigator.of(context)
         .pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
-      return HokollektorApp(
-        child: HomePage(),
-      );
+      return const CollectorApp(child: HomePage());
     }));
   }
 }
 
 class LoginForm extends StatefulWidget {
+  const LoginForm({Key key}) : super(key: key);
+
   @override
-  LoginFormState createState() {
-    return new LoginFormState();
-  }
+  LoginFormState createState() => LoginFormState();
 }
 
 class LoginFormState extends State<LoginForm> {
   String error;
   bool loading = false;
   bool stayLoggedIn = false;
-  final formKey = new GlobalKey<FormState>(debugLabel: "Login Form Label");
+  final formKey = GlobalKey<FormState>(debugLabel: "Login Form Label");
   final List<FocusNode> nodes = [
     FocusNode(),
     FocusNode(),
   ];
 
-  TextEditingController _userController = new TextEditingController();
-  TextEditingController _passController = new TextEditingController();
+  final TextEditingController _userController = TextEditingController();
+  final TextEditingController _passController = TextEditingController();
 
   @override
   void initState() {
@@ -98,7 +99,7 @@ class LoginFormState extends State<LoginForm> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
           child: Material(
-            shape: RoundedRectangleBorder(borderRadius: appBorderRadius),
+            shape: const RoundedRectangleBorder(borderRadius: kAppBorderRadius),
             elevation: 4,
             color: Colors.white,
             child: Form(
@@ -109,18 +110,18 @@ class LoginFormState extends State<LoginForm> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     LoginInput(
                       controller: _userController,
                       labelText: loc.getText(loc.user),
-                      icon: Icon(Icons.person),
+                      icon: const Icon(Icons.person),
                       node: nodes[0],
                       onSubmitted: (String text) {
                         FocusScope.of(context).requestFocus(nodes[1]);
                       },
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Divider(
                         color: Colors.grey,
                       ),
@@ -128,12 +129,12 @@ class LoginFormState extends State<LoginForm> {
                     LoginInput(
                       controller: _passController,
                       labelText: loc.getText(loc.pass),
-                      icon: Icon(Icons.lock),
+                      icon: const Icon(Icons.lock),
                       obscureText: true,
                       node: nodes[1],
                       onSubmitted: (String text) => nodes[1].unfocus(),
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     error != null
                         ? Text(
                             error,
@@ -141,23 +142,23 @@ class LoginFormState extends State<LoginForm> {
                             style: theme.button.copyWith(color: Colors.red),
                           )
                         : loading
-                            ? Wrap(children: [
-                                const Center(
+                            ? Wrap(children: const [
+                                Center(
                                   child: CircularProgressIndicator(),
                                 )
                               ])
                             : Container(),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     CheckBoxTile(
                       value: stayLoggedIn,
                       onChanged: (bool value) =>
-                          this.setState(() => stayLoggedIn = value),
+                          setState(() => stayLoggedIn = value),
                       title: Text(
                         loc.getText(loc.stayLoggedIn),
                         textAlign: TextAlign.end,
                       ),
                     ),
-                    SizedBox(height: 32),
+                    const SizedBox(height: 32),
                   ],
                 ),
               ),
@@ -167,9 +168,9 @@ class LoginFormState extends State<LoginForm> {
         LoginButton(
           text: loc.getText(loc.login),
           onPressed: _loginButtonPressed,
-          gradientColors: [
-            HomePanelColor,
-            ChartPanelColor,
+          gradientColors: const [
+            kHomePanelColor,
+            kChartPanelColor,
           ],
         ),
       ],
@@ -180,7 +181,9 @@ class LoginFormState extends State<LoginForm> {
   void dispose() {
     super.dispose();
 
-    for (FocusNode node in nodes) node.dispose();
+    for (FocusNode node in nodes) {
+      node.dispose();
+    }
 
     _userController.dispose();
     _passController.dispose();
@@ -188,13 +191,13 @@ class LoginFormState extends State<LoginForm> {
 
   _loginButtonPressed() async {
     if (!formKey.currentState.validate()) return;
-    this.setState(() => loading = true);
+    setState(() => loading = true);
     String res = await _login(_userController.text, _passController.text);
 
     if (res == '') {
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
-        return HokollektorApp(
+        return const CollectorApp(
           child: HomePage(),
         );
       }));
@@ -202,18 +205,18 @@ class LoginFormState extends State<LoginForm> {
         _saveStayLoggedIn();
       }
     } else {
-      this.setState(() {
-        this.error = res;
-        this.loading = false;
+      setState(() {
+        error = res;
+        loading = false;
       });
     }
   }
 }
 
 class LoginButton extends StatelessWidget {
-  final onPressed;
-  final gradientColors;
-  final text;
+  final VoidCallback onPressed;
+  final List<Color> gradientColors;
+  final String text;
 
   const LoginButton({Key key, this.onPressed, this.gradientColors, this.text})
       : super(key: key);
@@ -226,23 +229,23 @@ class LoginButton extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: Colors.grey[800],
-              offset: Offset(0, 1.5),
+              offset: const Offset(0, 1.5),
               blurRadius: 1.5,
             ),
           ],
           gradient: LinearGradient(colors: gradientColors),
-          borderRadius: appBorderRadius,
+          borderRadius: kAppBorderRadius,
         ),
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-            borderRadius: appBorderRadius,
+            borderRadius: kAppBorderRadius,
             onTap: onPressed,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 42),
               child: Text(
                 text,
-                style: theme.title.copyWith(color: Colors.white),
+                style: theme.headline6.copyWith(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -271,7 +274,7 @@ class LoginInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final border = UnderlineInputBorder(
+    const border = UnderlineInputBorder(
       borderSide: BorderSide(
         style: BorderStyle.none,
         color: Colors.transparent,
@@ -280,11 +283,16 @@ class LoginInput extends StatelessWidget {
 
     return TextFormField(
       validator: (String text) {
-        if (text == null) return null;
-        if (text.length == 0) return loc.getText(loc.noTextAdded);
+        if (text == null) {
+          return null;
+        }
+        if (text.isEmpty) {
+          return loc.getText(loc.noTextAdded);
+        }
+        return null;
       },
       controller: controller,
-      focusNode: this.node,
+      focusNode: node,
       obscureText: obscureText,
       onFieldSubmitted: onSubmitted,
       decoration: InputDecoration(
@@ -297,7 +305,7 @@ class LoginInput extends StatelessWidget {
         errorBorder: border,
         focusedBorder: border,
         focusedErrorBorder: border,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       ),
     );
   }
@@ -307,25 +315,26 @@ Future<String> _login(String user, String pass) async {
   if (!await isConnected()) return loc.getText(loc.noInternet);
 
   try {
-    final chars = Utf8Encoder().convert(pass);
+    final chars = const Utf8Encoder().convert(pass);
 
     final digest = md5.convert(chars);
 
     final password = hex.encode(digest.bytes);
 
-    final http.Response res = await http.post(loginURL, body: {
+    final http.Response res = await http.post(Uri.parse(kLoginURL), body: {
       'username': user,
       'password': password,
     });
 
     final resJson = jsonDecode(res.body);
 
-    if (resJson['success'])
+    if (resJson['success']) {
       return '';
-    else
+    } else {
       return loc.getText(loc.invalidUserInfo);
+    }
   } catch (e) {
-    print(e);
+    developer.log(e);
     return loc.getText(loc.invalidUserInfo);
   }
 }
@@ -336,7 +345,7 @@ void _saveStayLoggedIn() async {
 
     prefs.setBool(stayLoggedInKey, true);
   } catch (e) {
-    print(e.toString());
+    developer.log(e.toString());
   }
 }
 
@@ -354,13 +363,13 @@ class CheckBoxTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 35,
       child: Row(
         children: <Widget>[
-          Spacer(),
+          const Spacer(),
           InkWell(
-            borderRadius: appBorderRadius,
+            borderRadius: kAppBorderRadius,
             onTap: () => onChanged(!value),
             child: Padding(
               padding: const EdgeInsets.only(left: 8),
@@ -373,7 +382,7 @@ class CheckBoxTile extends StatelessWidget {
               ),
             ),
           ),
-          Spacer(),
+          const Spacer(),
         ],
       ),
     );
@@ -381,8 +390,8 @@ class CheckBoxTile extends StatelessWidget {
 }
 
 class LoginAsGuest extends StatelessWidget {
-  final color;
-  final onTap;
+  final Color color;
+  final VoidCallback onTap;
 
   const LoginAsGuest({Key key, this.color = Colors.white, this.onTap})
       : super(key: key);
@@ -399,9 +408,9 @@ class LoginAsGuest extends StatelessWidget {
         LoginButton(
           text: loc.getText(loc.signInAsGuest),
           onPressed: onTap,
-          gradientColors: [
-            ChartPanelColor,
-            HomePanelColor,
+          gradientColors: const [
+            kChartPanelColor,
+            kHomePanelColor,
           ],
         ),
       ],
@@ -410,8 +419,8 @@ class LoginAsGuest extends StatelessWidget {
 }
 
 class OrLine extends StatelessWidget {
-  final text;
-  final color;
+  final String text;
+  final Color color;
 
   const OrLine({Key key, this.text, this.color}) : super(key: key);
 
@@ -420,18 +429,18 @@ class OrLine extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Spacer(flex: 6),
+        const Spacer(flex: 6),
         Flexible(flex: 4, child: Container(height: 1, color: color)),
         Flexible(flex: 3, child: Container(height: 2, color: color)),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Text(
           text,
-          style: Theme.of(context).textTheme.subhead.copyWith(color: color),
+          style: Theme.of(context).textTheme.subtitle1.copyWith(color: color),
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Flexible(flex: 3, child: Container(height: 2, color: color)),
         Flexible(flex: 4, child: Container(height: 1, color: color)),
-        Spacer(flex: 6),
+        const Spacer(flex: 6),
       ],
     );
   }

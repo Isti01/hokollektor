@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:hokollektor/Localization.dart';
+import 'package:hokollektor/localization.dart';
 
-const AppFontFamily = "Rubik";
-const AppTitle = 'Collector App';
+const kAppFontFamily = "Rubik";
+const kAppTitle = 'Collector App';
 
-class HokollektorApp extends StatelessWidget {
+class CollectorApp extends StatelessWidget {
   final Widget child;
 
-  const HokollektorApp({Key key, this.child}) : super(key: key);
+  const CollectorApp({Key key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
       ],
@@ -21,9 +21,9 @@ class HokollektorApp extends StatelessWidget {
         return Locale(languageCode);
       }).toList(),
       debugShowCheckedModeBanner: false,
-      title: AppTitle,
+      title: kAppTitle,
       theme: ThemeData(
-        fontFamily: AppFontFamily,
+        fontFamily: kAppFontFamily,
         primarySwatch: Colors.blue,
       ),
       home: LocaleInitializerLayer(child: child),
@@ -32,14 +32,12 @@ class HokollektorApp extends StatelessWidget {
 }
 
 class LocaleInitializerLayer extends StatefulWidget {
-  final child;
+  final Widget child;
 
   const LocaleInitializerLayer({Key key, this.child}) : super(key: key);
 
   @override
-  LocaleInitializerLayerState createState() {
-    return new LocaleInitializerLayerState();
-  }
+  LocaleInitializerLayerState createState() => LocaleInitializerLayerState();
 }
 
 class LocaleInitializerLayerState extends State<LocaleInitializerLayer> {
@@ -48,7 +46,7 @@ class LocaleInitializerLayerState extends State<LocaleInitializerLayer> {
   @override
   void initState() {
     super.initState();
-    onLocaleChange = () => this.setState(() => key = UniqueKey());
+    onLocaleChange = () => setState(() => key = UniqueKey());
   }
 
   @override

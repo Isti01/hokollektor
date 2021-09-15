@@ -1,18 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:hokollektor/Localization.dart' as loc;
-import 'package:hokollektor/home/Home.dart';
-import 'package:hokollektor/util/DateIntervalPicker.dart' as picker;
-import 'package:hokollektor/util/SimpleScrollBehavior.dart';
+import "dart:developer" as developer;
 
-const int lastDay = 15;
-final DateTime FirstDate = DateTime(2018, 1, 1);
-const Duration maxInterval = Duration(days: 14);
+import 'package:flutter/material.dart';
+import 'package:hokollektor/home/home.dart';
+import 'package:hokollektor/localization.dart' as loc;
+import 'package:hokollektor/util/date_interval_picker.dart' as picker;
+import 'package:hokollektor/util/simple_scroll_behavior.dart';
+
+const int kLastDay = 15;
+final DateTime kFirstDate = DateTime(2018, 1, 1);
+const Duration kMaxInterval = Duration(days: 14);
 
 class DatePickerDialog extends StatefulWidget {
+  const DatePickerDialog({Key key}) : super(key: key);
+
   @override
-  DatePickerDialogState createState() {
-    return new DatePickerDialogState();
-  }
+  DatePickerDialogState createState() => DatePickerDialogState();
 }
 
 class DatePickerDialogState extends State<DatePickerDialog> {
@@ -27,7 +29,7 @@ class DatePickerDialogState extends State<DatePickerDialog> {
 
     firstDate = DateTime(now.year, now.month, now.day);
     lastDate = DateTime(now.year, now.month, now.day, 23, 59)
-        .subtract(Duration(days: lastDay - 1));
+        .subtract(const Duration(days: kLastDay - 1));
   }
 
   @override
@@ -36,7 +38,7 @@ class DatePickerDialogState extends State<DatePickerDialog> {
     final theme = Theme.of(context).textTheme;
 
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: appBorderRadius),
+      shape: const RoundedRectangleBorder(borderRadius: kAppBorderRadius),
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 12),
@@ -44,7 +46,7 @@ class DatePickerDialogState extends State<DatePickerDialog> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
+              SizedBox(
                 height: 300,
                 child: _buildDatePickerCard(
                   title: loc.getText(loc.pickInterval),
@@ -62,17 +64,17 @@ class DatePickerDialogState extends State<DatePickerDialog> {
                       borderSide:
                           BorderSide(color: Theme.of(context).primaryColor),
                       shape: const RoundedRectangleBorder(
-                          borderRadius: appBorderRadius),
+                          borderRadius: kAppBorderRadius),
                       textColor: Theme.of(context).primaryColor,
                       onPressed: () => Navigator.pop(context)),
                   RaisedButton(
                     child: Text(loc.getText(loc.save)),
                     shape: const RoundedRectangleBorder(
-                        borderRadius: appBorderRadius),
+                        borderRadius: kAppBorderRadius),
                     textColor: Colors.white,
                     color: Theme.of(context).primaryColor,
                     onPressed: () {
-                      var result;
+                      List<DateTime> result;
                       try {
                         try {
                           result = [
@@ -85,10 +87,11 @@ class DatePickerDialogState extends State<DatePickerDialog> {
                             firstDate ?? lastDate,
                           ];
                         }
-                        if (result[0] != null && result[1] != null)
+                        if (result[0] != null && result[1] != null) {
                           Navigator.pop(context, result);
+                        }
                       } catch (e) {
-                        print(e);
+                        developer.log(e);
                       }
                     },
                   ),
@@ -125,9 +128,9 @@ class DatePickerDialogState extends State<DatePickerDialog> {
               selectedDate2: selectedDate2,
               selectedDate: currentDate,
               onChanged: onDateChanged,
-              firstDate: FirstDate,
+              firstDate: kFirstDate,
               lastDate: now,
-              maxInterval: maxInterval,
+              maxInterval: kMaxInterval,
             ),
           ),
         ],
@@ -136,9 +139,9 @@ class DatePickerDialogState extends State<DatePickerDialog> {
   }
 
   _handleDateChange(DateTime date, DateTime date2) {
-    this.setState(() {
-      this.firstDate = date;
-      this.lastDate = date2;
+    setState(() {
+      firstDate = date;
+      lastDate = date2;
     });
   }
 }

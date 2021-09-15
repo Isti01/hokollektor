@@ -6,7 +6,7 @@ const double kFrontHeadingHeight = 32.0; // front layer beveled rectangle
 const double kFrontClosedHeight = 92.0; // front layer height when closed
 const double _kBackAppBarHeight = 48; // back layer (options) appbar height
 // The size of the front layer heading's left and right beveled corners.
-final Animatable<BorderRadius> _kFrontHeadingRoundRadius = BorderRadiusTween(
+final _kFrontHeadingRoundRadius = BorderRadiusTween(
   begin: const BorderRadius.only(
     topLeft: Radius.circular(12),
     topRight: Radius.circular(12),
@@ -112,7 +112,7 @@ class _CrossFadeTransition extends StatelessWidget {
           child: child1,
         ),
       );
-    } else
+    } else {
       return Stack(
         alignment: alignment,
         children: <Widget>[
@@ -134,6 +134,7 @@ class _CrossFadeTransition extends StatelessWidget {
           ),
         ],
       );
+    }
   }
 }
 
@@ -176,13 +177,13 @@ class TabbedBackdropState extends State<TabbedBackdrop>
     );
     _frontOpacity = _controller.drive(_frontOpacityTween);
 
-    _tabController = new TabController(
+    _tabController = TabController(
       length: widget.tabs.length,
       vsync: this,
       initialIndex: widget.initialIndex,
     );
 
-    _tabController.animation.addListener(() => this.setState(() {}));
+    _tabController.animation.addListener(() => setState(() {}));
   }
 
   @override
@@ -211,12 +212,13 @@ class TabbedBackdropState extends State<TabbedBackdrop>
 
     final double flingVelocity =
         details.velocity.pixelsPerSecond.dy / _backdropHeight;
-    if (flingVelocity < 0)
+    if (flingVelocity < 0) {
       _controller.fling(velocity: math.max(2, -flingVelocity));
-    else if (flingVelocity > 0)
+    } else if (flingVelocity > 0) {
       _controller.fling(velocity: math.min(-2, -flingVelocity));
-    else
+    } else {
       _controller.fling(velocity: _controller.value < 0.5 ? -2 : 2);
+    }
   }
 
   void toggleFrontLayer() {

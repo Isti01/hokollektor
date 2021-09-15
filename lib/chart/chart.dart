@@ -1,24 +1,25 @@
 import 'dart:async';
+import "dart:developer" as developer;
 
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hokollektor/Localization.dart' as loc;
-import 'package:hokollektor/bloc/AppDataBloc.dart';
-import 'package:hokollektor/bloc/DataClasses.dart';
-import 'package:hokollektor/chart/ChartExplanation.dart';
-import 'package:hokollektor/chart/ChartLogic.dart';
-import 'package:hokollektor/util/URLs.dart' as urls;
+import 'package:hokollektor/bloc/app_data_bloc.dart';
+import 'package:hokollektor/bloc/data_classes.dart';
+import 'package:hokollektor/chart/chart_explanation.dart';
+import 'package:hokollektor/chart/chart_logic.dart';
+import 'package:hokollektor/localization.dart' as loc;
+import 'package:hokollektor/util/urls.dart' as urls;
 
-class KollChart extends StatefulWidget {
+class CollChart extends StatefulWidget {
   final String url;
   final double height;
   final bool animate;
   final bool clickable;
   final bool wattChart;
-  final chartExplanation;
+  final ChartExplanation chartExplanation;
 
-  KollChart({
+  CollChart({
     Key key,
     @required this.url,
     this.animate = true,
@@ -29,22 +30,22 @@ class KollChart extends StatefulWidget {
         super(key: key);
 
   @override
-  KollChartState createState() {
-    return new KollChartState();
+  CollChartState createState() {
+    return CollChartState();
   }
 }
 
-class KollChartState extends State<KollChart>
+class CollChartState extends State<CollChart>
     with AutomaticKeepAliveClientMixin {
   bool reloading = false;
 
   Future<List<charts.Series<ChartDataPoint, DateTime>>> _fetch() async {
-    var data;
+    List<charts.Series<ChartDataPoint, DateTime>> data;
 
     try {
       data = await fetchChartData(widget.url, widget.wattChart);
     } catch (e) {
-      print(e.toString());
+      developer.log(e.toString());
     }
     reloading = false;
     return data;
@@ -68,6 +69,7 @@ class KollChartState extends State<KollChart>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return FutureBuilder(
       future: _fetch(),
       builder: _build,
@@ -103,9 +105,9 @@ class KollChartState extends State<KollChart>
       return Material(
         type: MaterialType.transparency,
         child: InkWell(
-          onTap: () => this.setState(() {
-                reloading = true;
-              }),
+          onTap: () => setState(() {
+            reloading = true;
+          }),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -117,43 +119,38 @@ class KollChartState extends State<KollChart>
           ),
         ),
       );
-    } else
+    } else {
       return const Center(child: CircularProgressIndicator());
+    }
   }
 
   @override
   bool get wantKeepAlive => true;
 }
 
-class PreloadedKollChart extends StatefulWidget {
+class PreloadedCollChart extends StatefulWidget {
   final AppBloc bloc;
   final double height;
   final bool animate;
   final bool clickable;
   final chartExplanation = ChartExplanation();
-  final title;
+  final String title;
 
-  PreloadedKollChart({
+  PreloadedCollChart({
+    Key key,
     @required this.bloc,
     this.animate = true,
     this.height = 300,
     this.clickable = false,
     this.title,
-  });
+  }) : super(key: key);
 
   @override
-  PreloadedKollChartState createState() {
-    return new PreloadedKollChartState();
-  }
+  PreloadedCollChartState createState() => PreloadedCollChartState();
 }
 
-class PreloadedKollChartState extends State<PreloadedKollChart>
+class PreloadedCollChartState extends State<PreloadedCollChart>
     with AutomaticKeepAliveClientMixin {
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   bool _isAnimated = false;
   bool failed = false;
 
@@ -167,6 +164,7 @@ class PreloadedKollChartState extends State<PreloadedKollChart>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BlocBuilder(
       bloc: widget.bloc,
       builder: _build,
@@ -174,14 +172,14 @@ class PreloadedKollChartState extends State<PreloadedKollChart>
   }
 
   Widget _build(BuildContext context, AppDataState snapshot) {
-    bool loaded = !snapshot.loading && snapshot.kollData != null;
+    bool loaded = !snapshot.loading && snapshot.collData != null;
     return AbsorbPointer(
-      absorbing: (!loaded || !widget.clickable) && !snapshot.kollFailed,
+      absorbing: (!loaded || !widget.clickable) && !snapshot.collFailed,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          widget.title != null && snapshot.kollData != null
+          widget.title != null && snapshot.collData != null
               ? Padding(
                   padding: const EdgeInsets.only(
                     left: 8,
@@ -190,7 +188,7 @@ class PreloadedKollChartState extends State<PreloadedKollChart>
                   ),
                   child: Text(
                     widget.title,
-                    style: Theme.of(context).textTheme.title,
+                    style: Theme.of(context).textTheme.headline6,
                   ),
                 )
               : const SizedBox(),
@@ -205,13 +203,13 @@ class PreloadedKollChartState extends State<PreloadedKollChart>
   }
 
   Widget _buildChart(BuildContext context, AppDataState snapshot) {
-    if (snapshot.kollData != null) {
+    if (snapshot.collData != null) {
       return charts.TimeSeriesChart(
-        snapshot.kollData,
+        snapshot.collData,
         animate: _animate,
         dateTimeFactory: const charts.LocalDateTimeFactory(),
       );
-    } else if (snapshot.kollFailed && !snapshot.tempFailed) {
+    } else if (snapshot.collFailed && !snapshot.tempFailed) {
       return Column(
         children: <Widget>[
           Padding(
@@ -231,57 +229,59 @@ class PreloadedKollChartState extends State<PreloadedKollChart>
               ),
             ),
           ),
-          Spacer(),
+          const Spacer(),
         ],
       );
-    } else if (snapshot.loading && snapshot.tempLoaded)
+    } else if (snapshot.loading && snapshot.tempLoaded) {
       return const Center(child: CircularProgressIndicator());
-    else
+    } else {
       return const SizedBox();
+    }
   }
 
   @override
   bool get wantKeepAlive => true;
 }
 
-class RealTimeChart extends PreloadedKollChart {
+class RealTimeChart extends PreloadedCollChart {
   RealTimeChart({
+    Key key,
     @required AppBloc bloc,
     double height,
     String title,
-  }) : super(height: height, bloc: bloc, title: title);
+  }) : super(key: key, height: height, bloc: bloc, title: title);
 }
 
-class OneDayChart extends KollChart {
+class OneDayChart extends CollChart {
   OneDayChart({double height, Key key})
-      : super(height: height, url: urls.OneDayChartURL, key: key);
+      : super(height: height, url: urls.kOneDayChartURL, key: key);
 }
 
-class OneWeekChart extends KollChart {
+class OneWeekChart extends CollChart {
   OneWeekChart({double height, Key key})
-      : super(height: height, url: urls.OneWeekChartURL, key: key);
+      : super(height: height, url: urls.kOneWeekChartURL, key: key);
 }
 
-class OneHourChart extends KollChart {
+class OneHourChart extends CollChart {
   OneHourChart({double height, Key key})
-      : super(height: height, url: urls.OneHourChartURL, key: key);
+      : super(height: height, url: urls.kOneHourChartURL, key: key);
 }
 
-class CustomChart extends KollChart {
+class CustomChart extends CollChart {
   CustomChart({double height, int startDate, int endDate, Key key})
       : super(
           key: key,
           height: height,
-          url: urls.CustomChartURL + '?ki=$startDate&vi=$endDate',
+          url: urls.kCustomChartURL + '?ki=$startDate&vi=$endDate',
         );
 }
 
-class WattChart extends KollChart {
+class WattChart extends CollChart {
   WattChart({double height, int startDate, int endDate, Key key})
       : super(
           key: key,
           height: height,
-          url: urls.wattChartURL + '?ki=$startDate&vi=$endDate',
+          url: urls.kWattChartURL + '?ki=$startDate&vi=$endDate',
           wattChart: true,
         );
 }

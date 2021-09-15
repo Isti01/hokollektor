@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hokollektor/Localization.dart' as loc;
-import 'package:hokollektor/bloc/CustomProfileBloc.dart';
-import 'package:hokollektor/home/Home.dart';
-import 'package:hokollektor/util/custom_profile_picker/SliderPicker.dart';
+import 'package:hokollektor/bloc/custom_profile_bloc.dart';
+import 'package:hokollektor/home/home.dart';
+import 'package:hokollektor/localization.dart' as loc;
+import 'package:hokollektor/util/custom_profile_picker/slider_picker.dart';
 
 class CustomProfilePicker extends StatelessWidget {
   final CustomProfileBloc bloc;
@@ -15,10 +15,10 @@ class CustomProfilePicker extends StatelessWidget {
     return Center(
       child: SingleChildScrollView(
         child: Material(
-          borderRadius: appBorderRadius,
+          borderRadius: kAppBorderRadius,
           child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: BlocBuilder<CustomProfileEvent, CustomProfileState>(
+              child: BlocBuilder<CustomProfileBloc, CustomProfileState>(
                 bloc: bloc,
                 builder: _buildLayout,
               )),
@@ -48,15 +48,16 @@ class CustomProfilePicker extends StatelessWidget {
               )
             ],
             onChanged: (value) {
-              if (value != state.expanded && !state.loading)
-                bloc.dispatch(SizeChangedEvent(value));
+              if (value != state.expanded && !state.loading) {
+                bloc.add(SizeChangedEvent(value));
+              }
             }),
         state.loading
-            ? CircularProgressIndicator()
+            ? const CircularProgressIndicator()
             : state.expanded
                 ? SliderPicker(
                     values: state.values,
-                    onChanged: (value) => bloc.dispatch(ValueChangeEvent(
+                    onChanged: (value) => bloc.add(ValueChangeEvent(
                         expanded: value.length == expandedSize,
                         initial: false,
                         newValues: value)),
@@ -65,7 +66,7 @@ class CustomProfilePicker extends StatelessWidget {
                   )
                 : SliderPicker(
                     values: state.values,
-                    onChanged: (value) => bloc.dispatch(ValueChangeEvent(
+                    onChanged: (value) => bloc.add(ValueChangeEvent(
                         expanded: value.length == expandedSize,
                         initial: false,
                         newValues: value)),
@@ -78,12 +79,14 @@ class CustomProfilePicker extends StatelessWidget {
             OutlineButton(
                 child: Text(loc.getText(loc.cancel)),
                 borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                shape: RoundedRectangleBorder(borderRadius: appBorderRadius),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: kAppBorderRadius),
                 textColor: Theme.of(context).primaryColor,
                 onPressed: () => Navigator.pop(context)),
             RaisedButton(
               child: Text(loc.getText(loc.save)),
-              shape: RoundedRectangleBorder(borderRadius: appBorderRadius),
+              shape:
+                  const RoundedRectangleBorder(borderRadius: kAppBorderRadius),
               textColor: Colors.white,
               color: Theme.of(context).primaryColor,
               onPressed: () {

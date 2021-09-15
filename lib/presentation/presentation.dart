@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hokollektor/Localization.dart' as loc;
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/main.dart';
 
 const double imagePadding = 6;
@@ -44,10 +44,10 @@ initSlides() => [
     ];
 
 class PresentationPage extends StatefulWidget {
+  const PresentationPage({Key key}) : super(key: key);
+
   @override
-  PresentationPageState createState() {
-    return new PresentationPageState();
-  }
+  PresentationPageState createState() => PresentationPageState();
 }
 
 class PresentationPageState extends State<PresentationPage>
@@ -120,13 +120,13 @@ class Slide extends StatelessWidget {
         children: [
           Material(
             elevation: 4,
-            color: this.topColor,
+            color: topColor,
             child: Padding(
               padding: const EdgeInsets.only(
                   top: 20, left: 24, right: 24, bottom: 20),
               child: Text(
                 title,
-                style: theme.display1.copyWith(color: this.textColor),
+                style: theme.headline4.copyWith(color: textColor),
               ),
             ),
           ),
@@ -189,7 +189,7 @@ class Slide extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Text(
         text,
-        style: theme.headline.copyWith(fontSize: 20),
+        style: theme.headline5.copyWith(fontSize: 20),
         textAlign: TextAlign.start,
       ),
     );

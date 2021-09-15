@@ -43,7 +43,7 @@ class _CollectorProgressIndicatorState extends State<CollectorProgressIndicator>
     _controller = AnimationController(vsync: this, duration: widget.duration);
     super.initState();
     _controller.forward();
-    _controller.addListener(() => this.setState(() {}));
+    _controller.addListener(() => setState(() {}));
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -59,27 +59,29 @@ class _CollectorProgressIndicatorState extends State<CollectorProgressIndicator>
   }
 
   double _getMotionAnimation1() {
-    if (_controller.value < 0.25)
+    if (_controller.value < 0.25) {
       return Tween<double>(begin: 0, end: maxSize1).evaluate(
-          CurvedAnimation(parent: _controller, curve: Interval(0, 0.25)));
-    else
+          CurvedAnimation(parent: _controller, curve: const Interval(0, 0.25)));
+    } else {
       return Tween<double>(begin: maxSize1, end: 0).evaluate(
-          CurvedAnimation(parent: _controller, curve: Interval(0.25, 0.66)));
+          CurvedAnimation(parent: _controller, curve: const Interval(0.25, 0.66)));
+    }
   }
 
   double _getMotionAnimation2() {
-    if (_controller.value < 0.25)
+    if (_controller.value < 0.25) {
       return Tween<double>(begin: 0, end: maxSize2).evaluate(
-          CurvedAnimation(parent: _controller, curve: Interval(0, 0.25)));
-    else if (_controller.value < 0.5)
+          CurvedAnimation(parent: _controller, curve: const Interval(0, 0.25)));
+    } else if (_controller.value < 0.5) {
       return Tween<double>(begin: maxSize2, end: 0).evaluate(
-          CurvedAnimation(parent: _controller, curve: Interval(0.25, 0.5)));
-    else if (_controller.value < 0.75)
+          CurvedAnimation(parent: _controller, curve: const Interval(0.25, 0.5)));
+    } else if (_controller.value < 0.75) {
       return Tween<double>(begin: 0, end: maxSize2).evaluate(
-          CurvedAnimation(parent: _controller, curve: Interval(0.5, 0.75)));
-    else
+          CurvedAnimation(parent: _controller, curve: const Interval(0.5, 0.75)));
+    } else {
       return Tween<double>(begin: maxSize2, end: 0).evaluate(
-          CurvedAnimation(parent: _controller, curve: Interval(0.75, 1)));
+          CurvedAnimation(parent: _controller, curve: const Interval(0.75, 1)));
+    }
   }
 
   @override
@@ -95,14 +97,14 @@ class _CollectorProgressIndicatorState extends State<CollectorProgressIndicator>
     final size2 = widget.size / 3 * (2 + _getMotionAnimation2() ?? 0);
 
     return Transform.rotate(
-      angle: math.pi * _sizeAnimation?.value ?? 0,
+      angle: math.pi * (_sizeAnimation?.value ?? 0),
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
           Material(
             elevation: widget.elevation,
             color: widget.color2 ?? Colors.yellow[700],
-            child: Container(
+            child: SizedBox(
               height: size1,
               width: size1,
             ),
@@ -112,17 +114,17 @@ class _CollectorProgressIndicatorState extends State<CollectorProgressIndicator>
             child: Material(
               // elevation: widget.elevation,
               color: widget.color1 ?? Colors.yellow[600],
-              child: Container(
+              child: SizedBox(
                 height: size2,
                 width: size2,
               ),
             ),
           ),
           Material(
-            shape: CircleBorder(),
+            shape: const CircleBorder(),
             color: widget.color0 ?? Colors.yellow[400],
             elevation: widget.elevation,
-            child: Container(
+            child: SizedBox(
               height: widget.size,
               width: widget.size,
             ),

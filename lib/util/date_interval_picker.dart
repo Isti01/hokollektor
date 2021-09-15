@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:hokollektor/Localization.dart' as loc;
+import 'package:hokollektor/localization.dart' as loc;
 
 ///  * <https://material.io/guidelines/components/pickers.html#pickers-date-pickers>
 enum DatePickerMode {
@@ -85,24 +85,26 @@ class DayPicker extends StatelessWidget {
           border: Border(
             top: BorderSide(
               style: BorderStyle.solid,
-              color: themeData.accentColor,
+              color: themeData.colorScheme.secondary,
             ),
             bottom: BorderSide(
               style: BorderStyle.solid,
-              color: themeData.accentColor,
+              color: themeData.colorScheme.secondary,
             ),
             left: BorderSide(
               style: BorderStyle.solid,
-              color: Color.lerp(themeData.accentColor, Colors.white, 0.5),
+              color: Color.lerp(
+                  themeData.colorScheme.secondary, Colors.white, 0.5),
             ),
             right: BorderSide(
               style: BorderStyle.solid,
-              color: Color.lerp(themeData.accentColor, Colors.white, 0.5),
+              color: Color.lerp(
+                  themeData.colorScheme.secondary, Colors.white, 0.5),
             ),
           ),
-          color: Color.lerp(themeData.accentColor, Colors.white, 0.5),
+          color: Color.lerp(themeData.colorScheme.secondary, Colors.white, 0.5),
           shape: BoxShape.rectangle),
-      margin: EdgeInsets.symmetric(vertical: 2, horizontal: 0),
+      margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
     );
   }
 
@@ -238,10 +240,12 @@ class DayPicker extends StatelessWidget {
       date2 = selectedDate;
     }
 
-    if (date1 != null) date1 = DateTime(date1.year, date1.month, date1.day);
-
-    if (date2 != null)
+    if (date1 != null) {
+      date1 = DateTime(date1.year, date1.month, date1.day);
+    }
+    if (date2 != null) {
       date2 = DateTime(date2.year, date2.month, date2.day, 23, 59);
+    }
 
     labels.addAll(_getDayHeaders(themeData.textTheme.caption));
     for (int i = 0; true; i += 1) {
@@ -256,14 +260,15 @@ class DayPicker extends StatelessWidget {
         if (_isBetween(
             date1,
             date2,
-            DateTime(year, month, 1).subtract(Duration(
+            DateTime(year, month, 1).subtract(const Duration(
               hours: 23,
               minutes: 59,
               seconds: 59,
-            ))))
+            )))) {
           labels.add(_outOfMonthSelected(themeData));
-        else
+        } else {
           labels.add(Container());
+        }
       } else {
         final DateTime dayToBuild = DateTime(year, month, day);
         final bool disabled = dayToBuild.isAfter(lastDate) ||
@@ -272,7 +277,7 @@ class DayPicker extends StatelessWidget {
                 !selectableDayPredicate(dayToBuild));
 
         BoxDecoration decoration;
-        TextStyle itemStyle = themeData.textTheme.body1;
+        TextStyle itemStyle = themeData.textTheme.bodyText2;
 
         bool nullDate = false;
 
@@ -280,16 +285,18 @@ class DayPicker extends StatelessWidget {
         if (date1 != null) {
           isSelectedDay =
               date1.year == year && date1.month == month && date1.day == day;
-        } else
+        } else {
           nullDate = true;
+        }
 
         bool isSelectedDay2 = false;
 
         if (date2 != null) {
           isSelectedDay2 =
               date2.year == year && date2.month == month && date2.day == day;
-        } else
+        } else {
           nullDate = true;
+        }
 
         bool betweenSelectedDates = !nullDate;
         if (!nullDate) {
@@ -298,53 +305,56 @@ class DayPicker extends StatelessWidget {
           int selectedDateVal =
               DateTime(year, month, day).millisecondsSinceEpoch;
 
-          if (selectedDateVal > date2val || selectedDateVal < date1Val)
+          if (selectedDateVal > date2val || selectedDateVal < date1Val) {
             betweenSelectedDates = false;
+          }
         }
         if (isSelectedDay || isSelectedDay2 || betweenSelectedDates) {
           // The selected day gets a circle background highlight, and a contrasting text color.
-          itemStyle = themeData.accentTextTheme.body2;
+          itemStyle = themeData.textTheme.bodyText1.copyWith(
+            color: themeData.colorScheme.onSecondary,
+          );
           if (nullDate) {
             decoration = BoxDecoration(
-              color: themeData.accentColor,
+              color: themeData.colorScheme.secondary,
               shape: BoxShape.circle,
             );
           } else if (isSelectedDay) {
             decoration = BoxDecoration(
                 border: Border.all(
                   style: BorderStyle.solid,
-                  color: themeData.accentColor,
+                  color: themeData.colorScheme.secondary,
                 ),
-                color: themeData.accentColor,
-                borderRadius: BorderRadius.only(
+                color: themeData.colorScheme.secondary,
+                borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(100),
                     bottomLeft: Radius.circular(100)));
           } else if (isSelectedDay2) {
             decoration = BoxDecoration(
                 border: Border.all(
                   style: BorderStyle.solid,
-                  color: themeData.accentColor,
+                  color: themeData.colorScheme.secondary,
                 ),
-                color: themeData.accentColor,
-                borderRadius: BorderRadius.only(
+                color: themeData.colorScheme.secondary,
+                borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(100),
                     bottomRight: Radius.circular(100)));
           } else {
             decoration = BoxDecoration(
                 border: Border.all(
                   style: BorderStyle.solid,
-                  color: themeData.accentColor,
+                  color: themeData.colorScheme.secondary,
                 ),
-                color: themeData.accentColor,
+                color: themeData.colorScheme.secondary,
                 shape: BoxShape.rectangle);
           }
         } else if (disabled) {
-          itemStyle = themeData.textTheme.body1
+          itemStyle = themeData.textTheme.bodyText2
               .copyWith(color: themeData.disabledColor);
         }
 
         Widget dayWidget = Container(
-          margin: EdgeInsets.symmetric(vertical: 2, horizontal: 0),
+          margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
           decoration: decoration,
           child: Center(
             child: Text(loc.formatDecimal(day), style: itemStyle),
@@ -362,10 +372,11 @@ class DayPicker extends StatelessWidget {
                     dayToBuild.month == otherTime.month &&
                     dayToBuild.day == otherTime.day) return;
 
-                if (otherTime.isAfter(dayToBuild))
+                if (otherTime.isAfter(dayToBuild)) {
                   onChanged(dayToBuild, otherTime);
-                else
+                } else {
                   onChanged(dayToBuild, otherTime);
+                }
               } else if (dayToBuild.year == selectedDate.year &&
                   dayToBuild.month == selectedDate.month &&
                   dayToBuild.day == selectedDate.day) {
@@ -389,7 +400,7 @@ class DayPicker extends StatelessWidget {
     if (_isBetween(
         date1,
         date2,
-        DateTime(year, month, daysInMonth).add(Duration(
+        DateTime(year, month, daysInMonth).add(const Duration(
           hours: 23,
           minutes: 59,
           seconds: 59,
@@ -404,12 +415,12 @@ class DayPicker extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Container(
+        SizedBox(
           height: _kDayPickerRowHeight,
           child: Center(
             child: Text(
               loc.formatMonthYear(displayedMonth),
-              style: themeData.textTheme.subhead,
+              style: themeData.textTheme.subtitle1,
             ),
           ),
         ),
@@ -588,8 +599,9 @@ class _MonthPickerState extends State<MonthPicker>
       firstDate = selected.subtract(widget.maxInterval);
       lastDate = selected.add(widget.maxInterval);
     }
-    if (lastDate == null || widget.lastDate.isBefore(lastDate))
+    if (lastDate == null || widget.lastDate.isBefore(lastDate)) {
       lastDate = widget.lastDate;
+    }
 
     return DayPicker(
       key: ValueKey<DateTime>(month),

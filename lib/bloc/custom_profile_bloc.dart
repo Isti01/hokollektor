@@ -1,55 +1,54 @@
 import 'dart:convert';
-
+import "dart:developer" as developer;
 import 'package:bloc/bloc.dart';
-import 'package:hokollektor/util/Networking.dart';
-import 'package:hokollektor/util/URLs.dart' as urls;
+import 'package:hokollektor/util/networking.dart';
+import 'package:hokollektor/util/urls.dart' as urls;
 import 'package:http/http.dart' as http;
 
 const int minifiedSize = 5;
 const int expandedSize = 10;
 
 class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
-  @override
-  CustomProfileState get initialState {
+  CustomProfileBloc() : super(CustomProfileState.init()) {
     _fetchCustomProfileState();
-
-    return CustomProfileState.init();
   }
 
   _submitValues(List<int> values) async {
-    if (values.length == minifiedSize)
+    if (values.length == minifiedSize) {
       values = CustomProfileState.transformToExpanded(values);
+    }
 
     try {
-      if (values.length == minifiedSize)
-        await http.get(CustomProfile.createLink(values));
-      else
-        await http.get(CustomProfile.createLink(values));
+      if (values.length == minifiedSize) {
+        await http.get(Uri.parse(CustomProfile.createLink(values)));
+      } else {
+        await http.get(Uri.parse(CustomProfile.createLink(values)));
+      }
     } catch (e) {
-      print(e.toString());
+      developer.log(e.toString());
     }
   }
 
   _fetchCustomProfileState() async {
     try {
       if (!await isConnected()) {
-        dispatch(ProfileErrorEvent());
+        add(const ProfileErrorEvent());
         return;
       }
 
-      http.Response res = await http.get(urls.customProfileURL);
+      http.Response res = await http.get(Uri.parse(urls.kCustomProfileURL));
 
       final json = jsonDecode(res.body);
 
       final data = CustomProfile.fromJson(json);
-      dispatch(ValueChangeEvent(
+      add(ValueChangeEvent(
         newValues: data.values,
         initial: true,
         expanded: true,
       ));
     } catch (e) {
-      print(e.toString());
-      dispatch(ProfileErrorEvent());
+      developer.log(e.toString());
+      add(const ProfileErrorEvent());
     }
   }
 
@@ -67,11 +66,8 @@ class CustomProfileBloc extends Bloc<CustomProfileEvent, CustomProfileState> {
     }
 
     if (event is SizeChangedEvent) {
-      // print('updating size');
-      yield CustomProfileState.success(currentState.values, expanded: event.expanded);
+      yield CustomProfileState.success(state.values, expanded: event.expanded);
     }
-
-    // print('Unknown profile event');
   }
 }
 
@@ -79,16 +75,16 @@ class CustomProfileState {
   final bool loading, hasError, expanded;
   final List<int> values;
 
-  CustomProfileState({
+  const CustomProfileState({
     this.expanded = false,
     this.loading = false,
     this.hasError = false,
     this.values = const [],
   });
 
-  factory CustomProfileState.init() => CustomProfileState(loading: true);
+  factory CustomProfileState.init() => const CustomProfileState(loading: true);
 
-  factory CustomProfileState.error() => CustomProfileState(
+  factory CustomProfileState.error() => const CustomProfileState(
         hasError: true,
       );
 
@@ -107,7 +103,7 @@ class CustomProfileState {
   }
 
   static transformToExpanded(List<int> input) {
-    // print(input.length);
+    // developer.log(input.length);
 
     List<int> result = [];
 
@@ -119,33 +115,36 @@ class CustomProfileState {
 
     if (result.length == expandedSize - 1) result.add(input[input.length - 1]);
 
-    //print('$input => $result');
+    //developer.log('$input => $result');
 
     return result;
   }
 
   static _transformToMinified(List<int> values) {
-    // print(values.length);
+    // developer.log(values.length);
     List<int> result = [];
 
-    for (int i = 1; i < values.length; i += 2)
+    for (int i = 1; i < values.length; i += 2) {
       result.add((values[i] + values[i - 1]) ~/ 2);
+    }
 
     return result;
   }
 }
 
-abstract class CustomProfileEvent {}
+abstract class CustomProfileEvent {
+  const CustomProfileEvent();
+}
 
 class ProfileErrorEvent extends CustomProfileEvent {
-  ProfileErrorEvent();
+  const ProfileErrorEvent();
 }
 
 class ValueChangeEvent extends CustomProfileEvent {
   final List<int> newValues;
   final bool expanded, initial;
 
-  ValueChangeEvent({
+  const ValueChangeEvent({
     this.newValues,
     this.expanded,
     this.initial = false,
@@ -156,13 +155,13 @@ class ValueChangeEvent extends CustomProfileEvent {
 class SizeChangedEvent extends CustomProfileEvent {
   final bool expanded;
 
-  SizeChangedEvent(this.expanded);
+  const SizeChangedEvent(this.expanded);
 }
 
 class CustomProfile {
   final List<int> values;
 
-  CustomProfile({
+  const CustomProfile({
     this.values,
   });
 
@@ -181,17 +180,17 @@ class CustomProfile {
       ]);
 
   static createLink(List<int> values) {
-    return urls.importCustomProfileURL +
+    return urls.kImportCustomProfileURL +
         '?'
-        'param1=${values[0]}'
-        '&param2=${values[1]}'
-        '&param3=${values[2]}'
-        '&param4=${values[3]}'
-        '&param5=${values[4]}'
-        '&param6=${values[5]}'
-        '&param7=${values[6]}'
-        '&param8=${values[7]}'
-        '&param9=${values[8]}'
-        '&param10=${values[9]}';
+            'param1=${values[0]}'
+            '&param2=${values[1]}'
+            '&param3=${values[2]}'
+            '&param4=${values[3]}'
+            '&param5=${values[4]}'
+            '&param6=${values[5]}'
+            '&param7=${values[6]}'
+            '&param8=${values[7]}'
+            '&param9=${values[8]}'
+            '&param10=${values[9]}';
   }
 }

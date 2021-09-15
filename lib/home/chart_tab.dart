@@ -1,19 +1,21 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hokollektor/Localization.dart' as loc;
-import 'package:hokollektor/bloc/AppDataBloc.dart';
-import 'package:hokollektor/bloc/ChartTabBloc.dart';
-import 'package:hokollektor/chart/Chart.dart';
-import 'package:hokollektor/chart/datePicker.dart';
-import 'package:hokollektor/home/Home.dart';
-import 'package:hokollektor/util/TabbedBackdrop.dart';
+import "dart:developer" as developer;
 
-class ChartBackpanel extends StatelessWidget {
+import 'package:flutter/material.dart' hide DatePickerDialog;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hokollektor/bloc/app_data_bloc.dart';
+import 'package:hokollektor/bloc/chart_tab_bloc.dart';
+import 'package:hokollektor/chart/chart.dart';
+import 'package:hokollektor/chart/date_picker.dart';
+import 'package:hokollektor/home/home.dart';
+import 'package:hokollektor/localization.dart' as loc;
+import 'package:hokollektor/util/tabbed_backdrop.dart';
+
+class ChartBackPanel extends StatelessWidget {
   final VoidCallback onReturn;
   final Color lineColor;
   final ChartTabBloc bloc;
 
-  const ChartBackpanel({
+  const ChartBackPanel({
     Key key,
     this.onReturn,
     this.lineColor = Colors.white,
@@ -22,7 +24,7 @@ class ChartBackpanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChartEvent, ChartTabState>(
+    return BlocBuilder<ChartTabBloc, ChartTabState>(
       bloc: bloc,
       builder: _build,
     );
@@ -75,8 +77,9 @@ class ChartBackpanel extends StatelessWidget {
     Color color = Colors.white;
 
     var onPressed = () async {
-      if (chart == Charts.custom || chart == Charts.watt)
+      if (chart == Charts.custom || chart == Charts.watt) {
         await _showCustomChart(context, chart == Charts.watt);
+      }
 
       onReturn();
     };
@@ -86,7 +89,7 @@ class ChartBackpanel extends StatelessWidget {
         if (chart == Charts.custom || chart == Charts.watt) {
           await _showCustomChart(context, chart == Charts.watt);
         } else {
-          bloc.dispatch(ChartTabEvent(chart));
+          bloc.add(ChartTabEvent(chart));
         }
         onReturn();
       };
@@ -99,7 +102,7 @@ class ChartBackpanel extends StatelessWidget {
       disabledElevation: 0,
       shape: RoundedRectangleBorder(
         side: BorderSide(color: color, width: 2),
-        borderRadius: appBorderRadius,
+        borderRadius: kAppBorderRadius,
       ),
       color: Colors.transparent,
       onPressed: onPressed,
@@ -107,8 +110,10 @@ class ChartBackpanel extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Text(
           text,
-          style:
-              Theme.of(context).textTheme.title.copyWith(color: Colors.white),
+          style: Theme.of(context)
+              .textTheme
+              .headline6
+              .copyWith(color: Colors.white),
         ),
       ),
     );
@@ -118,7 +123,7 @@ class ChartBackpanel extends StatelessWidget {
     try {
       final List<DateTime> dates = await showDialog(
           context: context,
-          builder: (BuildContext context) => DatePickerDialog(),
+          builder: (BuildContext context) => const DatePickerDialog(),
           barrierDismissible: true);
 
       DateTime elso = DateTime(
@@ -138,13 +143,13 @@ class ChartBackpanel extends StatelessWidget {
       int startDate = elso.millisecondsSinceEpoch ~/ 1000;
       int endDate = masodik.millisecondsSinceEpoch ~/ 1000;
 
-      bloc.dispatch(CustomChartTabEvent(
+      bloc.add(CustomChartTabEvent(
         wattChart ? Charts.watt : Charts.custom,
         startDate,
         endDate,
       ));
     } catch (e) {
-      print(e.toString());
+      developer.log(e.toString());
     }
   }
 }
@@ -155,15 +160,13 @@ class ChartFront extends StatefulWidget {
 
   const ChartFront({
     Key key,
-    this.bloc,
+    @required this.bloc,
     this.realTimeBloc,
   })  : assert(bloc != null),
         super(key: key);
 
   @override
-  ChartFrontState createState() {
-    return new ChartFrontState();
-  }
+  ChartFrontState createState() => ChartFrontState();
 }
 
 class ChartFrontState extends State<ChartFront> {
@@ -180,26 +183,26 @@ class ChartFrontState extends State<ChartFront> {
     chart = initialChart;
     _createWidgets();
 
-    widget.bloc.state.listen((ChartTabState data) {
+    widget.bloc.stream.listen((ChartTabState data) {
       if (mounted) {
-        this.setState(() {
-          this.chart = data.chart;
-          this.startDate = data.startDate;
-          this.endDate = data.endDate;
+        setState(() {
+          chart = data.chart;
+          startDate = data.startDate;
+          endDate = data.endDate;
           _createWidgets();
         });
       } else {
-        this.chart = data.chart;
-        this.startDate = data.startDate;
-        this.endDate = data.endDate;
+        chart = data.chart;
+        startDate = data.startDate;
+        endDate = data.endDate;
         _createWidgets();
       }
     });
   }
 
   void _createWidgets() {
-    this.title = getChartTitle(this.chart);
-    this.chartWidget = _getChart(
+    title = getChartTitle(chart);
+    chartWidget = _getChart(
       chart,
       startDate: startDate,
       endDate: endDate,
@@ -222,11 +225,11 @@ class ChartFrontState extends State<ChartFront> {
           Padding(
             padding: const EdgeInsets.all(8),
             child: Text(
-              this.title,
-              style: Theme.of(context).textTheme.title,
+              title,
+              style: Theme.of(context).textTheme.headline6,
             ),
           ),
-          this.chartWidget,
+          chartWidget,
         ],
       ),
     );
@@ -278,14 +281,14 @@ class ChartFrontState extends State<ChartFront> {
           height: 450,
         );
       case Charts.custom:
-        return new CustomChart(
+        return CustomChart(
           key: UniqueKey(),
           height: 450,
           startDate: startDate,
           endDate: endDate,
         );
       case Charts.watt:
-        return new WattChart(
+        return WattChart(
           key: UniqueKey(),
           height: 450,
           startDate: startDate,

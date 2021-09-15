@@ -1,9 +1,11 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hokollektor/HokollektorApp.dart';
-import 'package:hokollektor/Localization.dart';
-import 'package:hokollektor/home/Home.dart';
-import 'package:hokollektor/login/Login.dart';
+import 'package:hokollektor/collector_app.dart';
+import 'package:hokollektor/home/home.dart';
+import 'package:hokollektor/localization.dart';
+import 'package:hokollektor/login/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool inGuestMode = false;
@@ -21,24 +23,26 @@ void main() async {
   try {
     loggedIn = prefs.getBool(stayLoggedInKey) ?? false;
   } catch (e) {
-    print(e.toString());
+    developer.log(e.toString());
   }
 
   try {
     chosenLanguage = prefs.getString(languagePrefKey);
 
-    if (chosenLanguage != null && chosenLanguage.trim().isEmpty)
+    if (chosenLanguage != null && chosenLanguage.trim().isEmpty) {
       chosenLanguage = null;
+    }
   } catch (e) {
-    print(e.toString());
+    developer.log(e.toString());
   }
 
   preferredLanguage = chosenLanguage;
 
-  if (loggedIn)
-    runApp(HokollektorApp(child: HomePage()));
-  else
-    runApp(HokollektorApp(child: LoginPage()));
+  if (loggedIn) {
+    runApp(const CollectorApp(child: HomePage()));
+  } else {
+    runApp(const CollectorApp(child: LoginPage()));
+  }
 }
 
 setPortraitOrientation() {
@@ -56,11 +60,12 @@ setLandscapeOrientation() {
 }
 
 showSystemOverlay() {
-  SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+      overlays: SystemUiOverlay.values);
 }
 
 hideSystemOverlay() {
-  SystemChrome.setEnabledSystemUIOverlays([]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 }
 
 saveLanguagePreference(String languageCode) async {

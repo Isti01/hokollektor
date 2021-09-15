@@ -1,15 +1,16 @@
 import 'dart:convert';
+import "dart:developer" as developer;
 
 import 'package:charts_common/common.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:hokollektor/Localization.dart' as loc;
-import 'package:hokollektor/util/Networking.dart';
+import 'package:hokollektor/localization.dart' as loc;
+import 'package:hokollektor/util/networking.dart';
 import 'package:http/http.dart' as http;
 
-const tempBent = 'bnt';
-const tempKint = 'knt';
-const tempKoll = 'kll';
-const datum = 'dt';
+const tempHouseKey = 'bnt';
+const tempOutsideKey = 'knt';
+const tempCollKey = 'kll';
+const dateKey = 'dt';
 const wattKey = 'w';
 
 final List<Color> chartColors = [
@@ -22,7 +23,7 @@ Future<List<charts.Series<ChartDataPoint, DateTime>>> fetchChartData(String url,
     [bool wattChart = false]) async {
   if (!(await isConnected())) return null;
 
-  http.Response connection = await http.get(url);
+  http.Response connection = await http.get(Uri.parse(url));
 
   String body = connection.body;
 
@@ -42,10 +43,12 @@ class ChartDataPoint {
 
   factory ChartDataPoint.fromJson(Map<String, dynamic> json, String key) {
     return ChartDataPoint(
-      date: DateTime.parse(json[datum]),
+      date: DateTime.parse(json[dateKey]),
       value: json[key] is double
           ? json[key]
-          : json[key] is num ? json[key].toDouble() : double.parse(json[key]),
+          : json[key] is num
+              ? json[key].toDouble()
+              : double.parse(json[key]),
     );
   }
 }
@@ -57,9 +60,9 @@ List<charts.Series<ChartDataPoint, DateTime>> parseChartData(json) {
 
   try {
     for (var subJson in json['adatokkollektor']) {
-      kinti.add(ChartDataPoint.fromJson(subJson, tempKint));
-      benti.add(ChartDataPoint.fromJson(subJson, tempBent));
-      koll.add(ChartDataPoint.fromJson(subJson, tempKoll));
+      kinti.add(ChartDataPoint.fromJson(subJson, tempOutsideKey));
+      benti.add(ChartDataPoint.fromJson(subJson, tempHouseKey));
+      koll.add(ChartDataPoint.fromJson(subJson, tempCollKey));
     }
 
     final result = [
@@ -87,7 +90,7 @@ List<charts.Series<ChartDataPoint, DateTime>> parseChartData(json) {
     ];
     return result;
   } catch (e) {
-    print(e.toString());
+    developer.log(e.toString());
     return null;
   }
 }
@@ -111,7 +114,7 @@ List<charts.Series<ChartDataPoint, DateTime>> parseWattChartData(json) {
     ];
     return result;
   } catch (e) {
-    print(e.toString());
+    developer.log(e.toString());
     return null;
   }
 }

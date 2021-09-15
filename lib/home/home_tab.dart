@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hokollektor/Localization.dart' as loc;
-import 'package:hokollektor/bloc/AppDataBloc.dart';
-import 'package:hokollektor/bloc/CustomProfileBloc.dart';
-import 'package:hokollektor/bloc/DataClasses.dart';
-import 'package:hokollektor/chart/Chart.dart';
-import 'package:hokollektor/home/Home.dart';
+import 'package:hokollektor/bloc/app_data_bloc.dart';
+import 'package:hokollektor/bloc/custom_profile_bloc.dart';
+import 'package:hokollektor/bloc/data_classes.dart';
+import 'package:hokollektor/chart/chart.dart';
+import 'package:hokollektor/home/home.dart';
+import 'package:hokollektor/localization.dart' as loc;
 import 'package:hokollektor/main.dart';
-import 'package:hokollektor/presentation/Presentation.dart';
-import 'package:hokollektor/util/TabbedBackdrop.dart';
-import 'package:hokollektor/util/custom_profile_picker/CustomProfilePicker.dart';
+import 'package:hokollektor/presentation/presentation.dart';
+import 'package:hokollektor/util/custom_profile_picker/custom_profile_picker.dart';
+import 'package:hokollektor/util/tabbed_backdrop.dart';
 
 const fontColor = Colors.white;
 const radioActiveColor = Colors.white;
 const progressIndicatorColor = AlwaysStoppedAnimation(Colors.white);
-const backpanelIndicator =
+const backPanelIndicator =
     CircularProgressIndicator(valueColor: progressIndicatorColor);
 
-class HomeBackpanel extends StatelessWidget {
+class HomeBackPanel extends StatelessWidget {
   final AppBloc bloc;
 
-  const HomeBackpanel({
+  const HomeBackPanel({
     Key key,
     this.bloc,
   }) : super(key: key);
@@ -28,33 +28,37 @@ class HomeBackpanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       children: [
         inGuestMode
-            ? SizedBox()
-            : BlocBuilder<DataEvent, AppDataState>(
+            ? const SizedBox()
+            : BlocBuilder<AppBloc, AppDataState>(
                 bloc: bloc,
                 builder: _buildProfile,
               ),
         inGuestMode
-            ? SizedBox()
-            : BlocBuilder<DataEvent, AppDataState>(
+            ? const SizedBox()
+            : BlocBuilder<AppBloc, AppDataState>(
                 bloc: bloc,
                 builder: _buildManual,
               ),
-        LanguageSetting(),
-        SizedBox(height: 1000),
+        const LanguageSetting(),
+        const SizedBox(height: 1000),
         Material(
           type: MaterialType.transparency,
           child: ListTile(
             title: Text(
               loc.getText(loc.presentationTime),
               textAlign: TextAlign.center,
-              style:
-                  Theme.of(context).textTheme.title.copyWith(color: fontColor),
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6
+                  .copyWith(color: fontColor),
             ),
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PresentationPage())),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const PresentationPage())),
           ),
         ),
         const SizedBox(
@@ -68,12 +72,14 @@ class HomeBackpanel extends StatelessWidget {
     final theme = Theme.of(context);
 
     if (state.manualData == null) {
-      if (state.loading && state.profileLoaded)
-        return const Center(child: backpanelIndicator);
-      else if (state.loading) return const SizedBox();
+      if (state.loading && state.profileLoaded) {
+        return const Center(child: backPanelIndicator);
+      } else if (state.loading) {
+        return const SizedBox();
+      }
     }
     if ((state.manualFailed || state.manualData == null) &&
-        !state.profileFailed)
+        !state.profileFailed) {
       return Material(
         type: MaterialType.transparency,
         child: InkWell(
@@ -83,14 +89,15 @@ class HomeBackpanel extends StatelessWidget {
               padding: const EdgeInsets.all(24),
               child: Text(
                 loc.getText(loc.tapToReload),
-                style: theme.textTheme.title.copyWith(color: fontColor),
+                style: theme.textTheme.headline6.copyWith(color: fontColor),
               ),
             ),
           ),
         ),
       );
-    else if (state.manualFailed || state.manualData == null)
+    } else if (state.manualFailed || state.manualData == null) {
       return const SizedBox();
+    }
 
     final data = state.manualData;
 
@@ -102,20 +109,20 @@ class HomeBackpanel extends StatelessWidget {
               ManualSlider(
                 sliderLabel: loc.getText(loc.vent0),
                 initialValue: data.rpm1,
-                onChanged: (value) => bloc.uploadData(Rpm(
-                      enabled: data.enabled,
-                      rpm1: value,
-                      rpm2: data.rpm2,
-                    )),
+                onChanged: (value) => bloc.uploadData(RpmData(
+                  enabled: data.enabled,
+                  rpm1: value,
+                  rpm2: data.rpm2,
+                )),
               ),
               ManualSlider(
                 sliderLabel: loc.getText(loc.vent1),
                 initialValue: data.rpm2,
-                onChanged: (value) => bloc.uploadData(Rpm(
-                      enabled: data.enabled,
-                      rpm1: data.rpm1,
-                      rpm2: value,
-                    )),
+                onChanged: (value) => bloc.uploadData(RpmData(
+                  enabled: data.enabled,
+                  rpm1: data.rpm1,
+                  rpm2: value,
+                )),
               ),
             ],
           )
@@ -123,7 +130,7 @@ class HomeBackpanel extends StatelessWidget {
   }
 
   void _customProfileTileClicked(
-      profileState value, context, AppDataState state) async {
+      ProfileState value, context, AppDataState state) async {
     final CustomProfileBloc customProfileBloc = CustomProfileBloc();
 
     final data = state.profileData;
@@ -133,7 +140,7 @@ class HomeBackpanel extends StatelessWidget {
       builder: (context) => CustomProfilePicker(bloc: customProfileBloc),
     );
 
-    customProfileBloc.dispose();
+    await customProfileBloc.close();
     if (result != null && result) {
       if (value != data) {
         bloc.uploadData(value);
@@ -148,15 +155,16 @@ class HomeBackpanel extends StatelessWidget {
 
     bool error = !state.loading && data?.index == null;
 
-    if (state.loading && state.profileData == null)
+    if (state.loading && state.profileData == null) {
       return const Center(
         child: Padding(
           padding: EdgeInsets.all(8),
-          child: backpanelIndicator,
+          child: backPanelIndicator,
         ),
       );
+    }
 
-    if (state.profileFailed || error)
+    if (state.profileFailed || error) {
       return Material(
         type: MaterialType.transparency,
         child: InkWell(
@@ -166,12 +174,13 @@ class HomeBackpanel extends StatelessWidget {
               padding: const EdgeInsets.all(24),
               child: Text(
                 loc.getText(loc.tapToReload),
-                style: theme.textTheme.title.copyWith(color: fontColor),
+                style: theme.textTheme.headline6.copyWith(color: fontColor),
               ),
             ),
           ),
         ),
       );
+    }
 
     return buildFrame(
       theme: theme,
@@ -181,35 +190,35 @@ class HomeBackpanel extends StatelessWidget {
         _radioTile(
           loc.getText(loc.optimal),
           loc.getText(loc.profileOptimalDescription),
-          profileState.optimal,
+          ProfileState.optimal,
           theme.textTheme,
           state,
         ),
         _radioTile(
           loc.getText(loc.minimal),
           loc.getText(loc.profileMinimalDescription),
-          profileState.minimal,
+          ProfileState.minimal,
           theme.textTheme,
           state,
         ),
         _radioTile(
           loc.getText(loc.maximal),
           loc.getText(loc.profileMaximalDescription),
-          profileState.maximal,
+          ProfileState.maximal,
           theme.textTheme,
           state,
         ),
         _radioTile(
           loc.getText(loc.manual),
           loc.getText(loc.profileManualDescription),
-          profileState.manual,
+          ProfileState.manual,
           theme.textTheme,
           state,
         ),
         _radioTile(
           loc.getText(loc.custom),
           loc.getText(loc.profileCustomDescription),
-          profileState.custom,
+          ProfileState.custom,
           theme.textTheme,
           state,
           (value) => _customProfileTileClicked(value, context, state),
@@ -221,26 +230,26 @@ class HomeBackpanel extends StatelessWidget {
   _radioTile(
     String text,
     String description,
-    profileState value,
+    ProfileState value,
     TextTheme theme,
     AppDataState state, [
-    Function(profileState value) onChanged,
+    Function(ProfileState value) onChanged,
   ]) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
-      child: RadioListTile<profileState>(
+      child: RadioListTile<ProfileState>(
         activeColor: radioActiveColor,
         title: Text(
           text,
-          style: theme.title.copyWith(color: fontColor),
+          style: theme.headline6.copyWith(color: fontColor),
         ),
         subtitle: Text(
           description,
-          style: theme.subtitle.copyWith(color: fontColor),
+          style: theme.subtitle2.copyWith(color: fontColor),
         ),
         value: value,
         groupValue: state.profileData,
-        onChanged: (profileState value) {
+        onChanged: (ProfileState value) {
           if (onChanged != null) {
             onChanged(value);
           } else {
@@ -292,7 +301,7 @@ class InformationCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DataEvent, AppDataState>(
+    return BlocBuilder<AppBloc, AppDataState>(
       bloc: bloc,
       builder: _buildCards,
     );
@@ -302,7 +311,7 @@ class InformationCards extends StatelessWidget {
     final theme = Theme.of(context);
 
     if (state.tempData != null && state.kwhData != null) {
-      InformationHolder data = state.tempData;
+      TemperatureStatistics data = state.tempData;
 
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -314,27 +323,27 @@ class InformationCards extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(loc.getText(loc.koll), style: theme.textTheme.title),
+                Text(loc.getText(loc.koll), style: theme.textTheme.headline6),
                 const SizedBox(
                   height: 8,
                 ),
                 Text(
-                  loc.getText(loc.minTemp) + '${data.legkisebbKoll}°C',
-                  style: theme.textTheme.subhead.copyWith(),
+                  loc.getText(loc.minTemp) + '${data.minCollector}°C',
+                  style: theme.textTheme.subtitle1.copyWith(),
                 ),
                 const SizedBox(
                   height: 4,
                 ),
                 Text(
-                  loc.getText(loc.maxTemp) + '${data.legnagyobbKoll}°C',
-                  style: theme.textTheme.subhead.copyWith(),
+                  loc.getText(loc.maxTemp) + '${data.maxCollector}°C',
+                  style: theme.textTheme.subtitle1.copyWith(),
                 ),
                 const SizedBox(
                   height: 4,
                 ),
                 Text(
                   loc.getText(loc.kwhText) + '${state.kwhData}KWh',
-                  style: theme.textTheme.subhead.copyWith(),
+                  style: theme.textTheme.subtitle1.copyWith(),
                 ),
               ],
             ),
@@ -345,25 +354,25 @@ class InformationCards extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(loc.getText(loc.house), style: theme.textTheme.title),
+                Text(loc.getText(loc.house), style: theme.textTheme.headline6),
                 const SizedBox(
                   height: 8,
                 ),
                 Text(
-                  loc.getText(loc.minTemp) + '${data.legkisebbBenti}°C',
-                  style: theme.textTheme.subhead.copyWith(),
+                  loc.getText(loc.minTemp) + '${data.minHouse}°C',
+                  style: theme.textTheme.subtitle1.copyWith(),
                 ),
                 const SizedBox(
                   height: 4,
                 ),
                 Text(
-                  loc.getText(loc.maxTemp) + '${data.legnagyobbBenti}°C',
-                  style: theme.textTheme.subhead.copyWith(),
+                  loc.getText(loc.maxTemp) + '${data.maxHouse}°C',
+                  style: theme.textTheme.subtitle1.copyWith(),
                 ),
               ],
             ),
           ),
-          Divider(),
+          const Divider(),
         ],
       );
     } else if (state.loading) {
@@ -451,8 +460,8 @@ class _ManualSliderState extends State<ManualSlider> {
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Text(
               widget.sliderLabel,
-              style: theme.body2.copyWith(
-                fontSize: theme.body2.fontSize + 3,
+              style: theme.bodyText1.copyWith(
+                fontSize: theme.bodyText1.fontSize + 3,
                 color: fontColor,
               ),
             ),
@@ -464,17 +473,17 @@ class _ManualSliderState extends State<ManualSlider> {
             children: <Widget>[
               Text(
                 value.toString(),
-                style: theme.body2.copyWith(color: fontColor),
+                style: theme.bodyText1.copyWith(color: fontColor),
               ),
               Expanded(
                 child: Slider(
                   inactiveColor: Colors.grey[500],
                   activeColor: Colors.white,
                   value: sliderValue,
-                  onChanged: (value) => this.setState(() {
-                        _setValue(value);
-                        this.sliderValue = value;
-                      }),
+                  onChanged: (value) => setState(() {
+                    _setValue(value);
+                    sliderValue = value;
+                  }),
                   onChangeEnd: (value) {
                     widget.onChanged((value * 100).round());
                   },
@@ -489,6 +498,8 @@ class _ManualSliderState extends State<ManualSlider> {
 }
 
 class LanguageSetting extends StatelessWidget {
+  const LanguageSetting({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -499,12 +510,12 @@ class LanguageSetting extends StatelessWidget {
               context: context,
               builder: (context) => Theme(
                     data: Theme.of(context),
-                    child: LanguageDialog(),
+                    child: const LanguageDialog(),
                   )),
           title: Text(
             loc.getText(loc.changeLanguage),
-            style: theme.textTheme.title.copyWith(
-              fontSize: theme.textTheme.title.fontSize + 6,
+            style: theme.textTheme.headline6.copyWith(
+              fontSize: theme.textTheme.headline6.fontSize + 6,
               color: fontColor,
             ),
           )),
@@ -513,31 +524,35 @@ class LanguageSetting extends StatelessWidget {
 }
 
 class LanguageDialog extends StatefulWidget {
+  const LanguageDialog({Key key}) : super(key: key);
+
   @override
   _LanguageDialogState createState() => _LanguageDialogState();
 }
 
 class _LanguageDialogState extends State<LanguageDialog> {
-  List<DropdownMenuItem<String>> languages;
+  List<DropdownMenuItem<String>> locales;
   String chosenValue;
 
-  _initLangs(List<String> langs) => this.languages = langs
-      .map((lang) => DropdownMenuItem<String>(
-            value: lang,
-            child: Center(
-              child: Text(loc.languageToOption(lang)),
-            ),
-          ))
-      .toList();
+  _initLocales(List<String> locales) {
+    this.locales = locales
+        .map((locale) => DropdownMenuItem<String>(
+              value: locale,
+              child: Center(
+                child: Text(loc.languageToOption(locale)),
+              ),
+            ))
+        .toList();
+  }
 
   @override
   void initState() {
     super.initState();
-    final langs = loc.getLanguageOptions();
+    final locales = loc.getLanguageOptions();
 
     chosenValue = loc.getPreferredLanguage();
 
-    _initLangs(langs);
+    _initLocales(locales);
   }
 
   @override
@@ -546,7 +561,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
 
     return Center(
       child: Material(
-        shape: RoundedRectangleBorder(borderRadius: appBorderRadius),
+        shape: const RoundedRectangleBorder(borderRadius: kAppBorderRadius),
         child: Padding(
           padding: const EdgeInsets.only(top: 12, left: 12, right: 12),
           child: IntrinsicWidth(
@@ -557,13 +572,13 @@ class _LanguageDialogState extends State<LanguageDialog> {
                 Text(
                   loc.getText(loc.changeLanguage),
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.title,
+                  style: theme.textTheme.headline6,
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 DropdownButton<String>(
-                  items: languages,
+                  items: locales,
                   onChanged: (newValue) =>
-                      this.setState(() => chosenValue = newValue),
+                      setState(() => chosenValue = newValue),
                   value: chosenValue,
                   isExpanded: true,
                 ),
@@ -572,8 +587,8 @@ class _LanguageDialogState extends State<LanguageDialog> {
                   children: [
                     OutlineButton(
                       borderSide: BorderSide(color: theme.primaryColor),
-                      shape:
-                          RoundedRectangleBorder(borderRadius: appBorderRadius),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: kAppBorderRadius),
                       child: Text(
                         loc.getText(loc.cancel),
                         style: theme.textTheme.button
@@ -583,8 +598,8 @@ class _LanguageDialogState extends State<LanguageDialog> {
                     ),
                     RaisedButton(
                       color: theme.primaryColor,
-                      shape:
-                          RoundedRectangleBorder(borderRadius: appBorderRadius),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: kAppBorderRadius),
                       child: Text(
                         loc.getText(loc.save),
                         style:
@@ -622,8 +637,8 @@ buildFrame({
           children: children,
           title: Text(
             title,
-            style: theme.textTheme.title.copyWith(
-              fontSize: theme.textTheme.title.fontSize + 6,
+            style: theme.textTheme.headline6.copyWith(
+              fontSize: theme.textTheme.headline6.fontSize + 6,
               color: fontColor,
             ),
           ),
