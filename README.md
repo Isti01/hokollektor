@@ -1,16 +1,26 @@
-# hokollektor
+# Collector app
+An app to visualize sensor data and configure a smart solar collector.
 
-A new Flutter project.
+## Features
+- The app displays daily statistics and charts on the screen.
+- The IOT device can be remote configured using the app, the user can use pre-made heating profiles or create custom ones.
 
-## Getting Started
+## Screenshots
+- Daily statistics screen, configuration screen, chart screen![Daily statistics screen, configuration screen, chart screen](./screenshots/app.png)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## How to build the app
+- Install [Flutter](https://docs.flutter.dev/get-started/install)
+- Install [Android Studio](https://developer.android.com/studio) (not necessary, but highly recommended)
+- Clone the repo
+```shell
+git clone https://github.com/Isti01/hokollektor.git
+```
+- Restore project files and install packages
+```shell
+flutter create .
+flutter pub get
+```
+- Install an [Android emulator](https://developer.android.com/studio/run/managing-avds) and run the app.
+```shell
+flutter run
+```
